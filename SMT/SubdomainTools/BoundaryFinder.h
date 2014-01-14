@@ -70,7 +70,10 @@ class BoundaryFinder
 		std::vector<unsigned int> FindInnerBoundaries(ElementState* elementSelection);
 		Boundaries	FindAllBoundaries(std::vector<Element> *elements);
 		Boundaries	FindOrderedBoundaries(std::vector<Element*> elements);
-		Boundaries	NewBoundarySearch(std::vector<Element*> elements);
+		Boundaries*	NewBoundarySearch(std::vector<Element*> elements);
+		Boundaries*	FindOuterBoundaries(std::vector<Element*> elements);
+
+		Boundaries	*currentBoundaries;
 
 	private:
 
@@ -78,6 +81,7 @@ class BoundaryFinder
 		std::map<unsigned int, std::vector<unsigned int> >	nodeAdjacency;
 		std::vector<unsigned int>				edgesList;
 
+		void		ResetBoundaries();
 		void		FindEdges(std::vector<Element*>* elements);
 		void		CreateEdgesList();
 		Boundaries	RecursiveBoundarySearch(Boundaries boundaryNodes, std::vector<Element*> elements, bool recurse);

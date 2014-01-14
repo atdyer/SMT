@@ -2,13 +2,37 @@
 
 BoundaryFinder::BoundaryFinder()
 {
-
+	currentBoundaries = new Boundaries();
+	currentBoundaries->innerBoundaryNodes.clear();
+	currentBoundaries->maxZ = -99999;
+	currentBoundaries->minZ = 99999;
+	currentBoundaries->numElements = 0;
+	currentBoundaries->numNodes = 0;
+	currentBoundaries->orderedInnerBoundaryNodes.clear();
+	currentBoundaries->orderedOuterBoundaryNodes.clear();
+	currentBoundaries->outerBoundaryNodes.clear();
 }
 
 
 BoundaryFinder::~BoundaryFinder()
 {
+	delete currentBoundaries;
+}
 
+
+void BoundaryFinder::ResetBoundaries()
+{
+	if (currentBoundaries)
+	{
+		currentBoundaries->innerBoundaryNodes.clear();
+		currentBoundaries->maxZ = -99999;
+		currentBoundaries->minZ = 99999;
+		currentBoundaries->numElements = 0;
+		currentBoundaries->numNodes = 0;
+		currentBoundaries->orderedInnerBoundaryNodes.clear();
+		currentBoundaries->orderedOuterBoundaryNodes.clear();
+		currentBoundaries->outerBoundaryNodes.clear();
+	}
 }
 
 
@@ -381,15 +405,16 @@ Boundaries BoundaryFinder::RecursiveBoundarySearch(Boundaries boundaryNodes, std
 }
 
 
-Boundaries BoundaryFinder::NewBoundarySearch(std::vector<Element*> elements)
+Boundaries* BoundaryFinder::NewBoundarySearch(std::vector<Element*> elements)
 {
-	Boundaries boundaryNodes;
+	ResetBoundaries();
+	Boundaries *boundaryNodes = currentBoundaries;
 //	return boundaryNodes;
 
-	boundaryNodes.numElements = elements.size();
-	boundaryNodes.numNodes = 0;
-	boundaryNodes.minZ = 99999.0;
-	boundaryNodes.maxZ = -99999.0;
+	boundaryNodes->numElements = elements.size();
+	boundaryNodes->numNodes = 0;
+	boundaryNodes->minZ = 99999.0;
+	boundaryNodes->maxZ = -99999.0;
 
 	if (elements.size())
 	{
@@ -423,22 +448,22 @@ Boundaries BoundaryFinder::NewBoundarySearch(std::vector<Element*> elements)
 				elementsThatContainNode[currElement->n2->nodeNumber].push_back(currElement);
 				elementsThatContainNode[currElement->n3->nodeNumber].push_back(currElement);
 
-				if (currElement->n1->z < boundaryNodes.minZ)
-					boundaryNodes.minZ = currElement->n1->z;
-				else if (currElement->n1->z > boundaryNodes.maxZ)
-					boundaryNodes.maxZ = currElement->n1->z;
-				if (currElement->n2->z < boundaryNodes.minZ)
-					boundaryNodes.minZ = currElement->n2->z;
-				else if (currElement->n2->z > boundaryNodes.maxZ)
-					boundaryNodes.maxZ = currElement->n2->z;
-				if (currElement->n3->z < boundaryNodes.minZ)
-					boundaryNodes.minZ = currElement->n3->z;
-				else if (currElement->n3->z > boundaryNodes.maxZ)
-					boundaryNodes.maxZ = currElement->n3->z;
+				if (currElement->n1->z < boundaryNodes->minZ)
+					boundaryNodes->minZ = currElement->n1->z;
+				else if (currElement->n1->z > boundaryNodes->maxZ)
+					boundaryNodes->maxZ = currElement->n1->z;
+				if (currElement->n2->z < boundaryNodes->minZ)
+					boundaryNodes->minZ = currElement->n2->z;
+				else if (currElement->n2->z > boundaryNodes->maxZ)
+					boundaryNodes->maxZ = currElement->n2->z;
+				if (currElement->n3->z < boundaryNodes->minZ)
+					boundaryNodes->minZ = currElement->n3->z;
+				else if (currElement->n3->z > boundaryNodes->maxZ)
+					boundaryNodes->maxZ = currElement->n3->z;
 			}
 		}
 
-		boundaryNodes.numNodes = elementsThatContainNode.size();
+		boundaryNodes->numNodes = elementsThatContainNode.size();
 
 
 		/*
@@ -453,8 +478,8 @@ Boundaries BoundaryFinder::NewBoundarySearch(std::vector<Element*> elements)
 				unsigned int n2 = it->first.n2;
 				if (n1 != n2)
 				{
-					boundaryNodes.outerBoundaryNodes.insert(n1);
-					boundaryNodes.outerBoundaryNodes.insert(n2);
+					boundaryNodes->outerBoundaryNodes.insert(n1);
+					boundaryNodes->outerBoundaryNodes.insert(n2);
 					/*			     */
 
 					if (sortingTable[n1].n1 == 0)
@@ -483,7 +508,7 @@ Boundaries BoundaryFinder::NewBoundarySearch(std::vector<Element*> elements)
 		while (currCount < maxCount)
 		{
 			/* Node stuff */
-			boundaryNodes.orderedOuterBoundaryNodes.push_back(currNode);
+			boundaryNodes->orderedOuterBoundaryNodes.push_back(currNode);
 
 			if (nextNode == firstNode)
 				break;
@@ -501,8 +526,8 @@ Boundaries BoundaryFinder::NewBoundarySearch(std::vector<Element*> elements)
 		std::vector<Element*> orderedBoundaryElements;
 
 		/* Add the first element (the one that contains the first two outer boundary nodes */
-		unsigned int n1 = boundaryNodes.orderedOuterBoundaryNodes.at(0);
-		unsigned int n2 = boundaryNodes.orderedOuterBoundaryNodes.at(1);
+		unsigned int n1 = boundaryNodes->orderedOuterBoundaryNodes.at(0);
+		unsigned int n2 = boundaryNodes->orderedOuterBoundaryNodes.at(1);
 		for (std::vector<Element*>::iterator n1Elements = elementsThatContainNode[n1].begin();
 		     n1Elements != elementsThatContainNode[n1].end();
 		     ++n1Elements)
@@ -520,8 +545,8 @@ Boundaries BoundaryFinder::NewBoundarySearch(std::vector<Element*> elements)
 
 		Element *lastElement;
 		std::vector<Element*> elementsWithCurrOBN;
-		for (std::vector<unsigned int>::iterator currOBN = boundaryNodes.orderedOuterBoundaryNodes.begin()+1;
-		     currOBN != boundaryNodes.orderedOuterBoundaryNodes.end();
+		for (std::vector<unsigned int>::iterator currOBN = boundaryNodes->orderedOuterBoundaryNodes.begin()+1;
+		     currOBN != boundaryNodes->orderedOuterBoundaryNodes.end();
 		     ++currOBN)
 		{
 			lastElement = orderedBoundaryElements.back();
@@ -595,25 +620,94 @@ Boundaries BoundaryFinder::NewBoundarySearch(std::vector<Element*> elements)
 			n1 = (*currOuterElement)->n1->nodeNumber;
 			n2 = (*currOuterElement)->n2->nodeNumber;
 			n3 = (*currOuterElement)->n3->nodeNumber;
-			if (!boundaryNodes.orderedInnerBoundaryNodes.size())
+			if (!boundaryNodes->orderedInnerBoundaryNodes.size())
 			{
-				if (!boundaryNodes.outerBoundaryNodes.count(n1))
-					boundaryNodes.orderedInnerBoundaryNodes.push_back(n1);
-				if (!boundaryNodes.outerBoundaryNodes.count(n2))
-					boundaryNodes.orderedInnerBoundaryNodes.push_back(n2);
-				if (!boundaryNodes.outerBoundaryNodes.count(n3))
-					boundaryNodes.orderedInnerBoundaryNodes.push_back(n3);
+				if (!boundaryNodes->outerBoundaryNodes.count(n1))
+					boundaryNodes->orderedInnerBoundaryNodes.push_back(n1);
+				if (!boundaryNodes->outerBoundaryNodes.count(n2))
+					boundaryNodes->orderedInnerBoundaryNodes.push_back(n2);
+				if (!boundaryNodes->outerBoundaryNodes.count(n3))
+					boundaryNodes->orderedInnerBoundaryNodes.push_back(n3);
 			} else {
-				lastNode = boundaryNodes.orderedInnerBoundaryNodes.back();
-				if (!boundaryNodes.outerBoundaryNodes.count(n1) && (n1 != lastNode))
-					boundaryNodes.orderedInnerBoundaryNodes.push_back(n1);
-				if (!boundaryNodes.outerBoundaryNodes.count(n2) && (n2 != lastNode))
-					boundaryNodes.orderedInnerBoundaryNodes.push_back(n2);
-				if (!boundaryNodes.outerBoundaryNodes.count(n3) && (n3 != lastNode))
-					boundaryNodes.orderedInnerBoundaryNodes.push_back(n3);
+				lastNode = boundaryNodes->orderedInnerBoundaryNodes.back();
+				if (!boundaryNodes->outerBoundaryNodes.count(n1) && (n1 != lastNode))
+					boundaryNodes->orderedInnerBoundaryNodes.push_back(n1);
+				if (!boundaryNodes->outerBoundaryNodes.count(n2) && (n2 != lastNode))
+					boundaryNodes->orderedInnerBoundaryNodes.push_back(n2);
+				if (!boundaryNodes->outerBoundaryNodes.count(n3) && (n3 != lastNode))
+					boundaryNodes->orderedInnerBoundaryNodes.push_back(n3);
 			}
 		}
 
 		return boundaryNodes;
 	}
+}
+
+
+Boundaries *BoundaryFinder::FindOuterBoundaries(std::vector<Element *> elements)
+{
+
+	ResetBoundaries();
+	nodeAdjacency.clear();
+
+	std::map<Edge, int> edgeCount;
+
+	Element *currElement = 0;
+	for (std::vector<Element*>::iterator elementIterator = elements.begin();
+	     elementIterator != elements.end();
+	     ++elementIterator)
+	{
+		currElement = *elementIterator;
+		if (currElement)
+		{
+			Edge edge1 (currElement->n1->nodeNumber, currElement->n2->nodeNumber);
+			Edge edge2 (currElement->n1->nodeNumber, currElement->n3->nodeNumber);
+			Edge edge3 (currElement->n2->nodeNumber, currElement->n3->nodeNumber);
+			if (edgeCount.count(edge1) == 0)
+				edgeCount[edge1] = 0;
+			if (edgeCount.count(edge2) == 0)
+				edgeCount[edge2] = 0;
+			if (edgeCount.count(edge3) == 0)
+				edgeCount[edge3] = 0;
+			edgeCount[edge1] += 1;
+			edgeCount[edge2] += 1;
+			edgeCount[edge3] += 1;
+		}
+	}
+
+	if (edgeCount.size() > 2)
+	{
+		for (std::map<Edge, int>::iterator it = edgeCount.begin(); it != edgeCount.end(); ++it)
+		{
+			if (it->second == 1)
+			{
+				nodeAdjacency[it->first.n1].push_back(it->first.n2);
+				nodeAdjacency[it->first.n2].push_back(it->first.n1);
+			}
+		}
+
+		if (nodeAdjacency.size() > 2)
+		{
+
+			unsigned int previousNode;
+			unsigned int currentNode = nodeAdjacency.begin()->first;
+			unsigned int nextNode = nodeAdjacency[currentNode][0];
+
+			for (unsigned int i=0; i<nodeAdjacency.size(); ++i)
+			{
+				// Push back current node
+				currentBoundaries->orderedOuterBoundaryNodes.push_back(currentNode);
+
+				// Set up next iteration
+				previousNode = currentNode;
+				currentNode = nextNode;
+				if (nodeAdjacency[currentNode][0] == previousNode)
+					nextNode = nodeAdjacency[currentNode][1];
+				else
+					nextNode = nodeAdjacency[currentNode][0];
+			}
+		}
+	}
+
+	return currentBoundaries;
 }

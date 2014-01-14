@@ -67,13 +67,6 @@ class Quadtree
 		std::vector<std::vector<Element*> *> GetElementsThroughDepth(int depth);
 		std::vector<std::vector<Element*> *> GetElementsThroughDepth(int depth, float l, float r, float b, float t);
 
-		int totalNodes;
-		int totalBranches;
-
-		void	leafCheck();
-		void	leafCheck(branch *currBranch);
-		void	leafCheck(leaf *currLeaf);
-
 	private:
 
 		// Data Variables

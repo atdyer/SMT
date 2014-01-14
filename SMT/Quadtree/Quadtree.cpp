@@ -1,38 +1,5 @@
 #include "Quadtree.h"
 
-#include <sys/time.h>
-#include <ctime>
-#include <algorithm>
-
-bool performBenchmarking = true;
-
-typedef unsigned long long ts;
-static ts getTS()
-{
-	struct timeval now;
-	gettimeofday(&now, NULL);
-	return now.tv_usec + (ts)now.tv_sec*1000000;
-}
-
-bool PointIsInsideCircle(float x, float y, float r, float pointX, float pointY)
-{
-	return ((pointX - x)*(pointX - x) + (pointY - y)*(pointY - y)) < r*r;
-}
-
-bool PointIsInsideRectangle(float l, float r, float b, float t, float x, float y)
-{
-	if (l <= x &&
-	    x <= r &&
-	    b <= y &&
-	    y <= t)
-		return true;
-	return false;
-}
-
-float DistanceSquared(float x1, float y1, float x2, float y2)
-{
-	return (x1 - x2)*(x1 - x2) + (y1 - y2)*(y1 - y2);
-}
 
 /**
  * @brief This constructor builds the Quadtree data structure from a list of Nodes
@@ -91,8 +58,6 @@ Quadtree::Quadtree(std::vector<Node> nodes, std::vector<Element> elements, int s
 	IBOId = 0;
 	outlineShader = 0;
 	camera = 0;
-	totalNodes = 0;
-	totalBranches = 0;
 
 	// Create the root branch
 	std::cout << "Creating quadtree: " << minX << ", " << maxX << ", " << minY << ", " << maxY << std::endl;
@@ -108,9 +73,6 @@ Quadtree::Quadtree(std::vector<Node> nodes, std::vector<Element> elements, int s
 	}
 
 	hasElements = true;
-
-	--totalNodes;
-	--totalBranches;
 
 }
 
@@ -137,35 +99,6 @@ Quadtree::~Quadtree()
 		glDeleteBuffers(1, &VBOId);
 	if (IBOId)
 		glDeleteBuffers(1, &IBOId);
-}
-
-
-void Quadtree::leafCheck()
-{
-//	std::cout << "Starting" << std::endl;
-	leafCheck(root);
-}
-
-
-void Quadtree::leafCheck(branch *currBranch)
-{
-//	std::cout << "Checking branch" << std::endl;
-	for (int i=0; i<4; ++i)
-	{
-		if (currBranch->branches[i])
-			leafCheck(currBranch->branches[i]);
-		if (currBranch->leaves[i])
-			leafCheck(currBranch->leaves[i]);
-	}
-}
-
-void Quadtree::leafCheck(leaf *currLeaf)
-{
-//	std::cout << "Checking leaf" << std::endl;
-	if (currLeaf->nodes.size() != binSize)
-		std::cout << "NOPE" << std::endl;
-//	else
-//		std::cout << "GOOD" << std::endl;
 }
 
 
@@ -225,82 +158,12 @@ Node* Quadtree::FindNode(float x, float y)
  */
 Element* Quadtree::FindElement(float x, float y)
 {
-	if (performBenchmarking)
-	{
-
-//		for (unsigned int i=0; i<elementList.size(); i+=40000)
-//		{
-//			Element e = elementList[i];
-//			float newX = (e.n1->normX + e.n2->normX + e.n3->normX) / 3.0;
-//			float newY = (e.n1->normY + e.n2->normY + e.n3->normY) / 3.0;
-////			float newX = bL + (rand()/(double)RAND_MAX)*(bR-bL);
-////			float newY = bB + (rand()/(double)RAND_MAX)*(bT-bB);
-
-//			ts startTime = getTS();
-//			pointSearch.SetPointParameters(newX, newY);
-//			std::vector<Element*> results = pointSearch.FindElements(root);
-//			ts algTime = getTS() - startTime;
-
-//			startTime = getTS();
-//			clickSearch.x = newX;
-//			clickSearch.y = newY;
-//			Element *foundElement = 0;
-//			for (std::vector<Element>::iterator it = elementList.begin(); it != elementList.end(); ++it)
-//			{
-//				if (clickSearch.PointIsInsideElement(&(*it)))
-//				{
-//					foundElement = &(*it);
-//					break;
-//				}
-//			}
-//			ts bruteTime = getTS() - startTime;
-
-//			if (foundElement != 0 && results.size() && results[0] == foundElement)
-//				std::cout << foundElement->elementNumber-1 << "\t" << algTime/ 1000000.0L << "\t" << bruteTime/ 1000000.0L << std::endl;
-//		}
-
-		for (unsigned int i=0; i<nodeList.size(); i+=20000)
-		{
-			Node n = nodeList[i];
-			float newX = n.normX;
-			float newY = n.normY;
-
-			ts startTime = getTS();
-			pointSearch.SetPointParameters(newX, newY);
-			std::vector<Node*> results = pointSearch.FindNodes(root);
-			ts algTime = getTS() - startTime;
-
-			startTime = getTS();
-			clickSearch.x = newX;
-			clickSearch.y = newY;
-			Node *foundNode = 0;
-			float currDist = 999999;
-			for (std::vector<Node>::iterator it = nodeList.begin(); it != nodeList.end(); ++it)
-			{
-				float newDist = clickSearch.Distance(&(*it));
-				if (newDist < currDist)
-				{
-					currDist = newDist;
-					foundNode = &(*it);
-				}
-			}
-			ts bruteTime = getTS() - startTime;
-
-			if (foundNode && results.size() && foundNode == results[0])
-				std::cout << foundNode->nodeNumber-1 << "\t" << algTime/ 1000000.0L << "\t" << bruteTime/ 1000000.0L << std::endl;
-//			else
-//				std::cout << "nope" << std::endl;
-		}
-
-	}
-//	return clickSearch.FindElement(root, x, y);
 	pointSearch.SetPointParameters(x, y);
 	std::vector<Element*> result = pointSearch.FindElements(root);
 	if (result.size())
 		return result[0];
 	else
 		return 0;
-
 }
 
 
@@ -319,304 +182,25 @@ std::vector<Node*> Quadtree::FindNodesInCircle(float x, float y, float radius)
 	return circleSearch.FindNodes(root, x, y, radius);
 }
 
-#include "ConvexCircleSearch.h"
 
 std::vector<Element*> Quadtree::FindElementsInCircle(float x, float y, float radius)
 {
-//	ConvexCircleSearch convex;
-
-	if (performBenchmarking)
-	{
-		srand((unsigned int)x);
-		std::cout << totalNodes << "\t" << totalBranches << std::endl;
-//		for (int i=0; i<5000; ++i)
-//		{
-//			float newRad = radius * (rand() / (double)RAND_MAX);
-//			float xDif = (x+radius) - (2*radius*(rand()/(double)RAND_MAX));
-//			float yDif = (y+radius) - (2*radius*(rand()/(double)RAND_MAX));
-
-//			ts startTime = getTS();
-//			newCircleSearch.SetCircleParameters(xDif, yDif, newRad);
-//			std::vector<Element*> algResult = newCircleSearch.FindElements(root);
-//			ts algTime = getTS()-startTime;
-//			if (algResult.size())
-//			{
-//				std::sort(algResult.begin(), algResult.end());
-//				std::vector<Element*>::iterator it;
-//				it = std::unique(algResult.begin(), algResult.end());
-//				algResult.resize(std::distance(algResult.begin(), it));
-//			}
-
-//			std::cout << algTime/ 1000000.0L << "\t" << algResult.size() << "\t" << newCircleSearch.numFollowed << std::endl;
-
-//			startTime = getTS();
-//			convex.SetCircleParameters(xDif, yDif, newRad);
-//			std::vector<Element*> convexResult = convex.FindElements(root);
-//			ts conTime = getTS()-startTime;
-//			if (convexResult.size())
-//			{
-//				std::sort(convexResult.begin(), convexResult.end());
-//				std::vector<Element*>::iterator it;
-//				it = std::unique(convexResult.begin(), convexResult.end());
-//				convexResult.resize(std::distance(convexResult.begin(), it));
-//			}
-
-//			if (algResult.size() == convexResult.size())
-//				std::cout << algResult.size() << "\t" << algTime/ 1000000.0L <<
-//					     "\t" << conTime / 1000000.0L << std::endl;
-//			else
-//				std::cout << algResult.size() << "\t" << convexResult.size() << std::endl;
-
-//			startTime = getTS();
-//			newCircleSearch.SetCircleParameters(xDif, yDif, newRad);
-//			std::vector<std::vector<Element*>*> ptrResult = newCircleSearch.FindElementsLists(root);
-//			ts ptrTime = getTS() - startTime;
-//			unsigned int count = 0;
-//			for (unsigned int i=0; i<ptrResult.size(); ++i)
-//				count += ptrResult[i]->size();
-
-//			std::vector<Element*> bruteResult;
-//			Element *currElement = 0;
-//			startTime = getTS();
-//			for (std::vector<Element>::iterator it = elementList.begin(); it != elementList.end(); ++it)
-//			{
-//				currElement = &(*it);
-//				if (PointIsInsideCircle(xDif, yDif, newRad, currElement->n1->normX, currElement->n1->normY) ||
-//				    PointIsInsideCircle(xDif, yDif, newRad, currElement->n2->normX, currElement->n2->normY) ||
-//				    PointIsInsideCircle(xDif, yDif, newRad, currElement->n3->normX, currElement->n3->normY))
-//					bruteResult.push_back(currElement);
-//			}
-//			ts bruteTime = getTS()-startTime;
-
-//			if (bruteResult.size() == algResult.size())
-//				std::cout << bruteResult.size() << "\t" << algTime/ 1000000.0L <<
-//					     "\t" << bruteTime / 1000000.0L << std::endl;
-//			else
-//				std::cout << algResult.size() << " " << bruteResult.size() << std::endl;
-//		}
-
-//		std::cout << "------------------------------------" << std::endl;
-
-		for (int i=0; i<2000; ++i)
-		{
-			float newRad = radius * (0.5 + ((rand() / (double)RAND_MAX)/2.0));
-			float xDif = (x+radius) - (2*radius*(rand()/(double)RAND_MAX));
-			float yDif = (y+radius) - (2*radius*(rand()/(double)RAND_MAX));
-
-			ts startTime = getTS();
-			newCircleSearch.SetCircleParameters(xDif, yDif, newRad);
-			std::vector<Node*> algResult = newCircleSearch.FindNodes(root);
-			ts algTime = getTS()-startTime;
-
-			std::cout << algTime/ 1000000.0L << "\t" << newCircleSearch.numLeaves << "\t" << newCircleSearch.numFollowed << std::endl;
-
-//			std::cout << algResult.size() << "\t" << algTime / 1000000.0L << std::endl;
-
-////			startTime = getTS();
-////			newCircleSearch.SetCircleParameters(xDif, yDif, newRad);
-////			std::vector<std::vector<Node*>*> ptrResult = newCircleSearch.FindNodesLists(root);
-////			ts ptrTime = getTS() - startTime;
-////			unsigned int count = 0;
-////			for (unsigned int i=0; i<ptrResult.size(); ++i)
-////				count += ptrResult[i]->size();
-
-////			std::vector<Node*> bruteResult;
-////			Node *currNode = 0;
-////			startTime = getTS();
-////			for (std::vector<Node>::iterator it = nodeList.begin(); it != nodeList.end(); ++it)
-////			{
-////				currNode = &(*it);
-////				if (PointIsInsideCircle(xDif, yDif, newRad, currNode->normX, currNode->normY))
-////					bruteResult.push_back(currNode);
-////			}
-////			ts bruteTime = getTS()-startTime;
-
-////			if (bruteResult.size() == algResult.size())
-////				std::cout << bruteResult.size() << "\t" << algTime/ 1000000.0L <<
-////					     "\t" << bruteTime / 1000000.0L << std::endl;
-////			else
-////				std::cout << algResult.size() << " " << bruteResult.size() << std::endl;
-		}
-	}
-
-
-//	convex.SetCircleParameters(x, y, radius);
-//	return convex.FindElements(root);
-
-//	std::vector<Element*> empty;
-//	return empty;
 	newCircleSearch.SetCircleParameters(x, y, radius);
 	return newCircleSearch.FindElements(root);
-
-//	return circleSearch.FindElements(root, x, y, radius);
 }
 
 
 std::vector<Element*> Quadtree::FindElementsInRectangle(float l, float r, float b, float t)
 {
-	if (performBenchmarking)
-	{
-		srand((unsigned int)l);
-		for (int i=0; i<500; ++i)
-		{
-			float xDif = ((r-l)/2.0)*(rand()/(double)RAND_MAX);
-			float yDif = ((t-b)/2.0)*(rand()/(double)RAND_MAX);
-
-			ts startTime = getTS();
-			newRectangleSearch.SetRectangleParameters(l+xDif, r-xDif, b+yDif, t-yDif);
-			std::vector<Element*> algResult = newRectangleSearch.FindElements(root);
-			ts algTime = getTS()-startTime;
-			std::sort(algResult.begin(), algResult.end());
-			std::vector<Element*>::iterator it;
-			it = std::unique(algResult.begin(), algResult.end());
-			algResult.resize(std::distance(algResult.begin(), it));
-
-			std::vector<Element*> bruteResult;
-			Element *currElement = 0;
-			startTime = getTS();
-			for (std::vector<Element>::iterator it = elementList.begin(); it != elementList.end(); ++it)
-			{
-				currElement = &(*it);
-				if (PointIsInsideRectangle(l+xDif, r-xDif, b+yDif, t-yDif, currElement->n1->normX, currElement->n1->normY) ||
-				    PointIsInsideRectangle(l+xDif, r-xDif, b+yDif, t-yDif, currElement->n2->normX, currElement->n2->normY) ||
-				    PointIsInsideRectangle(l+xDif, r-xDif, b+yDif, t-yDif, currElement->n3->normX, currElement->n3->normY))
-					bruteResult.push_back(currElement);
-			}
-			ts bruteTime = getTS()-startTime;
-
-			if (bruteResult.size() == algResult.size())
-				std::cout << bruteResult.size() << "\t" << algTime/ 1000000.0L <<
-					     "\t" << bruteTime / 1000000.0L << std::endl;
-			else
-				std::cout << algResult.size() << " " << bruteResult.size() << std::endl;
-		}
-
-		std::cout << "------------------------------------" << std::endl;
-
-		for (int i=0; i<500; ++i)
-		{
-			float xDif = ((r-l)/2.0)*(rand()/(double)RAND_MAX);
-			float yDif = ((t-b)/2.0)*(rand()/(double)RAND_MAX);
-
-			ts startTime = getTS();
-			newRectangleSearch.SetRectangleParameters(l+xDif, r-xDif, b+yDif, t-yDif);
-			std::vector<Node*> algResult = newRectangleSearch.FindNodes(root);
-			ts algTime = getTS()-startTime;
-
-			std::vector<Node*> bruteResult;
-			Node *currNode = 0;
-			startTime = getTS();
-			for (std::vector<Node>::iterator it = nodeList.begin(); it != nodeList.end(); ++it)
-			{
-				currNode = &(*it);
-				if (PointIsInsideRectangle(l+xDif, r-xDif, b+yDif, t-yDif, currNode->normX, currNode->normY))
-					bruteResult.push_back(currNode);
-			}
-			ts bruteTime = getTS()-startTime;
-
-			if (bruteResult.size() == algResult.size())
-				std::cout << bruteResult.size() << "\t" << algTime/ 1000000.0L <<
-					     "\t" << bruteTime / 1000000.0L << std::endl;
-			else
-				std::cout << algResult.size() << " " << bruteResult.size() << std::endl;
-		}
-	}
-
-//	std::vector<Element*> empty;
-//	return empty;
 	newRectangleSearch.SetRectangleParameters(l, r, b, t);
 	return newRectangleSearch.FindElements(root);
-//	return rectangleSearch.FindElements(root, l, r, b, t);
 }
 
 
 std::vector<Element*> Quadtree::FindElementsInPolygon(std::vector<Point> polyLine)
 {
-	if (performBenchmarking)
-	{
-		srand((unsigned int)polyLine[0].x);
-		std::vector<Point> polyLineNew = polyLine;
-		for (int i=0; i<500; ++i)
-		{
-			float randomness = i/750.0;
-			polyLineNew = polyLine;
-			for (unsigned int j=0; j<polyLineNew.size(); ++j)
-			{
-				polyLineNew[j].x += randomness * ((rand()/(double)RAND_MAX) - 0.5);
-				polyLineNew[j].y += randomness * ((rand()/(double)RAND_MAX) - 0.5);
-			}
-
-			ts startTime = getTS();
-			newPolySearch.SetPolygonParameters(polyLineNew);
-			std::vector<Element*> algResult = newPolySearch.FindElements(root);
-			ts algTime = getTS() - startTime;
-
-			std::vector<Element*> bruteResult;
-			Element *currElement = 0;
-			startTime = getTS();
-			polySearch.SetPolygonTemp(polyLineNew);
-			for (std::vector<Element>::iterator it = elementList.begin(); it != elementList.end(); ++it)
-			{
-				currElement = &(*it);
-				if (polySearch.PointIsInsidePolygon(currElement->n1->normX, currElement->n1->normY) ||
-				    polySearch.PointIsInsidePolygon(currElement->n2->normX, currElement->n2->normY) ||
-				    polySearch.PointIsInsidePolygon(currElement->n3->normX, currElement->n3->normY))
-					bruteResult.push_back(currElement);
-			}
-			ts bruteTime = getTS()-startTime;
-
-//			if (bruteResult.size() == algResult.size())
-				std::cout << bruteResult.size() << "\t" << algTime/ 1000000.0L <<
-					     "\t" << bruteTime / 1000000.0L << std::endl;
-//			else
-//				std::cout << algResult.size() << " " << bruteResult.size() << std::endl;
-		}
-
-		polyLineNew = polyLine;
-		for (int i=0; i<500; ++i)
-		{
-			float randomness = i/750.0;
-			polyLineNew = polyLine;
-			for (unsigned int j=0; j<polyLineNew.size(); ++j)
-			{
-				polyLineNew[j].x += randomness * ((rand()/(double)RAND_MAX) - 0.5);
-				polyLineNew[j].y += randomness * ((rand()/(double)RAND_MAX) - 0.5);
-			}
-
-			ts startTime = getTS();
-			newPolySearch.SetPolygonParameters(polyLineNew);
-			std::vector<Node*> algResult = newPolySearch.FindNodes(root);
-			ts algTime = getTS() - startTime;
-
-			std::vector<Node*> bruteResult;
-			Node *currNode = 0;
-			startTime = getTS();
-			polySearch.SetPolygonTemp(polyLineNew);
-			for (std::vector<Node>::iterator it = nodeList.begin(); it != nodeList.end(); ++it)
-			{
-				currNode = &(*it);
-				if (polySearch.PointIsInsidePolygon(currNode->normX, currNode->normY))
-					bruteResult.push_back(currNode);
-			}
-			ts bruteTime = getTS()-startTime;
-
-			if (bruteResult.size() == algResult.size())
-				std::cout << bruteResult.size() << "\t" << algTime/ 1000000.0L <<
-					     "\t" << bruteTime / 1000000.0L << std::endl;
-			else
-				std::cout << algResult.size() << " " << bruteResult.size() << std::endl;
-		}
-
-	}
-
-//	std::vector<Node*> algResult = newPolySearch.FindNodes(root);
-
-//	newPolySearch.SetPolygonParameters(polyLine);
-//	std::vector<Element*> empty;
-//	return empty;
 	newPolySearch.SetPolygonParameters(polyLine);
 	return newPolySearch.FindElements(root);
-//	return polySearch.FindElements(root, polyLine);
 }
 
 
@@ -654,8 +238,6 @@ leaf* Quadtree::newLeaf(float l, float r, float b, float t)
 	currLeaf->bounds[1] = r;
 	currLeaf->bounds[2] = b;
 	currLeaf->bounds[3] = t;
-
-	++totalNodes;
 
 	return currLeaf;
 }
@@ -696,9 +278,6 @@ branch* Quadtree::newBranch(float l, float r, float b, float t)
 	currBranch->leaves[2] = newLeaf(l, x, b, y);
 	currBranch->leaves[3] = newLeaf(x, r, b, y);
 
-	++totalNodes;
-	++totalBranches;
-
 	return currBranch;
 }
 
@@ -728,7 +307,6 @@ branch* Quadtree::leafToBranch(leaf *currLeaf)
 		if (leafList[i] == currLeaf && leafList[i] != 0)
 		{
 			leafList[i] = 0;
-			--totalNodes;
 			delete currLeaf;
 		}
 	}

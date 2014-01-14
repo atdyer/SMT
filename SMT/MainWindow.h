@@ -32,6 +32,37 @@ class MainWindow : public QMainWindow
 
 		// Dialogs
 		DisplayOptionsDialog*	displayOptionsDialog;
+
+		void	CheckForMemoryLeaks();
+		void	CreateProject(bool newProjectFile);
+
+	public slots:
+
+		void	showMaxSelectedZ(float newZ);
+		void	showMinSelectedZ(float newZ);
+		void	showMouseX(float newX);
+		void	showMouseY(float newY);
+		void	showNumNodes(int numNodes);
+		void	showNumElements(int numElements);
+		void	showNumTS(int numTS);
+		void	showNumSelectedNodes(int numNodes);
+		void	showNumSelectedElements(int numElements);
+
+		// Circle Tool Slots
+		void	showCircleStats(float x, float y, float rad);
+
+	private slots:
+
+		/* Project buttons */
+		void	openProject();
+
+		/* Left side pane slots */
+		void	addSubdomainToList(QString s);
+		void	showProjectExplorerPane();
+		void	showCreateSubdomainPane();
+		void	showEditSubdomainPane();
+		void	showAdcircPane();
+		void	showAnalyzeResultsPane();
 };
 
 #endif // MAINWINDOW_H

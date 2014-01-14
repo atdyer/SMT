@@ -625,8 +625,6 @@ void Fort14::PopulateQuadtree()
 		ts buildTime = getTS() - startTime;
 		std::cout << size << "\t" << buildTime / 1000000.0L << std::endl;
 		quadtree->SetCamera(camera);
-
-		quadtree->leafCheck();
 	}
 }
 

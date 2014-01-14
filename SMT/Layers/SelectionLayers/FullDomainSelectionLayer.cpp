@@ -561,14 +561,16 @@ void FullDomainSelectionLayer::UseState(ElementState *state)
 		boundaryFinder = new BoundaryFinder();
 	}
 //	Boundaries boundaryNodes = boundaryFinder->FindOrderedBoundaries(*selectedState->GetState());
-	Boundaries boundaryNodes = boundaryFinder->NewBoundarySearch(*selectedState->GetState());
-	outerBoundaryNodes = boundaryNodes.orderedOuterBoundaryNodes;
-	innerBoundaryNodes = boundaryNodes.orderedInnerBoundaryNodes;
+//	Boundaries *boundaryNodes = boundaryFinder->NewBoundarySearch(*selectedState->GetState());
+	Boundaries *boundaryNodes = boundaryFinder->FindOuterBoundaries(*selectedState->GetState());
 
-	emit NumNodesSelected(boundaryNodes.numNodes);
-	emit NumElementsSelected(boundaryNodes.numElements);
-	emit MaxSelectedZ(boundaryNodes.maxZ);
-	emit MinSelectedZ(boundaryNodes.minZ);
+	outerBoundaryNodes = boundaryNodes->orderedOuterBoundaryNodes;
+//	innerBoundaryNodes = boundaryNodes->orderedInnerBoundaryNodes;
+
+//	emit NumNodesSelected(boundaryNodes.numNodes);
+//	emit NumElementsSelected(boundaryNodes.numElements);
+//	emit MaxSelectedZ(boundaryNodes.maxZ);
+//	emit MinSelectedZ(boundaryNodes.minZ);
 
 	/* Update the data on the GPU */
 	LoadDataToGPU();
