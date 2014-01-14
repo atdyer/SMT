@@ -1,4 +1,4 @@
 SMT
 ===
 
-Adcirc Subdomain Modeling Tool - Coming Soon.
+Adcirc Subdomain Modeling Tool - Coming Soon
