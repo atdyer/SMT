@@ -92,7 +92,23 @@ struct Boundaries
 		std::vector<unsigned int>	innerBoundaryNodes;
 		std::vector<unsigned int>	outerBoundaryNodes;
 
-		Boundaries() : boundariesFound(false) {}
+		/*
+		 * These values actually apply to an entire selection
+		 * but are easier to store here
+		 */
+		int	numNodes;
+		int	numElements;
+		float	minZ;
+		float	maxZ;
+
+		Boundaries() :
+			boundariesFound(false),
+			innerBoundaryNodes(),
+			outerBoundaryNodes(),
+			numNodes(0),
+			numElements(0),
+			minZ(99999),
+			maxZ(-99999) {}
 };
 
 

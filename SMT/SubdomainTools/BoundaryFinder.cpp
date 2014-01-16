@@ -21,8 +21,10 @@ void BoundaryFinder::PerformBoundarySearch(std::vector<Element *> elements, Boun
 
 		std::map<unsigned int, std::vector<unsigned int> > nodeAdjacencyOuter;
 		std::map<Edge, int> edgeCount;
+		std::set<unsigned int> selectedNodes;
 		boundaryData->innerBoundaryNodes.clear();
 		boundaryData->outerBoundaryNodes.clear();
+		boundaryData->numElements = elements.size();
 
 		/*
 		 * Count the number of times each edge appears in the selection
@@ -48,8 +50,27 @@ void BoundaryFinder::PerformBoundarySearch(std::vector<Element *> elements, Boun
 				edgeCount[edge1] += 1;
 				edgeCount[edge2] += 1;
 				edgeCount[edge3] += 1;
+
+				selectedNodes.insert(currElement->n1->nodeNumber);
+				selectedNodes.insert(currElement->n2->nodeNumber);
+				selectedNodes.insert(currElement->n3->nodeNumber);
+
+				if (currElement->n1->z < boundaryData->minZ)
+					boundaryData->minZ = currElement->n1->z;
+				else if (currElement->n1->z > boundaryData->maxZ)
+					boundaryData->maxZ = currElement->n1->z;
+				if (currElement->n2->z < boundaryData->minZ)
+					boundaryData->minZ = currElement->n2->z;
+				else if (currElement->n2->z > boundaryData->maxZ)
+					boundaryData->maxZ = currElement->n2->z;
+				if (currElement->n3->z < boundaryData->minZ)
+					boundaryData->minZ = currElement->n3->z;
+				else if (currElement->n3->z > boundaryData->maxZ)
+					boundaryData->maxZ = currElement->n3->z;
 			}
 		}
+
+		boundaryData->numNodes = selectedNodes.size();
 
 		if (edgeCount.size() > 2)
 		{

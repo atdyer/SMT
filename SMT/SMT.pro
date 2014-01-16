@@ -47,7 +47,6 @@ SOURCES += main.cpp\
     SubdomainTools/PolygonTool.cpp \
     SubdomainTools/ClickTool.cpp \
     SubdomainTools/CircleTool.cpp \
-    SubdomainTools/BoundarySearch.cpp \
     SubdomainTools/BoundaryFinder.cpp \
     Quadtree/RectangleSearchNew.cpp \
     Quadtree/QuadtreeSearch.cpp \
@@ -129,7 +128,6 @@ HEADERS  += MainWindow.h \
     SubdomainTools/PolygonTool.h \
     SubdomainTools/ClickTool.h \
     SubdomainTools/CircleTool.h \
-    SubdomainTools/BoundarySearch.h \
     SubdomainTools/BoundaryFinder.h \
     adcData.h \
     Quadtree/RectangleSearchNew.h \
