@@ -110,6 +110,11 @@ void MainWindow::CreateProject(bool currentProjectFile)
 		connect(ui->selectElementSingle, SIGNAL(clicked()), currentProject, SLOT(SelectFullDomainClickElements()));
 		connect(ui->selectNodeSingle, SIGNAL(clicked()), currentProject, SLOT(SelectFullDomainPolygonElements()));
 		connect(ui->selectNodesSquare, SIGNAL(clicked()), currentProject, SLOT(SelectFullDomainRectangleElements()));
+		connect(ui->deselectElementCircle, SIGNAL(clicked()), currentProject, SLOT(DeselectFullDomainCircleElements()));
+		connect(ui->deselectElementPolygon, SIGNAL(clicked()), currentProject, SLOT(DeselectFullDomainPolygonElements()));
+		connect(ui->deselectElementSingle, SIGNAL(clicked()), currentProject, SLOT(DeselectFullDomainClickElements()));
+		connect(ui->deselectElementSquare, SIGNAL(clicked()), currentProject, SLOT(DeselectFullDomainRectangleElements()));
+
 
 		connect(ui->undoButton, SIGNAL(clicked()), currentProject, SLOT(Undo()));
 		connect(ui->redoButton, SIGNAL(clicked()), currentProject, SLOT(Redo()));

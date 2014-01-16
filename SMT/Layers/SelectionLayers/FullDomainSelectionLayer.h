@@ -35,7 +35,7 @@ class FullDomainSelectionLayer : public SelectionLayer
 		virtual unsigned int	GetNumElementsSelected();
 
 		virtual void	SetCamera(GLCamera *newCamera);
-		virtual void	UseTool(ToolType tool, SelectionType selection);
+		virtual void	UseTool(ToolType tool, SelectionType selection, SelectionMode mode);
 
 		virtual void	MouseClick(QMouseEvent *event);
 		virtual void	MouseMove(QMouseEvent *event);
@@ -59,6 +59,7 @@ class FullDomainSelectionLayer : public SelectionLayer
 
 		/* Selection Tools */
 		ToolType	activeToolType;
+		SelectionMode	currentSelectionMode;
 		SelectionTool*	activeTool;
 		ClickTool*	clickTool;
 		CircleTool*	circleTool;

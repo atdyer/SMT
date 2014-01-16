@@ -564,28 +564,56 @@ void Project::SaveProject()
 void Project::SelectFullDomainCircleElements()
 {
 	if (fullDomain)
-		fullDomain->UseTool(CircleToolType, ElementSelection);
+		fullDomain->UseTool(CircleToolType, ElementSelection, Select);
 }
 
 
 void Project::SelectFullDomainClickElements()
 {
 	if (fullDomain)
-		fullDomain->UseTool(ClickToolType, ElementSelection);
+		fullDomain->UseTool(ClickToolType, ElementSelection, Select);
 }
 
 
 void Project::SelectFullDomainPolygonElements()
 {
 	if (fullDomain)
-		fullDomain->UseTool(PolygonToolType, ElementSelection);
+		fullDomain->UseTool(PolygonToolType, ElementSelection, Select);
 }
 
 
 void Project::SelectFullDomainRectangleElements()
 {
 	if (fullDomain)
-		fullDomain->UseTool(RectangleToolType, ElementSelection);
+		fullDomain->UseTool(RectangleToolType, ElementSelection, Select);
+}
+
+
+void Project::DeselectFullDomainCircleElements()
+{
+	if (fullDomain)
+		fullDomain->UseTool(CircleToolType, ElementSelection, Deselect);
+}
+
+
+void Project::DeselectFullDomainClickElements()
+{
+	if (fullDomain)
+		fullDomain->UseTool(ClickToolType, ElementSelection, Deselect);
+}
+
+
+void Project::DeselectFullDomainPolygonElements()
+{
+	if (fullDomain)
+		fullDomain->UseTool(PolygonToolType, ElementSelection, Deselect);
+}
+
+
+void Project::DeselectFullDomainRectangleElements()
+{
+	if (fullDomain)
+		fullDomain->UseTool(RectangleToolType, ElementSelection, Deselect);
 }
 
 

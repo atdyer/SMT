@@ -41,7 +41,7 @@ class Domain : public QObject
 
 		void	Undo();
 		bool	UndoAvailable();
-		void	UseTool(ToolType tool, SelectionType selection);
+		void	UseTool(ToolType tool, SelectionType selection, SelectionMode mode);
 
 	protected:
 

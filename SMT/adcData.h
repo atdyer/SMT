@@ -139,4 +139,13 @@ enum ToolType {ClickToolType, CircleToolType, RectangleToolType, PolygonToolType
 enum SelectionType {NodeSelection, ElementSelection};
 
 
+/**
+ * @brief Types of selection modes
+ *
+ * A user can either select or deselect.
+ *
+ */
+enum SelectionMode {Select, Deselect};
+
+
 #endif // ADCDATA_H

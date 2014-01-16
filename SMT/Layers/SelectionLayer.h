@@ -43,7 +43,7 @@ class SelectionLayer : public Layer
 		virtual unsigned int	GetNumElementsSelected();
 
 		virtual void	SetCamera(GLCamera *newCamera) = 0;
-		virtual void	UseTool(ToolType tool, SelectionType selection) = 0;
+		virtual void	UseTool(ToolType tool, SelectionType selection, SelectionMode mode) = 0;
 
 		virtual void	MouseClick(QMouseEvent *event) = 0;
 		virtual void	MouseMove(QMouseEvent *event) = 0;

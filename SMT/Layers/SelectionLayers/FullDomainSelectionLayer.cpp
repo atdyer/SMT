@@ -246,9 +246,10 @@ void FullDomainSelectionLayer::SetCamera(GLCamera *newCamera)
 }
 
 
-void FullDomainSelectionLayer::UseTool(ToolType tool, SelectionType selection)
+void FullDomainSelectionLayer::UseTool(ToolType tool, SelectionType selection, SelectionMode mode)
 {
 	activeToolType = tool;
+	currentSelectionMode = mode;
 
 	/* If the tool hasn't been created yet, create it now */
 	if (activeToolType == ClickToolType)
@@ -587,9 +588,26 @@ void FullDomainSelectionLayer::GetSelectionFromActiveTool()
 			unsigned int oldNumSelected = currList->size();
 			if (currList->size() > 0)
 			{
-				/* There are currently selected elements, so combine the lists */
-				newList->reserve(newList->size() + currList->size());
-				newList->insert(newList->end(), currList->begin(), currList->end());
+				if (currentSelectionMode == Select)
+				{
+					/* There are currently selected elements, so combine the lists */
+					newList->reserve(newList->size() + currList->size());
+					newList->insert(newList->end(), currList->begin(), currList->end());
+				} else {
+					/* Create a unique set of the current selection */
+					std::set<Element*> currentSet;
+					currentSet.insert(currList->begin(), currList->end());
+
+					/* Remove the selection just made */
+					for (std::vector<Element*>::iterator it = newList->begin(); it != newList->end(); ++it)
+					{
+						currentSet.erase(*it);
+					}
+
+					/* Add everything that's left to the new list */
+					newList->clear();
+					newList->insert(newList->end(), currentSet.begin(), currentSet.end());
+				}
 
 			}
 

@@ -186,11 +186,11 @@ bool Domain::UndoAvailable()
 }
 
 
-void Domain::UseTool(ToolType tool, SelectionType selection)
+void Domain::UseTool(ToolType tool, SelectionType selection, SelectionMode mode)
 {
 	currentMode = SelectionAction;
 	if (selectionLayer)
-		selectionLayer->UseTool(tool, selection);
+		selectionLayer->UseTool(tool, selection, mode);
 	emit setCursor(Qt::CrossCursor);
 }
 

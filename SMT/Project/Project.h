@@ -75,6 +75,10 @@ class Project : public QObject
 		void	SelectFullDomainClickElements();
 		void	SelectFullDomainPolygonElements();
 		void	SelectFullDomainRectangleElements();
+		void	DeselectFullDomainCircleElements();
+		void	DeselectFullDomainClickElements();
+		void	DeselectFullDomainPolygonElements();
+		void	DeselectFullDomainRectangleElements();
 
 		void	ShowDisplayOptionsDialog();
 
