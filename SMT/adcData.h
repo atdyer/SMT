@@ -5,6 +5,8 @@
 #define ADCDATA_H
 
 #include <iostream>
+#include <set>
+#include <vector>
 
 
 /** QT_DEBUG Macro used for displaying debug output
@@ -81,6 +83,16 @@ struct Point
 		float y;
 		Point() : x(0.0), y(0.0) {}
 		Point(float a, float b) : x(a), y(b) {}
+};
+
+
+struct Boundaries
+{
+		bool				boundariesFound;
+		std::vector<unsigned int>	innerBoundaryNodes;
+		std::vector<unsigned int>	outerBoundaryNodes;
+
+		Boundaries() : boundariesFound(false) {}
 };
 
 

@@ -672,7 +672,8 @@ void CreationSelectionLayer::UseState(ElementState *state)
 	selectedState = state;
 
 	/* Find the boundary */
-	boundaryNodes = boundaryFinder->FindBoundaries(selectedState);
+//	boundaryNodes = boundaryFinder->FindBoundaries(selectedState);
+	boundaryNodes = selectedState->GetBoundaries()->outerBoundaryNodes;
 
 	/* Update the data on the GPU */
 	LoadDataToGPU();

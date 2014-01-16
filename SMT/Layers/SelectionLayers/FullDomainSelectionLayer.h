@@ -5,7 +5,10 @@
 #include <stack>
 #include <algorithm>
 
+#include "adcData.h"
+
 #include "Layers/SelectionLayer.h"
+#include "Layers/Actions/ElementState.h"
 
 #include "Project/Files/Fort14.h"
 

@@ -101,17 +101,17 @@ void FullDomainSelectionLayer::Draw()
 		{
 			/* Draw points to smooth out the ends of the lines */
 			glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-			glPointSize(3.0);
+			glPointSize(5.0);
 			if (innerBoundaryShader->Use())
 				glDrawElements(GL_POINTS, innerBoundaryNodes.size(), GL_UNSIGNED_INT,
 					       (GLvoid*)(0 + sizeof(GLuint)*(numElements*3 + outerBoundaryNodes.size())));
 
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-			glLineWidth(3.0);
-			if (innerBoundaryShader->Use())
-				glDrawElements(GL_LINE_LOOP, innerBoundaryNodes.size(), GL_UNSIGNED_INT,
-					       (GLvoid*)(0 + sizeof(GLuint)*(numElements*3 + outerBoundaryNodes.size())));
-			glLineWidth(1.0);
+//			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+//			glLineWidth(3.0);
+//			if (innerBoundaryShader->Use())
+//				glDrawElements(GL_LINE_LOOP, innerBoundaryNodes.size(), GL_UNSIGNED_INT,
+//					       (GLvoid*)(0 + sizeof(GLuint)*(numElements*3 + outerBoundaryNodes.size())));
+//			glLineWidth(1.0);
 		}
 
 		glBindVertexArray(0);
@@ -437,7 +437,7 @@ void FullDomainSelectionLayer::InitializeGL()
 		fillShader->SetColor(QColor(0.4*255, 0.4*255, 0.4*255, 0.4*255));
 		outlineShader->SetColor(QColor(0.2*255, 0.2*255, 0.2*255, 0.2*255));
 		outerBoundaryShader->SetColor(QColor(0.0*255, 0.0*255, 0.0*255, 1.0*255));
-		innerBoundaryShader->SetColor(QColor(0.2*255, 0.2*255, 0.2*255, 1.0*255));
+		innerBoundaryShader->SetColor(QColor(0.0*255, 0.0*255, 0.0*255, 1.0*255));
 		if (camera)
 		{
 			fillShader->SetCamera(camera);
@@ -555,16 +555,20 @@ void FullDomainSelectionLayer::UseState(ElementState *state)
 	/* Set the current state to the new one */
 	selectedState = state;
 
+	Boundaries *currentBoundaries = selectedState->GetBoundaries();
+	outerBoundaryNodes = currentBoundaries->outerBoundaryNodes;
+	innerBoundaryNodes = currentBoundaries->innerBoundaryNodes;
+
 	/* Find the boundary */
-	if (!boundaryFinder)
-	{
-		boundaryFinder = new BoundaryFinder();
-	}
+//	if (!boundaryFinder)
+//	{
+//		boundaryFinder = new BoundaryFinder();
+//	}
 //	Boundaries boundaryNodes = boundaryFinder->FindOrderedBoundaries(*selectedState->GetState());
 //	Boundaries *boundaryNodes = boundaryFinder->NewBoundarySearch(*selectedState->GetState());
-	Boundaries *boundaryNodes = boundaryFinder->FindOuterBoundaries(*selectedState->GetState());
+//	Boundaries *boundaryNodes = boundaryFinder->FindOuterBoundaries(*selectedState->GetState());
 
-	outerBoundaryNodes = boundaryNodes->orderedOuterBoundaryNodes;
+//	outerBoundaryNodes = boundaryNodes->orderedOuterBoundaryNodes;
 //	innerBoundaryNodes = boundaryNodes->orderedInnerBoundaryNodes;
 
 //	emit NumNodesSelected(boundaryNodes.numNodes);

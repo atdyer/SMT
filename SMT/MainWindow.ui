@@ -9,8 +9,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>850</width>
-    <height>650</height>
+    <width>1105</width>
+    <height>751</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -227,7 +227,7 @@ border-top-right-radius: 4px;
              <x>0</x>
              <y>0</y>
              <width>256</width>
-             <height>424</height>
+             <height>436</height>
             </rect>
            </property>
            <property name="styleSheet">
@@ -299,7 +299,7 @@ border-top-right-radius: 4px;
              <x>0</x>
              <y>0</y>
              <width>198</width>
-             <height>424</height>
+             <height>436</height>
             </rect>
            </property>
            <attribute name="label">
@@ -774,7 +774,7 @@ border-top-right-radius: 4px;
              <x>0</x>
              <y>0</y>
              <width>168</width>
-             <height>424</height>
+             <height>436</height>
             </rect>
            </property>
            <attribute name="label">
@@ -787,7 +787,7 @@ border-top-right-radius: 4px;
              <x>0</x>
              <y>0</y>
              <width>258</width>
-             <height>424</height>
+             <height>525</height>
             </rect>
            </property>
            <attribute name="label">
@@ -855,7 +855,7 @@ border-top-right-radius: 4px;
              <x>0</x>
              <y>0</y>
              <width>168</width>
-             <height>424</height>
+             <height>436</height>
             </rect>
            </property>
            <attribute name="label">
@@ -965,7 +965,7 @@ border-top-right-radius: 4px;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>850</width>
+     <width>1105</width>
      <height>25</height>
     </rect>
    </property>

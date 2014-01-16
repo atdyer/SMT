@@ -7,14 +7,14 @@
 
 #include "adcData.h"
 
-#ifndef BOUNDARIES
-#define BOUNDARIES
-struct Boundaries
-{
-		std::set<unsigned int>	innerBoundaryNodes;
-		std::set<unsigned int>	outerBoundaryNodes;
-};
-#endif
+//#ifndef BOUNDARIES
+//#define BOUNDARIES
+//struct Boundaries
+//{
+//		std::set<unsigned int>	innerBoundaryNodes;
+//		std::set<unsigned int>	outerBoundaryNodes;
+//};
+//#endif
 
 class BoundarySearch
 {
