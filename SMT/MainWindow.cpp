@@ -55,6 +55,72 @@ MainWindow::~MainWindow()
 }
 
 
+void MainWindow::keyPressEvent(QKeyEvent *event)
+{
+	if (event->key() == Qt::Key_E)
+	{
+		if (currentProject)
+		{
+			if (event->modifiers() & Qt::ShiftModifier)
+				currentProject->DeselectFullDomainClickElements();
+			else
+				currentProject->SelectFullDomainClickElements();
+		}
+	}
+
+	else if (event->key() == Qt::Key_C)
+	{
+		if (currentProject)
+		{
+			if (event->modifiers() & Qt::ShiftModifier)
+				currentProject->DeselectFullDomainCircleElements();
+			else
+				currentProject->SelectFullDomainCircleElements();
+		}
+	}
+
+	else if (event->key() == Qt::Key_R)
+	{
+		if (currentProject)
+		{
+			if (event->modifiers() & Qt::ShiftModifier)
+				currentProject->DeselectFullDomainRectangleElements();
+			else
+				currentProject->SelectFullDomainRectangleElements();
+		}
+	}
+
+	else if (event->key() == Qt::Key_S)
+	{
+		if (currentProject)
+		{
+			if (event->modifiers() & Qt::ShiftModifier)
+				currentProject->DeselectFullDomainPolygonElements();
+			else
+				currentProject->SelectFullDomainPolygonElements();
+		}
+	}
+
+	else if (event->key() == Qt::Key_Z)
+	{
+		if (currentProject)
+		{
+			if (event->modifiers() & Qt::ControlModifier)
+			{
+				if (event->modifiers() & Qt::ShiftModifier)
+				{
+					if (ui->redoButton->isEnabled())
+						currentProject->Redo();
+				} else {
+					if (ui->undoButton->isEnabled())
+						currentProject->Undo();
+				}
+			}
+		}
+	}
+}
+
+
 void MainWindow::CheckForMemoryLeaks()
 {
 	if (GLShader::GetNumShaders() != 0)

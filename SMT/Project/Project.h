@@ -56,7 +56,7 @@ class Project : public QObject
 		SubDomain*	BuildSubdomain(QString subdomainName);
 		void		CreateAllSubdomains();
 		void		CreateProjectFile();
-		Domain*	DetermineSelectedDomain(QTreeWidgetItem *item);
+		Domain*		DetermineSelectedDomain(QTreeWidgetItem *item);
 		void		Initialize();
 		void		OpenProjectFile(QString filePath);
 		void		PopulateProjectTree();

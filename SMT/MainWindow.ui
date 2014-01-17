@@ -216,7 +216,7 @@ border-top-right-radius: 4px;
            <number>1</number>
           </property>
           <property name="currentIndex">
-           <number>3</number>
+           <number>1</number>
           </property>
           <property name="tabSpacing">
            <number>0</number>
@@ -227,7 +227,7 @@ border-top-right-radius: 4px;
              <x>0</x>
              <y>0</y>
              <width>256</width>
-             <height>436</height>
+             <height>525</height>
             </rect>
            </property>
            <property name="styleSheet">
@@ -299,7 +299,7 @@ border-top-right-radius: 4px;
              <x>0</x>
              <y>0</y>
              <width>198</width>
-             <height>436</height>
+             <height>525</height>
             </rect>
            </property>
            <attribute name="label">
@@ -348,13 +348,13 @@ border-top-right-radius: 4px;
                 <item>
                  <widget class="QToolButton" name="selectElementSingle">
                   <property name="toolTip">
-                   <string>Select individual elements</string>
+                   <string>Select individual elements (E)</string>
                   </property>
                   <property name="statusTip">
-                   <string>Select individual elements</string>
+                   <string>Select individual elements (E)</string>
                   </property>
                   <property name="whatsThis">
-                   <string>Select individual elements</string>
+                   <string>Select individual elements (E)</string>
                   </property>
                   <property name="text">
                    <string/>
@@ -374,13 +374,13 @@ border-top-right-radius: 4px;
                 <item>
                  <widget class="QToolButton" name="selectNodesCircle">
                   <property name="toolTip">
-                   <string>Select elements by drawing a circle</string>
+                   <string>Select elements by drawing a circle (C)</string>
                   </property>
                   <property name="statusTip">
-                   <string>Select elements by drawing a circle</string>
+                   <string>Select elements by drawing a circle (C)</string>
                   </property>
                   <property name="whatsThis">
-                   <string>Select elements by drawing a circle</string>
+                   <string>Select elements by drawing a circle (C)</string>
                   </property>
                   <property name="text">
                    <string/>
@@ -400,13 +400,13 @@ border-top-right-radius: 4px;
                 <item>
                  <widget class="QToolButton" name="selectNodesSquare">
                   <property name="toolTip">
-                   <string>Select elements by drawing a square</string>
+                   <string>Select elements by drawing a rectangle (R)</string>
                   </property>
                   <property name="statusTip">
-                   <string>Select elements by drawing a square</string>
+                   <string>Select elements by drawing a rectangle (R)</string>
                   </property>
                   <property name="whatsThis">
-                   <string>Select elements by drawing a square</string>
+                   <string>Select elements by drawing a rectangle (R)</string>
                   </property>
                   <property name="text">
                    <string/>
@@ -438,13 +438,13 @@ border-top-right-radius: 4px;
                    </size>
                   </property>
                   <property name="toolTip">
-                   <string>Select elements by drawing a closed polygon</string>
+                   <string>Select elements by drawing a polygon (S)</string>
                   </property>
                   <property name="statusTip">
-                   <string>Select elements by drawing a closed polygon</string>
+                   <string>Select elements by drawing a polygon (S)</string>
                   </property>
                   <property name="whatsThis">
-                   <string>Select elements by drawing a closed polygon</string>
+                   <string>Select elements by drawing a polygon (S)</string>
                   </property>
                   <property name="text">
                    <string/>
@@ -501,13 +501,13 @@ border-top-right-radius: 4px;
                 <item>
                  <widget class="QToolButton" name="deselectElementSingle">
                   <property name="toolTip">
-                   <string>Deselect individual elements</string>
+                   <string>Deselect individual elements (Shift + E)</string>
                   </property>
                   <property name="statusTip">
-                   <string>Deselect individual elements</string>
+                   <string>Deselect individual elements (Shift + E)</string>
                   </property>
                   <property name="whatsThis">
-                   <string>Deselect individual elements</string>
+                   <string>Deselect individual elements (Shift + E)</string>
                   </property>
                   <property name="text">
                    <string>...</string>
@@ -527,13 +527,13 @@ border-top-right-radius: 4px;
                 <item>
                  <widget class="QToolButton" name="deselectElementCircle">
                   <property name="toolTip">
-                   <string>Deselect elements by drawing a circle</string>
+                   <string>Deselect elements by drawing a circle (Shift + C)</string>
                   </property>
                   <property name="statusTip">
-                   <string>Deselect elements by drawing a circle</string>
+                   <string>Deselect elements by drawing a circle (Shift + C)</string>
                   </property>
                   <property name="whatsThis">
-                   <string>Deselect elements by drawing a circle</string>
+                   <string>Deselect elements by drawing a circle (Shift + C)</string>
                   </property>
                   <property name="text">
                    <string/>
@@ -553,13 +553,13 @@ border-top-right-radius: 4px;
                 <item>
                  <widget class="QToolButton" name="deselectElementSquare">
                   <property name="toolTip">
-                   <string>Deselect elements by drawing a square</string>
+                   <string>Deselect elements by drawing a rectangle (Shift + R)</string>
                   </property>
                   <property name="statusTip">
-                   <string>Deselect elements by drawing a square</string>
+                   <string>Deselect elements by drawing a rectangle (Shift + R)</string>
                   </property>
                   <property name="whatsThis">
-                   <string>Deselect elements by drawing a square</string>
+                   <string>Deselect elements by drawing a rectangle (Shift + R)</string>
                   </property>
                   <property name="text">
                    <string/>
@@ -579,13 +579,13 @@ border-top-right-radius: 4px;
                 <item>
                  <widget class="QToolButton" name="deselectElementPolygon">
                   <property name="toolTip">
-                   <string>Deselect elements by drawing a closed polygon</string>
+                   <string>Deselect elements by drawing a polygon (Shift + S)</string>
                   </property>
                   <property name="statusTip">
-                   <string>Deselect elements by drawing a closed polygon</string>
+                   <string>Deselect elements by drawing a polygon (Shift + S)</string>
                   </property>
                   <property name="whatsThis">
-                   <string>Deselect elements by drawing a closed polygon</string>
+                   <string>Deselect elements by drawing a polygon (Shift + S)</string>
                   </property>
                   <property name="text">
                    <string/>
@@ -774,7 +774,7 @@ border-top-right-radius: 4px;
              <x>0</x>
              <y>0</y>
              <width>168</width>
-             <height>436</height>
+             <height>525</height>
             </rect>
            </property>
            <attribute name="label">
@@ -855,7 +855,7 @@ border-top-right-radius: 4px;
              <x>0</x>
              <y>0</y>
              <width>168</width>
-             <height>436</height>
+             <height>525</height>
             </rect>
            </property>
            <attribute name="label">
@@ -915,10 +915,13 @@ border-top-right-radius: 4px;
              <bool>false</bool>
             </property>
             <property name="toolTip">
-             <string>Undo</string>
+             <string>Undo (Ctrl + Z)</string>
             </property>
             <property name="statusTip">
-             <string>Undo</string>
+             <string>Undo (Ctrl + Z)</string>
+            </property>
+            <property name="whatsThis">
+             <string>Undo (Ctrl + Z)</string>
             </property>
             <property name="text">
              <string/>
@@ -935,13 +938,13 @@ border-top-right-radius: 4px;
              <bool>false</bool>
             </property>
             <property name="toolTip">
-             <string>Redo</string>
+             <string>Redo (Ctrl + Shift + Z)</string>
             </property>
             <property name="statusTip">
-             <string>Redo</string>
+             <string>Redo (Ctrl + Shift + Z)</string>
             </property>
             <property name="whatsThis">
-             <string>Redo</string>
+             <string>Redo (Ctrl + Shift + Z)</string>
             </property>
             <property name="text">
              <string/>
