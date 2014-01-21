@@ -38,9 +38,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	// Hide the progress bar and bottom section
 	ui->progressBar->hide();
 
-
 	// Connect the buttons
 	connect(ui->openProjectButton, SIGNAL(clicked()), this, SLOT(openProject()));
+
+	// Connect the edit subdomains items
+	connect(ui->editSubdomainList, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(showSubdomain(QListWidgetItem*)));
 
 }
 
@@ -167,6 +169,7 @@ void MainWindow::CreateProject(bool currentProjectFile)
 		currentProject->SetOpenGLPanel(ui->GLPanel);
 		currentProject->SetProgressBar(ui->progressBar);
 		currentProject->SetProjectTree(ui->projectTree);
+		currentProject->SetEditSubdomainList(ui->editSubdomainList);
 
 		/* Subdomain Creation */
 		connect(ui->createSubdomainButton, SIGNAL(clicked()), currentProject, SLOT(CreateNewSubdomain()));
@@ -283,10 +286,14 @@ void MainWindow::openProject()
 
 void MainWindow::addSubdomainToList(QString s)
 {
-	QListWidgetItem* newItem = new QListWidgetItem(s);
-	newItem->setFlags(newItem->flags() | Qt::ItemIsUserCheckable);
-	newItem->setCheckState(Qt::Unchecked);
-	ui->subdomainsToRunList->addItem(newItem);
+	QListWidgetItem* newItemRun = new QListWidgetItem(s);
+	newItemRun->setFlags(newItemRun->flags() | Qt::ItemIsUserCheckable);
+	newItemRun->setCheckState(Qt::Unchecked);
+	ui->subdomainsToRunList->addItem(newItemRun);
+
+	QListWidgetItem* newItemEdit = new QListWidgetItem(s);
+	newItemEdit->setFlags(newItemEdit->flags() | Qt::ItemIsSelectable);
+	ui->editSubdomainList->addItem(newItemEdit);
 }
 
 

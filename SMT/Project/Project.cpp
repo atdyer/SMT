@@ -3,6 +3,7 @@
 Project::Project(QObject *parent) :
 	QObject(parent),
 	displayOptions(0),
+	editSubdomainList(0),
 	fullDomain(0),
 	fullDomainRunner(0),
 	glPanel(0),
@@ -20,6 +21,7 @@ Project::Project(QObject *parent) :
 Project::Project(QString projectFile, QObject *parent) :
 	QObject(parent),
 	displayOptions(0),
+	editSubdomainList(0),
 	fullDomain(0),
 	fullDomainRunner(0),
 	glPanel(0),
@@ -76,6 +78,17 @@ void Project::SetProjectTree(QTreeWidget *newTree)
 		PopulateProjectTree();
 		connect(projectTree, SIGNAL(currentItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)),
 			this, SLOT(ProjectTreeItemChanged(QTreeWidgetItem*,QTreeWidgetItem*)));
+	}
+}
+
+
+void Project::SetEditSubdomainList(QListWidget *newList)
+{
+	if (newList)
+	{
+		editSubdomainList = newList;
+		connect(editSubdomainList, SIGNAL(currentItemChanged(QListWidgetItem*,QListWidgetItem*)),
+			this, SLOT(ProjectTreeItemChanged(QListWidgetItem*,QListWidgetItem*)));
 	}
 }
 
@@ -221,6 +234,24 @@ Domain* Project::DetermineSelectedDomain(QTreeWidgetItem *item)
 			{
 					return DetermineSelectedDomain(parentItem);
 			}
+		}
+	}
+
+	return 0;
+}
+
+
+Domain* Project::DetermineSelectedDomain(QListWidgetItem *item)
+{
+	if (item)
+	{
+		QString itemText = item->text();
+		for (std::vector<SubDomain*>::iterator currSub = subDomains.begin();
+		     currSub != subDomains.end();
+		     ++currSub)
+		{
+			if ((*currSub)->GetDomainName() == itemText)
+				return *currSub;
 		}
 	}
 
@@ -647,6 +678,16 @@ void Project::Undo()
 
 
 void Project::ProjectTreeItemChanged(QTreeWidgetItem *item, QTreeWidgetItem *)
+{
+	Domain *selectedDomain = DetermineSelectedDomain(item);
+	if (selectedDomain && selectedDomain != visibleDomain)
+	{
+		SetVisibleDomain(selectedDomain);
+	}
+}
+
+
+void Project::ProjectTreeItemChanged(QListWidgetItem *item, QListWidgetItem *)
 {
 	Domain *selectedDomain = DetermineSelectedDomain(item);
 	if (selectedDomain && selectedDomain != visibleDomain)

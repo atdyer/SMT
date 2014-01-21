@@ -7,6 +7,7 @@
 #include <QTreeWidget>
 #include <QInputDialog>
 #include <QHeaderView>
+#include <QListWidget>
 
 #include <vector>
 
@@ -36,20 +37,22 @@ class Project : public QObject
 		void	SetOpenGLPanel(OpenGLPanel *newPanel);
 		void	SetProgressBar(QProgressBar *newBar);
 		void	SetProjectTree(QTreeWidget *newTree);
+		void	SetEditSubdomainList(QListWidget *newList);
 
 		QStringList	GetSubdomainNames();
 
 	private:
 
 		DisplayOptionsDialog*	displayOptions;
+		QListWidget*		editSubdomainList;
 		FullDomain*		fullDomain;
 		FullDomainRunner*	fullDomainRunner;
 		OpenGLPanel*		glPanel;
 		QProgressBar*		progressBar;
-		ProjectFile*	projectFile;
+		ProjectFile*		projectFile;
 		QTreeWidget*		projectTree;
 		std::vector<SubDomain*>	subDomains;
-		Domain*		visibleDomain;
+		Domain*			visibleDomain;
 
 
 		FullDomain*	BuildFullDomain();
@@ -57,6 +60,7 @@ class Project : public QObject
 		void		CreateAllSubdomains();
 		void		CreateProjectFile();
 		Domain*		DetermineSelectedDomain(QTreeWidgetItem *item);
+		Domain*		DetermineSelectedDomain(QListWidgetItem *item);
 		void		Initialize();
 		void		OpenProjectFile(QString filePath);
 		void		PopulateProjectTree();
@@ -89,6 +93,7 @@ class Project : public QObject
 	private slots:
 
 		void	ProjectTreeItemChanged(QTreeWidgetItem *item, QTreeWidgetItem*);
+		void	ProjectTreeItemChanged(QListWidgetItem *item, QListWidgetItem*);
 
 	signals:
 

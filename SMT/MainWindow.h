@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QListWidgetItem>
 
 #include "Project/Project.h"
 #include "Dialogs/DisplayOptionsDialog.h"
@@ -62,6 +63,7 @@ class MainWindow : public QMainWindow
 
 		/* Left side pane slots */
 		void	addSubdomainToList(QString s);
+
 		void	showProjectExplorerPane();
 		void	showCreateSubdomainPane();
 		void	showEditSubdomainPane();
