@@ -25,6 +25,7 @@ class Fort14 : public QObject
 
 		void	Draw();
 
+		Node*			FindNode(float xGL, float yGL);
 		Element*		FindElement(float xGL, float yGL);
 		std::vector<Element*>	FindElementsInCircle(float x, float y, float radius);
 		std::vector<Element*>	FindElementsInRectangle(float l, float r, float b, float t);

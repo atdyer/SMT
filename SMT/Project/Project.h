@@ -84,6 +84,8 @@ class Project : public QObject
 		void	DeselectFullDomainPolygonElements();
 		void	DeselectFullDomainRectangleElements();
 
+		void	SelectSingleSubdomainNode();
+
 		void	ShowDisplayOptionsDialog();
 
 		void	ToggleQuadtreeVisible();

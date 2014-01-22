@@ -40,6 +40,7 @@ class ClickTool : public SelectionTool
 		void	InitializeGL();
 		void	UpdateCoordinates();
 		void	UpdateGL();
+		void	FindNode();
 		void	FindElement();
 
 		/* OpenGL Stuff */

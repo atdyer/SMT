@@ -45,11 +45,11 @@ class Domain : public QObject
 
 	protected:
 
-		GLCamera*		camera;
+		GLCamera*	camera;
 		Fort14*		fort14;
-		QProgressBar*		progressBar;
+		QProgressBar*	progressBar;
 		ProjectFile*	projectFile;
-		SelectionLayer*		selectionLayer;
+		SelectionLayer*	selectionLayer;
 
 		/* Mouse Clicking and Moving Stuff */
 		ActionType	currentMode;	/**< The current mode used to determine where actions are sent */

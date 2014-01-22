@@ -247,6 +247,7 @@ void ClickTool::UseTool()
  */
 std::vector<Node*> ClickTool::GetSelectedNodes()
 {
+	FindNode();
 	return selectedNodes;
 }
 
@@ -365,6 +366,18 @@ void ClickTool::UpdateGL()
 			glBindBuffer(GL_ARRAY_BUFFER, VBOId);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, 2*sizeof(GLfloat), &glPoint[0]);
 		}
+	}
+}
+
+
+void ClickTool::FindNode()
+{
+	if (fort14)
+	{
+		selectedNodes.clear();
+		Node* selectedNode = fort14->FindNode(xGL, yGL);
+		if (selectedNode)
+			selectedNodes.push_back(selectedNode);
 	}
 }
 

@@ -183,6 +183,7 @@ void MainWindow::CreateProject(bool currentProjectFile)
 		connect(ui->deselectElementPolygon, SIGNAL(clicked()), currentProject, SLOT(DeselectFullDomainPolygonElements()));
 		connect(ui->deselectElementSingle, SIGNAL(clicked()), currentProject, SLOT(DeselectFullDomainClickElements()));
 		connect(ui->deselectElementSquare, SIGNAL(clicked()), currentProject, SLOT(DeselectFullDomainRectangleElements()));
+		connect(ui->selectNodeButton, SIGNAL(clicked()), currentProject, SLOT(SelectSingleSubdomainNode()));
 
 
 		connect(ui->undoButton, SIGNAL(clicked()), currentProject, SLOT(Undo()));
@@ -204,6 +205,9 @@ void MainWindow::CreateProject(bool currentProjectFile)
 		/* Running ADCIRC */
 		connect(ui->actionFull_Domain, SIGNAL(triggered()), currentProject, SLOT(RunFullDomain()));
 		connect(currentProject, SIGNAL(subdomainCreated(QString)), this, SLOT(addSubdomainToList(QString)));
+
+		/* Color Options Action Bar */
+		connect(ui->actionColor_Options, SIGNAL(triggered()), currentProject, SLOT(ShowDisplayOptionsDialog()));
 
 		/* Update list with already created subdomains */
 		QStringList currSubs = currentProject->GetSubdomainNames();

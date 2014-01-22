@@ -648,6 +648,21 @@ void Project::DeselectFullDomainRectangleElements()
 }
 
 
+void Project::SelectSingleSubdomainNode()
+{
+	SubDomain *currentSub = 0;
+	for (std::vector<SubDomain*>::iterator it = subDomains.begin(); it != subDomains.end(); ++it)
+	{
+		currentSub = *it;
+		if (currentSub == visibleDomain)
+		{
+			currentSub->UseTool(ClickToolType, NodeSelection, Select);
+			break;
+		}
+	}
+}
+
+
 void Project::ShowDisplayOptionsDialog()
 {
 	if (visibleDomain && displayOptions)

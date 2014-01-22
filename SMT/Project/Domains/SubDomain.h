@@ -8,6 +8,8 @@
 
 #include "Project/Domains/Domain.h"
 
+#include "Layers/SelectionLayers/SubDomainSelectionLayer.h"
+
 #include "Project/Files/BNList14.h"
 #include "Project/Files/Fort14.h"
 #include "Project/Files/Fort15.h"
@@ -37,8 +39,11 @@ class SubDomain : public Domain
 		Fort015*	GetFort015();
 		virtual QString	GetPath();
 		QString		GetDomainName();
+		Node*		GetSelectedNode();
 
 	private:
+
+		SubDomainSelectionLayer*	selectionLayerSubdomain;
 
 		BNList14*		bnList;
 		QString			domainName;

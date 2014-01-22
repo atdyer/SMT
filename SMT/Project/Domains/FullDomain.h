@@ -49,11 +49,11 @@ class FullDomain : public Domain
 		Fort22*		fort22;
 		Fort63*		fort63;
 		Fort64*		fort64;
-		Fort015*		fort015;
-		Fort066*		fort066;
-		Fort067*		fort067;
-		Maxele63*		maxele;
-		Maxvel63*		maxvel;
+		Fort015*	fort015;
+		Fort066*	fort066;
+		Fort067*	fort067;
+		Maxele63*	maxele;
+		Maxvel63*	maxvel;
 
 		void	CreateAllFiles();
 

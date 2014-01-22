@@ -183,6 +183,14 @@ void Fort14::Draw()
 }
 
 
+Node* Fort14::FindNode(float xGL, float yGL)
+{
+	if (quadtree)
+		return quadtree->FindNode(xGL, yGL);
+	return 0;
+}
+
+
 Element* Fort14::FindElement(float xGL, float yGL)
 {
 	if (quadtree)

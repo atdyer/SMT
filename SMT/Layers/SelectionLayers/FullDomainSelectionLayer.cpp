@@ -4,6 +4,7 @@ FullDomainSelectionLayer::FullDomainSelectionLayer(Fort14 *fort14, QObject *pare
 	SelectionLayer(parent),
 	fort14(fort14),
 	activeToolType(ClickToolType),
+	currentSelectionMode(Select),
 	activeTool(0),
 	clickTool(0),
 	circleTool(0),
@@ -321,6 +322,8 @@ void FullDomainSelectionLayer::KeyPress(QKeyEvent *event)
 
 void FullDomainSelectionLayer::WindowSizeChanged(float w, float h)
 {
+	if (clickTool)
+		clickTool->SetViewportSize(w, h);
 	if (circleTool)
 		circleTool->SetViewportSize(w, h);
 	if (rectangleTool)
@@ -475,7 +478,7 @@ void FullDomainSelectionLayer::InitializeGL()
 			glLoaded = false;
 		}
 	} else {
-		DEBUG("Subdomain Creation Selection Layer GL not initialized: TerrainLayer not set");
+		DEBUG("Subdomain Creation Selection Layer GL not initialized: fort.14 not set");
 		glLoaded = false;
 	}
 }

@@ -91,7 +91,8 @@ SOURCES += main.cpp\
     Dialogs/CreateSubdomainDialog.cpp \
     Dialogs/CreateProjectDialog.cpp \
     Adcirc/FullDomainRunner.cpp \
-    Adcirc/SubdomainCreator.cpp
+    Adcirc/SubdomainCreator.cpp \
+    Layers/SelectionLayers/SubDomainSelectionLayer.cpp
 
 HEADERS  += MainWindow.h \
     OpenGL/wglew.h \
@@ -174,7 +175,8 @@ HEADERS  += MainWindow.h \
     Dialogs/CreateSubdomainDialog.h \
     Dialogs/CreateProjectDialog.h \
     Adcirc/FullDomainRunner.h \
-    Adcirc/SubdomainCreator.h
+    Adcirc/SubdomainCreator.h \
+    Layers/SelectionLayers/SubDomainSelectionLayer.h
 
 FORMS    += MainWindow.ui \
     Widgets/ShaderOptionsStackedWidget.ui \

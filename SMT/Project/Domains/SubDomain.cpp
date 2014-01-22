@@ -3,6 +3,7 @@
 
 SubDomain::SubDomain(QString domainName, ProjectFile *projectFile, QObject *parent) :
 	Domain(projectFile, parent),
+	selectionLayerSubdomain(0),
 	bnList(0),
 	domainName(domainName),
 	fort15(0),
@@ -19,6 +20,20 @@ SubDomain::SubDomain(QString domainName, ProjectFile *projectFile, QObject *pare
 	py141(0)
 {
 	CreateAllFiles();
+	selectionLayerSubdomain = new SubDomainSelectionLayer(fort14, this);
+	selectionLayer = selectionLayerSubdomain;
+	selectionLayer->SetCamera(camera);
+
+	connect(selectionLayer, SIGNAL(ToolFinishedDrawing()), this, SLOT(EnterDisplayMode()));
+	connect(selectionLayer, SIGNAL(UndoAvailable(bool)), this, SIGNAL(undoAvailable(bool)));
+	connect(selectionLayer, SIGNAL(RedoAvailable(bool)), this, SIGNAL(redoAvailable(bool)));
+	connect(selectionLayer, SIGNAL(NumElementsSelected(int)), this, SIGNAL(numElementsSelected(int)));
+	connect(selectionLayer, SIGNAL(NumNodesSelected(int)), this, SIGNAL(numNodesSelected(int)));
+	connect(selectionLayer, SIGNAL(MaxSelectedZ(float)), this, SIGNAL(maxSelectedZ(float)));
+	connect(selectionLayer, SIGNAL(MinSelectedZ(float)), this, SIGNAL(minSelectedZ(float)));
+
+	connect(fort14, SIGNAL(NumElementsSet(int)), this, SIGNAL(numElements(int)));
+	connect(fort14, SIGNAL(NumNodesSet(int)), this, SIGNAL(numNodes(int)));
 }
 
 
@@ -51,6 +66,12 @@ QString SubDomain::GetPath()
 QString SubDomain::GetDomainName()
 {
 	return domainName;
+}
+
+
+Node* SubDomain::GetSelectedNode()
+{
+	return selectionLayerSubdomain->GetSelectedNode();
 }
 
 
