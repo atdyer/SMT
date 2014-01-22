@@ -30,6 +30,7 @@
 
 class SubDomain : public Domain
 {
+		Q_OBJECT
 	public:
 		SubDomain(QString domainName, ProjectFile *projectFile, QObject *parent=0);
 		~SubDomain();
@@ -62,6 +63,9 @@ class SubDomain : public Domain
 
 		void	CreateAllFiles();
 
+	signals:
+
+		void	editNode(unsigned int, QString, QString, QString);
 
 };
 

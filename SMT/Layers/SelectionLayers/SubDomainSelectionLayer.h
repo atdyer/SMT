@@ -70,6 +70,10 @@ class SubDomainSelectionLayer : public SelectionLayer
 
 		void	UseVBOId(GLuint newVBO);
 		void	GetSelectionFromTool();
+
+	signals:
+
+		void	editNode(unsigned int, QString, QString, QString);
 };
 
 #endif // SUBDOMAINSELECTIONLAYER_H

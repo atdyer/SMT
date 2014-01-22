@@ -24,6 +24,9 @@ SubDomain::SubDomain(QString domainName, ProjectFile *projectFile, QObject *pare
 	selectionLayer = selectionLayerSubdomain;
 	selectionLayer->SetCamera(camera);
 
+	connect(selectionLayerSubdomain, SIGNAL(editNode(uint,QString,QString,QString)),
+		this, SIGNAL(editNode(uint,QString,QString,QString)));
+
 	connect(selectionLayer, SIGNAL(ToolFinishedDrawing()), this, SLOT(EnterDisplayMode()));
 	connect(selectionLayer, SIGNAL(UndoAvailable(bool)), this, SIGNAL(undoAvailable(bool)));
 	connect(selectionLayer, SIGNAL(RedoAvailable(bool)), this, SIGNAL(redoAvailable(bool)));

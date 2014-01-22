@@ -128,6 +128,8 @@ SubDomain* Project::BuildSubdomain(QString subdomainName)
 	connect(newSubdomain, SIGNAL(mouseY(float)), this, SIGNAL(mouseY(float)));
 	connect(newSubdomain, SIGNAL(undoAvailable(bool)), this, SIGNAL(undoAvailable(bool)));
 	connect(newSubdomain, SIGNAL(redoAvailable(bool)), this, SIGNAL(redoAvailable(bool)));
+	connect(newSubdomain, SIGNAL(editNode(uint,QString,QString,QString)),
+		this, SIGNAL(editNode(uint,QString,QString,QString)));
 
 	if (progressBar)
 		newSubdomain->SetProgressBar(progressBar);

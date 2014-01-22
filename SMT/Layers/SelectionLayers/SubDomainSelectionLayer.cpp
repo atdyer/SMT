@@ -233,6 +233,8 @@ void SubDomainSelectionLayer::InitializeGL()
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexBufferSize, &glIndex, GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
+
+	glLoaded = true;
 }
 
 
@@ -259,6 +261,11 @@ void SubDomainSelectionLayer::GetSelectionFromActiveTool()
 			currentNode = newList[0];
 
 		LoadDataToGPU();
+
+		emit editNode(currentNode->nodeNumber,
+			      QString::fromStdString(currentNode->xDat),
+			      QString::fromStdString(currentNode->yDat),
+			      QString::fromStdString(currentNode->zDat));
 	}
 }
 

@@ -931,7 +931,7 @@ border-top-right-radius: 4px;
                  <bool>false</bool>
                 </property>
                 <property name="text">
-                 <string>Apply All</string>
+                 <string>Apply</string>
                 </property>
                </widget>
               </item>

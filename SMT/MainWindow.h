@@ -63,6 +63,7 @@ class MainWindow : public QMainWindow
 
 		/* Left side pane slots */
 		void	addSubdomainToList(QString s);
+		void	editNode(unsigned int nodeNum, QString x, QString y, QString z);
 
 		void	showProjectExplorerPane();
 		void	showCreateSubdomainPane();

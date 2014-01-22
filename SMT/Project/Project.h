@@ -99,6 +99,7 @@ class Project : public QObject
 
 	signals:
 
+		void	editNode(unsigned int, QString, QString, QString);
 		void	maxSelectedZ(float);
 		void	minSelectedZ(float);
 		void	mouseX(float);

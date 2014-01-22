@@ -185,9 +185,11 @@ void MainWindow::CreateProject(bool currentProjectFile)
 		connect(ui->deselectElementSquare, SIGNAL(clicked()), currentProject, SLOT(DeselectFullDomainRectangleElements()));
 		connect(ui->selectNodeButton, SIGNAL(clicked()), currentProject, SLOT(SelectSingleSubdomainNode()));
 
-
 		connect(ui->undoButton, SIGNAL(clicked()), currentProject, SLOT(Undo()));
 		connect(ui->redoButton, SIGNAL(clicked()), currentProject, SLOT(Redo()));
+
+		/* Subdomain Editing */
+		connect(currentProject, SIGNAL(editNode(uint,QString,QString,QString)), this, SLOT(editNode(uint,QString,QString,QString)));
 
 		/* U/I Updates */
 		connect(currentProject, SIGNAL(mouseX(float)), this, SLOT(showMouseX(float)));
@@ -298,6 +300,15 @@ void MainWindow::addSubdomainToList(QString s)
 	QListWidgetItem* newItemEdit = new QListWidgetItem(s);
 	newItemEdit->setFlags(newItemEdit->flags() | Qt::ItemIsSelectable);
 	ui->editSubdomainList->addItem(newItemEdit);
+}
+
+
+void MainWindow::editNode(unsigned int nodeNum, QString x, QString y, QString z)
+{
+	ui->editNodeNumber->setText(QString::number(nodeNum));
+	ui->editXLoc->setText(x);
+	ui->editYLoc->setText(y);
+	ui->editZLoc->setText(z);
 }
 
 
