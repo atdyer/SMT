@@ -222,7 +222,8 @@ std::vector<std::vector<Element*>*> Quadtree::GetElementsThroughDepth(int depth,
 }
 
 
-void Quadtree::SetNodalValues(unsigned int nodeNumber, float x, float y, float z, float normX, float normY, float normZ)
+void Quadtree::SetNodalValues(unsigned int nodeNumber, float x, float y, float z, float normX, float normY, float normZ,
+			      QString xDat, QString yDat, QString zDat)
 {
 	Node *currNode;
 	for (std::vector<Node>::iterator it = nodeList.begin();
@@ -238,6 +239,9 @@ void Quadtree::SetNodalValues(unsigned int nodeNumber, float x, float y, float z
 			currNode->normX = normX;
 			currNode->normY = normY;
 			currNode->normZ = normZ;
+			currNode->xDat = xDat.toStdString();
+			currNode->yDat = yDat.toStdString();
+			currNode->zDat = zDat.toStdString();
 			break;
 		}
 	}

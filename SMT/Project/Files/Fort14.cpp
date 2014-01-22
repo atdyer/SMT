@@ -495,7 +495,8 @@ void Fort14::SetNodalValues(unsigned int nodeNumber, QString x, QString y, QStri
 			if (quadtree)
 				quadtree->SetNodalValues(nodeNumber,
 							 currNode->x, currNode->y, currNode->z,
-							 currNode->normX, currNode->normY, currNode->normZ);
+							 currNode->normX, currNode->normY, currNode->normZ,
+							 x, y, z);
 
 			RefreshGL();
 			emit Refresh();

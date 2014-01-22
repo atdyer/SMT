@@ -67,7 +67,7 @@ class Quadtree
 		std::vector<std::vector<Element*> *> GetElementsThroughDepth(int depth);
 		std::vector<std::vector<Element*> *> GetElementsThroughDepth(int depth, float l, float r, float b, float t);
 
-		void	SetNodalValues(unsigned int nodeNumber, float x, float y, float z, float normX, float normY, float normZ);
+		void	SetNodalValues(unsigned int nodeNumber, float x, float y, float z, float normX, float normY, float normZ, QString xDat, QString yDat, QString zDat);
 	private:
 
 		// Data Variables
