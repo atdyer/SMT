@@ -30,31 +30,14 @@ void SubDomainSelectionLayer::Draw()
 	if (glLoaded && currentNode)
 	{
 		glBindVertexArray(VAOId);
-
-//		GLuint currentData = 0;
-//		GLfloat coords[3] = {0.0, 0.0, 0.0};
-//		glGetBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(GLuint), &currentData);
-//		std::cout << "Trying to draw node " << currentData << std::endl;
-//		glGetBufferSubData(GL_ARRAY_BUFFER, 4*currentData*sizeof(GLfloat), 3*sizeof(GLfloat), coords);
-//		std::cout << "Trying to draw coordinates: " << coords[0] << ", " << coords[1] << ", " << coords[2] << std::endl;
-
 		if (pointShader)
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
-			glPointSize(5.0);
+			glPointSize(10.0);
 			if (pointShader->Use())
 				glDrawElements(GL_POINTS, 1, GL_UNSIGNED_INT, (GLvoid*)0);
-
-			GLenum errorCheck = glGetError();
-			if (errorCheck == GL_NO_ERROR)
-			{
-
-			} else {
-				const GLubyte *errString = gluErrorString(errorCheck);
-				DEBUG(errString);
-			}
+			glPointSize(1.0);
 		}
-
 		glBindVertexArray(0);
 		glUseProgram(0);
 	}
@@ -69,69 +52,14 @@ void SubDomainSelectionLayer::LoadDataToGPU()
 	if (!glLoaded)
 		InitializeGL();
 
-	if (glLoaded && currentNode)
+	if (glLoaded)
 	{
-		const size_t VertexBufferSize = 4*sizeof(GLfloat);
-		const size_t IndexBufferSize = 1*sizeof(GLuint);
-
-		if (IndexBufferSize && VAOId && IBOId)
+		if (VBOId && currentNode)
 		{
-			glBindVertexArray(VAOId);
 			glBindBuffer(GL_ARRAY_BUFFER, VBOId);
-			glBufferData(GL_ARRAY_BUFFER, VertexBufferSize, NULL, GL_STATIC_DRAW);
-			GLfloat* glVertexData = (GLfloat*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-			if (glVertexData)
-			{
-				glVertexData[0] = (GLfloat)currentNode->normX;
-				glVertexData[1] = (GLfloat)currentNode->normY;
-				glVertexData[2] = (GLfloat)currentNode->normZ;
-				glVertexData[3] = (GLfloat)1.0;
-			}
-
-			if (glUnmapBuffer(GL_ARRAY_BUFFER) == GL_FALSE)
-			{
-				glLoaded = false;
-				DEBUG("Error unmapping");
-				return;
-			}
-
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBOId);
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexBufferSize, NULL, GL_STATIC_DRAW);
-			GLuint* glElementData = (GLuint*)glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY);
-			if (glElementData)
-			{
-				glElementData[0] = (GLuint)currentNode->nodeNumber-1;
-			} else {
-				glLoaded = false;
-				std::cout << "Error mapping" << std::endl;
-			}
-
-			GLenum errorCheck = glGetError();
-			if (errorCheck == GL_NO_ERROR)
-			{
-				if (VAOId && VBOId && IBOId)
-				{
-					glLoaded = true;
-				} else {
-					DEBUG("Error sending point data to GPU in Subdomain Selection Layer");
-					glLoaded = false;
-				}
-			} else {
-				const GLubyte *errString = gluErrorString(errorCheck);
-				DEBUG("Error sending point data to GPU in Subdomain Selection Layer: " << errString);
-				glLoaded = false;
-				return;
-			}
-
-			if (glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER) == GL_FALSE)
-			{
-				glLoaded = false;
-				DEBUG("Error unmapping");
-				return;
-			}
+			GLfloat glPoint[2] = {currentNode->normX, currentNode->normY};
+			glBufferSubData(GL_ARRAY_BUFFER, 0, 2*sizeof(GLfloat), &glPoint[0]);
 		}
-
-		emit Refreshed();
 	}
 }
 
@@ -276,47 +204,35 @@ void SubDomainSelectionLayer::AttachToFort14()
 
 void SubDomainSelectionLayer::InitializeGL()
 {
-//	if (VBOId)
-//	{
-	pointShader = new SolidShader();
-	pointShader->SetColor(QColor(1.0, 0.0, 0.0, 1.0));
 
-	if (camera)
-	{
-		pointShader->SetCamera(camera);
-	}
+	if (!pointShader)
+		pointShader = new SolidShader();
+	pointShader->SetColor(QColor(0.0*255, 0.0*255, 0.0*255, 1.0*255));
+	pointShader->SetCamera(camera);
 
-	glGenVertexArrays(1, &VAOId);
-	glGenBuffers(1, &VBOId);
-	glGenBuffers(1, &IBOId);
+	if (!VAOId)
+		glGenVertexArrays(1, &VAOId);
+	if (!VBOId)
+		glGenBuffers(1, &VBOId);
+	if (!IBOId)
+		glGenBuffers(1, &IBOId);
 
 	glBindVertexArray(VAOId);
 	glBindBuffer(GL_ARRAY_BUFFER, VBOId);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBOId);
-	glBindVertexArray(0);
 
-	GLenum errorCheck = glGetError();
-	if (errorCheck == GL_NO_ERROR)
-	{
-		if (VAOId && VBOId && IBOId)
-		{
-			DEBUG("Subdomain Edit Selection Layer Initialized");
-			glLoaded = true;
-		} else {
-			DEBUG("Subdomain Edit Selection Layer Not Initialized");
-			glLoaded = false;
-		}
-	} else {
-		const GLubyte *errString = gluErrorString(errorCheck);
-		DEBUG("Subdomain Edit Selection Layer OpenGL Error: " << errString);
-		glLoaded = false;
-	}
-//	} else {
-//		DEBUG("Subdomain Edit Selection Layer GL not initialized: fort.14 not set");
-//		glLoaded = false;
-//	}
+	const size_t VertexBufferSize = 4*sizeof(GLfloat);
+	GLfloat glPoint[4] = {0.0, 0.0, 0.0, 1.0};
+	glBufferData(GL_ARRAY_BUFFER, VertexBufferSize, &glPoint[0], GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBOId);
+
+	const size_t IndexBufferSize = 1*sizeof(GLuint);
+	GLuint glIndex = 0;
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexBufferSize, &glIndex, GL_STATIC_DRAW);
+
+	glBindVertexArray(0);
 }
 
 

@@ -45,18 +45,18 @@ class SubDomain : public Domain
 
 		SubDomainSelectionLayer*	selectionLayerSubdomain;
 
-		BNList14*		bnList;
-		QString			domainName;
+		BNList14*	bnList;
+		QString		domainName;
 		Fort15*		fort15;
 		Fort22*		fort22;
 		Fort63*		fort63;
 		Fort64*		fort64;
-		Fort015*		fort015;
-		Fort020*		fort020;
-		Fort021*		fort021;
-		Fort022*		fort022;
-		Maxele63*		maxele;
-		Maxvel63*		maxvel;
+		Fort015*	fort015;
+		Fort020*	fort020;
+		Fort021*	fort021;
+		Fort022*	fort022;
+		Maxele63*	maxele;
+		Maxvel63*	maxvel;
 		Py140*		py140;
 		Py141*		py141;
 

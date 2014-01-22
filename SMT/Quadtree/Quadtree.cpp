@@ -142,7 +142,13 @@ void Quadtree::SetCamera(GLCamera *newCam)
  */
 Node* Quadtree::FindNode(float x, float y)
 {
-	return clickSearch.FindNode(root, x, y);
+//	return clickSearch.FindNode(root, x, y);
+	pointSearch.SetPointParameters(x, y);
+	std::vector<Node*> result = pointSearch.FindNodes(root);
+	if (result.size())
+		return result[0];
+	else
+		return 0;
 }
 
 
