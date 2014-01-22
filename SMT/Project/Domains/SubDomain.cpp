@@ -37,6 +37,7 @@ SubDomain::SubDomain(QString domainName, ProjectFile *projectFile, QObject *pare
 
 	connect(fort14, SIGNAL(NumElementsSet(int)), this, SIGNAL(numElements(int)));
 	connect(fort14, SIGNAL(NumNodesSet(int)), this, SIGNAL(numNodes(int)));
+	connect(fort14, SIGNAL(Refresh()), this, SIGNAL(updateGL()));
 }
 
 
@@ -75,6 +76,15 @@ QString SubDomain::GetDomainName()
 Node* SubDomain::GetSelectedNode()
 {
 	return selectionLayerSubdomain->GetSelectedNode();
+}
+
+
+void SubDomain::SetNodalValues(unsigned int nodeNumber, QString x, QString y, QString z)
+{
+	if (fort14)
+	{
+		fort14->SetNodalValues(nodeNumber, x, y, z);
+	}
 }
 
 

@@ -70,6 +70,12 @@ class MainWindow : public QMainWindow
 		void	showEditSubdomainPane();
 		void	showAdcircPane();
 		void	showAnalyzeResultsPane();
+
+		/* Node editing slots */
+		void	setNodeValues();
+
+		/* Extra */
+		void	printText(QString text);
 };
 
 #endif // MAINWINDOW_H

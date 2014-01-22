@@ -34,6 +34,7 @@ class Project : public QObject
 		Project(QString projectFile, QObject *parent=0);
 		~Project();
 
+		void	SetNodalValues(QString subdomainName, unsigned int nodeNumber, QString x, QString y, QString z);
 		void	SetOpenGLPanel(OpenGLPanel *newPanel);
 		void	SetProgressBar(QProgressBar *newBar);
 		void	SetProjectTree(QTreeWidget *newTree);

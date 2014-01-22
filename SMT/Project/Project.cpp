@@ -47,6 +47,26 @@ Project::~Project()
 }
 
 
+void Project::SetNodalValues(QString subdomainName, unsigned int nodeNumber, QString x, QString y, QString z)
+{
+	SubDomain *currentSubdomain;
+	for (std::vector<SubDomain*>::iterator it = subDomains.begin();
+	     it != subDomains.end();
+	     ++it)
+	{
+		currentSubdomain = *it;
+		if (currentSubdomain)
+		{
+			if (currentSubdomain->GetDomainName() == subdomainName)
+			{
+				currentSubdomain->SetNodalValues(nodeNumber, x, y, z);
+				break;
+			}
+		}
+	}
+}
+
+
 void Project::SetOpenGLPanel(OpenGLPanel *newPanel)
 {
 	glPanel = newPanel;

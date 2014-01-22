@@ -396,6 +396,32 @@ QColor Fort14::GetSolidOutlineColor()
 }
 
 
+void Fort14::RefreshGL()
+{
+	if (glLoaded)
+	{
+		glBindBuffer(GL_ARRAY_BUFFER, VBOId);
+		GLfloat* glNodeData = (GLfloat *)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+		if (glNodeData)
+		{
+			for (unsigned int i=0; i<numNodes; i++)
+			{
+				glNodeData[4*i+0] = (GLfloat)nodes[i].normX;
+				glNodeData[4*i+1] = (GLfloat)nodes[i].normY;
+				glNodeData[4*i+2] = (GLfloat)nodes[i].z;
+			}
+
+			if (glUnmapBuffer(GL_ARRAY_BUFFER) == GL_FALSE)
+			{
+				glLoaded = false;
+				DEBUG("ERROR: Unmapping vertex buffer for fort.14");
+				return;
+			}
+		}
+	}
+}
+
+
 void Fort14::SetCamera(GLCamera *camera)
 {
 	this->camera = camera;
@@ -444,6 +470,39 @@ void Fort14::SetGradientOutlineColors(QGradientStops newStops)
 	gradientOutline->SetGradientStops(newStops);
 
 	outlineShader = gradientOutline;
+}
+
+
+void Fort14::SetNodalValues(unsigned int nodeNumber, QString x, QString y, QString z)
+{
+	Node *currNode;
+	for (std::vector<Node>::iterator it = nodes.begin();
+	     it != nodes.end(); ++it)
+	{
+		currNode = &(*it);
+		if (currNode && currNode->nodeNumber == nodeNumber)
+		{
+			currNode->xDat = x.toStdString();
+			currNode->yDat = y.toStdString();
+			currNode->zDat = z.toStdString();
+			currNode->x = atof(currNode->xDat.data());
+			currNode->y = atof(currNode->yDat.data());
+			currNode->z = -1.0 * atof(currNode->zDat.data());
+			currNode->normX = (currNode->x - midX) / max;
+			currNode->normY = (currNode->y - midY) / max;
+			currNode->normZ = currNode->z / (maxZ - minZ);
+
+			if (quadtree)
+				quadtree->SetNodalValues(nodeNumber,
+							 currNode->x, currNode->y, currNode->z,
+							 currNode->normX, currNode->normY, currNode->normZ);
+
+			RefreshGL();
+			emit Refresh();
+
+			break;
+		}
+	}
 }
 
 

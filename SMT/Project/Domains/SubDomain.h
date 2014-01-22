@@ -42,6 +42,8 @@ class SubDomain : public Domain
 		QString		GetDomainName();
 		Node*		GetSelectedNode();
 
+		void	SetNodalValues(unsigned int nodeNumber, QString x, QString y, QString z);
+
 	private:
 
 		SubDomainSelectionLayer*	selectionLayerSubdomain;

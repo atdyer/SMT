@@ -222,6 +222,28 @@ std::vector<std::vector<Element*>*> Quadtree::GetElementsThroughDepth(int depth,
 }
 
 
+void Quadtree::SetNodalValues(unsigned int nodeNumber, float x, float y, float z, float normX, float normY, float normZ)
+{
+	Node *currNode;
+	for (std::vector<Node>::iterator it = nodeList.begin();
+	     it != nodeList.end();
+	     ++it)
+	{
+		currNode = &(*it);
+		if (currNode && currNode->nodeNumber == nodeNumber)
+		{
+			currNode->x = x;
+			currNode->y = y;
+			currNode->z = z;
+			currNode->normX = normX;
+			currNode->normY = normY;
+			currNode->normZ = normZ;
+			break;
+		}
+	}
+}
+
+
 /**
  * @brief Creates a new leaf with the specified boundaries
  *

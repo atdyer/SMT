@@ -41,8 +41,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	// Connect the buttons
 	connect(ui->openProjectButton, SIGNAL(clicked()), this, SLOT(openProject()));
 
-	// Connect the edit subdomains items
+	// Set up the edit subdomains items
 	connect(ui->editSubdomainList, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(showSubdomain(QListWidgetItem*)));
+	ui->editXLoc->setValidator(new QDoubleValidator());
+	ui->editYLoc->setValidator(new QDoubleValidator());
+	ui->editZLoc->setValidator(new QDoubleValidator());
 
 }
 
@@ -190,6 +193,10 @@ void MainWindow::CreateProject(bool currentProjectFile)
 
 		/* Subdomain Editing */
 		connect(currentProject, SIGNAL(editNode(uint,QString,QString,QString)), this, SLOT(editNode(uint,QString,QString,QString)));
+		connect(ui->editXLoc, SIGNAL(returnPressed()), this, SLOT(setNodeValues()));
+		connect(ui->editYLoc, SIGNAL(returnPressed()), this, SLOT(setNodeValues()));
+		connect(ui->editZLoc, SIGNAL(returnPressed()), this, SLOT(setNodeValues()));
+		connect(ui->applyEditButton, SIGNAL(clicked()), this, SLOT(setNodeValues()));
 
 		/* U/I Updates */
 		connect(currentProject, SIGNAL(mouseX(float)), this, SLOT(showMouseX(float)));
@@ -339,4 +346,25 @@ void MainWindow::showAdcircPane()
 void MainWindow::showAnalyzeResultsPane()
 {
 	ui->paneBox->setCurrentIndex(4);
+}
+
+
+void MainWindow::setNodeValues()
+{
+	if (currentProject)
+	{
+		QString currentSubdomain = ui->editSubdomainList->currentItem()->text();
+		unsigned int nodeNumber = ui->editNodeNumber->text().toUInt();
+		currentProject->SetNodalValues(currentSubdomain,
+					       nodeNumber,
+					       ui->editXLoc->text(),
+					       ui->editYLoc->text(),
+					       ui->editZLoc->text());
+	}
+}
+
+
+void MainWindow::printText(QString text)
+{
+	std::cout << text.toStdString().data() << std::endl;
 }

@@ -55,10 +55,12 @@ class Fort14 : public QObject
 		QColor			GetSolidFillColor();
 		QColor			GetSolidOutlineColor();
 
+		void			RefreshGL();
 		void			SetCamera(GLCamera *camera);
 		void			SetGradientBoundaryColors(QGradientStops newStops);
 		void			SetGradientFillColors(QGradientStops newStops);
 		void			SetGradientOutlineColors(QGradientStops newStops);
+		void			SetNodalValues(unsigned int nodeNumber, QString x, QString y, QString z);
 		void			SetProgressBar(QProgressBar *newBar);
 		void			SetSolidBoundaryColor(QColor newColor);
 		void			SetSolidFillColor(QColor newColor);
@@ -85,7 +87,7 @@ class Fort14 : public QObject
 		unsigned int			numElements;
 		unsigned int			numNodes;
 		QProgressBar*			progressBar;
-		ProjectFile*		projectFile;
+		ProjectFile*			projectFile;
 		Quadtree*			quadtree;
 		bool				quadtreeVisible;
 		bool				readingLock;
@@ -117,6 +119,7 @@ class Fort14 : public QObject
 		void	DataLoadedToGPU(GLuint);
 		void	NumElementsSet(int);
 		void	NumNodesSet(int);
+		void	Refresh();
 
 	public slots:
 
