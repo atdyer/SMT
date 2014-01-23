@@ -59,6 +59,7 @@ class MainWindow : public QMainWindow
 	private slots:
 
 		/* Project buttons */
+		void	createProject();
 		void	openProject();
 
 		/* Left side pane slots */

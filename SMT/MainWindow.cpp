@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->progressBar->hide();
 
 	// Connect the buttons
+	connect(ui->newProjectButton, SIGNAL(clicked()), this, SLOT(createProject()));
 	connect(ui->openProjectButton, SIGNAL(clicked()), this, SLOT(openProject()));
 
 	// Set up the edit subdomains items
@@ -147,9 +148,17 @@ void MainWindow::CreateProject(bool currentProjectFile)
 {
 	if (currentProjectFile)
 	{
-		if (currentProject)
-			delete currentProject;
-		currentProject = new Project(this);
+
+		Project* newProject = new Project(this);
+		if (newProject->IsInitialized())
+		{
+			if (currentProject)
+				delete currentProject;
+			currentProject = newProject;
+		} else {
+			delete newProject;
+			return;
+		}
 	} else {
 		QStringList selections;
 		QFileDialog dialog(0, "Open an ADCIRC Subdomain Project", QDir::homePath());
@@ -290,6 +299,12 @@ void MainWindow::showCircleStats(float x, float y, float rad)
 {
 	if (glStatusBar)
 		glStatusBar->showMessage(QString("Center: ").append(QString::number(x, 'f', 5)).append(", ").append(QString::number(y, 'f', 5)).append("   Radius: ").append(QString::number(rad, 'f', 5)));
+}
+
+
+void MainWindow::createProject()
+{
+	CreateProject(true);
 }
 
 

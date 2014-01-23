@@ -9,12 +9,14 @@ Project::Project(QObject *parent) :
 	glPanel(0),
 	progressBar(0),
 	projectFile(0),
+	projectInitialized(false),
 	projectTree(0),
 	subDomains(),
 	visibleDomain(0)
 {
 	CreateProjectFile();
-	Initialize();
+	if (IsInitialized())
+		Initialize();
 }
 
 
@@ -27,12 +29,14 @@ Project::Project(QString projectFile, QObject *parent) :
 	glPanel(0),
 	progressBar(0),
 	projectFile(0),
+	projectInitialized(false),
 	projectTree(0),
 	subDomains(),
 	visibleDomain(0)
 {
 	OpenProjectFile(projectFile);
-	Initialize();
+	if (IsInitialized())
+		Initialize();
 }
 
 
@@ -46,6 +50,12 @@ Project::~Project()
 		delete displayOptions;
 	if (fullDomainRunner)
 		delete fullDomainRunner;
+}
+
+
+bool Project::IsInitialized()
+{
+	return projectInitialized;
 }
 
 
@@ -220,9 +230,12 @@ void Project::CreateProjectFile()
 					projectFile->SetFullDomainFort24(fort24Loc, dialog.GetUseSymbolicLinkFort24());
 				projectFile->SaveProject();
 			}
+
+			fullDomain = BuildFullDomain();
+			CreateAllSubdomains();
+
+			projectInitialized = true;
 		}
-		fullDomain = BuildFullDomain();
-		CreateAllSubdomains();
 	}
 }
 

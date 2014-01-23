@@ -34,6 +34,7 @@ class Project : public QObject
 		Project(QString projectFile, QObject *parent=0);
 		~Project();
 
+		bool	IsInitialized();
 		void	SetNodalValues(QString subdomainName, unsigned int nodeNumber, QString x, QString y, QString z);
 		void	SetOpenGLPanel(OpenGLPanel *newPanel);
 		void	SetProgressBar(QProgressBar *newBar);
@@ -51,6 +52,7 @@ class Project : public QObject
 		OpenGLPanel*		glPanel;
 		QProgressBar*		progressBar;
 		ProjectFile*		projectFile;
+		bool			projectInitialized;
 		QTreeWidget*		projectTree;
 		std::vector<SubDomain*>	subDomains;
 		Domain*			visibleDomain;
