@@ -145,83 +145,85 @@ void MainWindow::CheckForMemoryLeaks()
 
 void MainWindow::CreateProject(bool currentProjectFile)
 {
-	if (currentProject)
-		delete currentProject;
-
 	if (currentProjectFile)
+	{
+		if (currentProject)
+			delete currentProject;
+		currentProject = new Project(this);
+	} else {
+		QStringList selections;
+		QFileDialog dialog(0, "Open an ADCIRC Subdomain Project", QDir::homePath());
+		dialog.setModal(true);
+		dialog.setNameFilter("ADCIRC Subdomain Projects (*.spf)");
+		dialog.setFileMode(QFileDialog::ExistingFile);
+		if (dialog.exec())
 		{
-			currentProject = new Project(this);
-		} else {
-			QStringList selections;
-			QFileDialog dialog(0, "Open an ADCIRC Subdomain Project", QDir::homePath());
-			dialog.setModal(true);
-			dialog.setNameFilter("ADCIRC Subdomain Projects (*.spf)");
-			dialog.setFileMode(QFileDialog::ExistingFile);
-			if (dialog.exec())
+			if (currentProject)
+				delete currentProject;
+
+			selections = dialog.selectedFiles();
+			if (!selections.isEmpty())
 			{
-				selections = dialog.selectedFiles();
-				if (!selections.isEmpty())
-				{
-					currentProject = new Project(selections.first(), this);
-				}
-			} else {
-				return;
+				currentProject = new Project(selections.first(), this);
 			}
+		} else {
+			return;
 		}
+	}
 
-		currentProject->SetOpenGLPanel(ui->GLPanel);
-		currentProject->SetProgressBar(ui->progressBar);
-		currentProject->SetProjectTree(ui->projectTree);
-		currentProject->SetEditSubdomainList(ui->editSubdomainList);
+	currentProject->SetOpenGLPanel(ui->GLPanel);
+	currentProject->SetProgressBar(ui->progressBar);
+	currentProject->SetProjectTree(ui->projectTree);
+	currentProject->SetEditSubdomainList(ui->editSubdomainList);
 
-		/* Subdomain Creation */
-		connect(ui->createSubdomainButton, SIGNAL(clicked()), currentProject, SLOT(CreateNewSubdomain()));
+	/* Subdomain Creation */
+	connect(ui->createSubdomainButton, SIGNAL(clicked()), currentProject, SLOT(CreateNewSubdomain()));
 
-		/* Selection Tools */
-		connect(ui->selectNodesCircle, SIGNAL(clicked()), currentProject, SLOT(SelectFullDomainCircleElements()));
-		connect(ui->selectElementSingle, SIGNAL(clicked()), currentProject, SLOT(SelectFullDomainClickElements()));
-		connect(ui->selectNodeSingle, SIGNAL(clicked()), currentProject, SLOT(SelectFullDomainPolygonElements()));
-		connect(ui->selectNodesSquare, SIGNAL(clicked()), currentProject, SLOT(SelectFullDomainRectangleElements()));
-		connect(ui->deselectElementCircle, SIGNAL(clicked()), currentProject, SLOT(DeselectFullDomainCircleElements()));
-		connect(ui->deselectElementPolygon, SIGNAL(clicked()), currentProject, SLOT(DeselectFullDomainPolygonElements()));
-		connect(ui->deselectElementSingle, SIGNAL(clicked()), currentProject, SLOT(DeselectFullDomainClickElements()));
-		connect(ui->deselectElementSquare, SIGNAL(clicked()), currentProject, SLOT(DeselectFullDomainRectangleElements()));
-		connect(ui->selectNodeButton, SIGNAL(clicked()), currentProject, SLOT(SelectSingleSubdomainNode()));
+	/* Selection Tools */
+	connect(ui->selectNodesCircle, SIGNAL(clicked()), currentProject, SLOT(SelectFullDomainCircleElements()));
+	connect(ui->selectElementSingle, SIGNAL(clicked()), currentProject, SLOT(SelectFullDomainClickElements()));
+	connect(ui->selectNodeSingle, SIGNAL(clicked()), currentProject, SLOT(SelectFullDomainPolygonElements()));
+	connect(ui->selectNodesSquare, SIGNAL(clicked()), currentProject, SLOT(SelectFullDomainRectangleElements()));
+	connect(ui->deselectElementCircle, SIGNAL(clicked()), currentProject, SLOT(DeselectFullDomainCircleElements()));
+	connect(ui->deselectElementPolygon, SIGNAL(clicked()), currentProject, SLOT(DeselectFullDomainPolygonElements()));
+	connect(ui->deselectElementSingle, SIGNAL(clicked()), currentProject, SLOT(DeselectFullDomainClickElements()));
+	connect(ui->deselectElementSquare, SIGNAL(clicked()), currentProject, SLOT(DeselectFullDomainRectangleElements()));
+	connect(ui->selectNodeButton, SIGNAL(clicked()), currentProject, SLOT(SelectSingleSubdomainNode()));
 
-		connect(ui->undoButton, SIGNAL(clicked()), currentProject, SLOT(Undo()));
-		connect(ui->redoButton, SIGNAL(clicked()), currentProject, SLOT(Redo()));
+	connect(ui->undoButton, SIGNAL(clicked()), currentProject, SLOT(Undo()));
+	connect(ui->redoButton, SIGNAL(clicked()), currentProject, SLOT(Redo()));
 
-		/* Subdomain Editing */
-		connect(currentProject, SIGNAL(editNode(uint,QString,QString,QString)), this, SLOT(editNode(uint,QString,QString,QString)));
-		connect(ui->editXLoc, SIGNAL(returnPressed()), this, SLOT(setNodeValues()));
-		connect(ui->editYLoc, SIGNAL(returnPressed()), this, SLOT(setNodeValues()));
-		connect(ui->editZLoc, SIGNAL(returnPressed()), this, SLOT(setNodeValues()));
-		connect(ui->applyEditButton, SIGNAL(clicked()), this, SLOT(setNodeValues()));
+	/* Subdomain Editing */
+	connect(currentProject, SIGNAL(editNode(uint,QString,QString,QString)), this, SLOT(editNode(uint,QString,QString,QString)));
+	connect(ui->editXLoc, SIGNAL(returnPressed()), this, SLOT(setNodeValues()));
+	connect(ui->editYLoc, SIGNAL(returnPressed()), this, SLOT(setNodeValues()));
+	connect(ui->editZLoc, SIGNAL(returnPressed()), this, SLOT(setNodeValues()));
+	connect(ui->applyEditButton, SIGNAL(clicked()), this, SLOT(setNodeValues()));
 
-		/* U/I Updates */
-		connect(currentProject, SIGNAL(mouseX(float)), this, SLOT(showMouseX(float)));
-		connect(currentProject, SIGNAL(mouseY(float)), this, SLOT(showMouseY(float)));
-		connect(currentProject, SIGNAL(undoAvailable(bool)), ui->undoButton, SLOT(setEnabled(bool)));
-		connect(currentProject, SIGNAL(redoAvailable(bool)), ui->redoButton, SLOT(setEnabled(bool)));
-		connect(currentProject, SIGNAL(numElements(int)), this, SLOT(showNumElements(int)));
-		connect(currentProject, SIGNAL(numNodes(int)), this, SLOT(showNumNodes(int)));
-		connect(currentProject, SIGNAL(numElementsSelected(int)), this, SLOT(showNumSelectedElements(int)));
-		connect(currentProject, SIGNAL(numNodesSelected(int)), this, SLOT(showNumSelectedNodes(int)));
-		connect(currentProject, SIGNAL(maxSelectedZ(float)), this, SLOT(showMaxSelectedZ(float)));
-		connect(currentProject, SIGNAL(minSelectedZ(float)), this, SLOT(showMinSelectedZ(float)));
-		connect(currentProject, SIGNAL(showProjectView()), this, SLOT(showProjectExplorerPane()));
+	/* U/I Updates */
+	connect(currentProject, SIGNAL(mouseX(float)), this, SLOT(showMouseX(float)));
+	connect(currentProject, SIGNAL(mouseY(float)), this, SLOT(showMouseY(float)));
+	connect(currentProject, SIGNAL(undoAvailable(bool)), ui->undoButton, SLOT(setEnabled(bool)));
+	connect(currentProject, SIGNAL(redoAvailable(bool)), ui->redoButton, SLOT(setEnabled(bool)));
+	connect(currentProject, SIGNAL(numElements(int)), this, SLOT(showNumElements(int)));
+	connect(currentProject, SIGNAL(numNodes(int)), this, SLOT(showNumNodes(int)));
+	connect(currentProject, SIGNAL(numElementsSelected(int)), this, SLOT(showNumSelectedElements(int)));
+	connect(currentProject, SIGNAL(numNodesSelected(int)), this, SLOT(showNumSelectedNodes(int)));
+	connect(currentProject, SIGNAL(maxSelectedZ(float)), this, SLOT(showMaxSelectedZ(float)));
+	connect(currentProject, SIGNAL(minSelectedZ(float)), this, SLOT(showMinSelectedZ(float)));
+	connect(currentProject, SIGNAL(showProjectView()), this, SLOT(showProjectExplorerPane()));
 
-		/* Running ADCIRC */
-		connect(ui->actionFull_Domain, SIGNAL(triggered()), currentProject, SLOT(RunFullDomain()));
-		connect(currentProject, SIGNAL(subdomainCreated(QString)), this, SLOT(addSubdomainToList(QString)));
+	/* Running ADCIRC */
+	connect(ui->actionFull_Domain, SIGNAL(triggered()), currentProject, SLOT(RunFullDomain()));
+	connect(currentProject, SIGNAL(subdomainCreated(QString)), this, SLOT(addSubdomainToList(QString)));
 
-		/* Color Options Action Bar */
-		connect(ui->actionColor_Options, SIGNAL(triggered()), currentProject, SLOT(ShowDisplayOptionsDialog()));
+	/* Color Options Action Bar */
+	connect(ui->actionColor_Options, SIGNAL(triggered()), currentProject, SLOT(ShowDisplayOptionsDialog()));
 
-		/* Update list with already created subdomains */
-		QStringList currSubs = currentProject->GetSubdomainNames();
-		for (int i=0; i<currSubs.size(); ++i)
-			addSubdomainToList(currSubs.at(i));
+	/* Update list with already created subdomains */
+	QStringList currSubs = currentProject->GetSubdomainNames();
+	for (int i=0; i<currSubs.size(); ++i)
+		addSubdomainToList(currSubs.at(i));
 
 }
 

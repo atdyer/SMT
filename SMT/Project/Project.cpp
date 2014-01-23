@@ -38,6 +38,8 @@ Project::Project(QString projectFile, QObject *parent) :
 
 Project::~Project()
 {
+	if (glPanel)
+		glPanel->SetActiveDomainNew(0);
 	if (projectFile)
 		delete projectFile;
 	if (displayOptions)

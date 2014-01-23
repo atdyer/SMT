@@ -1248,6 +1248,9 @@ border-top-right-radius: 4px;
    </property>
   </action>
   <action name="actionTutorial">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Tutorial</string>
    </property>
@@ -1264,6 +1267,9 @@ border-top-right-radius: 4px;
    <property name="checkable">
     <bool>true</bool>
    </property>
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Sea Level</string>
    </property>
@@ -1272,11 +1278,17 @@ border-top-right-radius: 4px;
    </property>
   </action>
   <action name="actionOtherLayerOptions">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Options...</string>
    </property>
   </action>
   <action name="actionProjectSettings">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Project Settings...</string>
    </property>
@@ -1316,6 +1328,9 @@ border-top-right-radius: 4px;
    </property>
   </action>
   <action name="actionRemove_Subdomain">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Remove Subdomain</string>
    </property>
@@ -1334,11 +1349,17 @@ border-top-right-radius: 4px;
    </property>
   </action>
   <action name="actionPreferences">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Preferences...</string>
    </property>
   </action>
   <action name="actionImport_Existing_Subdomain">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Import Existing Subdomain</string>
    </property>
@@ -1360,6 +1381,9 @@ border-top-right-radius: 4px;
    </property>
   </action>
   <action name="actionSave_Project">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Save Project</string>
    </property>
@@ -1368,6 +1392,9 @@ border-top-right-radius: 4px;
    </property>
   </action>
   <action name="actionKeyboard_Shortcuts">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Keyboard Shortcuts...</string>
    </property>
@@ -1383,6 +1410,9 @@ border-top-right-radius: 4px;
    </property>
   </action>
   <action name="actionSave_Project_As">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="text">
     <string>Save Project As...</string>
    </property>

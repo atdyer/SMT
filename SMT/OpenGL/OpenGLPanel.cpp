@@ -168,10 +168,14 @@ void OpenGLPanel::SetActiveDomainNew(Domain *newDomain)
 	}
 
 	activeNewDomain = newDomain;
-	activeNewDomain->SetWindowSize(viewportWidth, viewportHeight);
-	connect(activeNewDomain, SIGNAL(updateGL()), this, SLOT(updateGL()));
-	connect(activeNewDomain, SIGNAL(setCursor(QCursor)), this, SLOT(UseCursor(QCursor)));
-	updateGL();
+
+	if (activeNewDomain)
+	{
+		activeNewDomain->SetWindowSize(viewportWidth, viewportHeight);
+		connect(activeNewDomain, SIGNAL(updateGL()), this, SLOT(updateGL()));
+		connect(activeNewDomain, SIGNAL(setCursor(QCursor)), this, SLOT(UseCursor(QCursor)));
+		updateGL();
+	}
 }
 
 
