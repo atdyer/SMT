@@ -224,6 +224,7 @@ void MainWindow::CreateProject(bool currentProjectFile)
 
 	/* Running ADCIRC */
 	connect(ui->actionFull_Domain, SIGNAL(triggered()), currentProject, SLOT(RunFullDomain()));
+	connect(ui->runFullDomainButton, SIGNAL(clicked()), currentProject, SLOT(RunFullDomain()));
 	connect(currentProject, SIGNAL(subdomainCreated(QString)), this, SLOT(addSubdomainToList(QString)));
 
 	/* Color Options Action Bar */

@@ -608,6 +608,10 @@ void Project::Redo()
 
 void Project::RunFullDomain()
 {
+	if (!fullDomainRunner)
+	{
+		fullDomainRunner = new FullDomainRunner();
+	}
 	if (fullDomainRunner && fullDomain)
 	{
 		fullDomainRunner->SetFullDomain(fullDomain);
