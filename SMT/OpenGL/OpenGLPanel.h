@@ -6,6 +6,7 @@
 #include <QWheelEvent>
 #include <QContextMenuEvent>
 #include <QAction>
+#include <QActionGroup>
 #include <QMenu>
 
 #include "Layers/SelectionLayer.h"
@@ -52,8 +53,13 @@ class OpenGLPanel : public QGLWidget
 		QMenu*		rightClickMenu;
 		QMenu*		matchColorsMenu;
 		QMenu*		matchCameraMenu;
+
+		QActionGroup*	colorActionGroup;
+		QActionGroup*	cameraActionGroup;
+
 		QAction*	colorOptionsAction;
 		QAction*	zoomToFitAction;
+		QAction*	clearSelectionsAction;
 		QAction*	matchFullColorsAction;
 		QAction*	matchFullCameraAction;
 
@@ -70,6 +76,10 @@ class OpenGLPanel : public QGLWidget
 	signals:
 
 		void	emitMessage(QString);
+
+		void	openColorOptions();
+		void	matchColors(QAction*);
+		void	matchCamera(QAction*);
 
 };
 

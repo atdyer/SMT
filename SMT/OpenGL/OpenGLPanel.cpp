@@ -18,8 +18,12 @@ OpenGLPanel::OpenGLPanel(QWidget *parent) :
 	matchColorsMenu = 0;
 	matchCameraMenu = 0;
 
+	colorActionGroup = 0;
+	cameraActionGroup = 0;
+
 	colorOptionsAction = 0;
 	zoomToFitAction = 0;
+	clearSelectionsAction = 0;
 	matchFullColorsAction = 0;
 	matchFullCameraAction = 0;
 
@@ -167,12 +171,23 @@ void OpenGLPanel::contextMenuEvent(QContextMenuEvent *event)
 
 void OpenGLPanel::CreateMenus()
 {
+	/* Action Groups */
+	colorActionGroup = new QActionGroup(this);
+	cameraActionGroup = new QActionGroup(this);
+
+
+
 	rightClickMenu = new QMenu(this);
+
+	/* Top Level Items */
 	matchColorsMenu = new QMenu("Match Colors", this);
 	matchCameraMenu = new QMenu("Match Camera", this);
 
-	colorOptionsAction = new QAction("Color Settings...", this);
+	colorOptionsAction = new QAction("Color Options...", this);
 	zoomToFitAction = new QAction("Zoom to Fit", this);
+	clearSelectionsAction = new QAction("Clear All Selections", this);
+
+	/* Second Level Items */
 	matchFullColorsAction = new QAction("Full Domain", this);
 	matchFullCameraAction = new QAction("Full Domain", this);
 
@@ -183,14 +198,24 @@ void OpenGLPanel::CreateMenus()
 	rightClickMenu->addSeparator();
 	rightClickMenu->addAction(zoomToFitAction);
 	rightClickMenu->addMenu(matchCameraMenu);
+	rightClickMenu->addSeparator();
+	rightClickMenu->addAction(clearSelectionsAction);
 
 	/* -- Match Colors Menu */
 	matchColorsMenu->addAction(matchFullColorsAction);
 	matchColorsMenu->addSeparator();
+	colorActionGroup->addAction(matchFullColorsAction);
 
 	/* -- Match Camera Menu */
 	matchCameraMenu->addAction(matchFullCameraAction);
 	matchCameraMenu->addSeparator();
+	cameraActionGroup->addAction(matchFullCameraAction);
+
+
+	/* Make Connections */
+	connect(colorOptionsAction, SIGNAL(triggered()), this, SIGNAL(openColorOptions()));
+	connect(colorActionGroup, SIGNAL(triggered(QAction*)), this, SIGNAL(matchColors(QAction*)));
+	connect(cameraActionGroup, SIGNAL(triggered(QAction*)), this, SIGNAL(matchCamera(QAction*)));
 
 }
 
@@ -199,11 +224,12 @@ void OpenGLPanel::addSubdomainToMenus(QString domainName)
 {
 	if (matchColorsMenu && matchCameraMenu)
 	{
-		std::cout << "Added" << std::endl;
 		QAction *colorAction = new QAction(domainName, this);
 		QAction *cameraAction = new QAction(domainName, this);
 		matchColorsMenu->addAction(colorAction);
 		matchCameraMenu->addAction(cameraAction);
+		colorActionGroup->addAction(colorAction);
+		cameraActionGroup->addAction(cameraAction);
 	}
 
 }

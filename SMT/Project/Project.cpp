@@ -86,6 +86,10 @@ void Project::SetOpenGLPanel(OpenGLPanel *newPanel)
 		glPanel = newPanel;
 		connect(this, SIGNAL(subdomainCreated(QString)), glPanel, SLOT(addSubdomainToMenus(QString)));
 
+		connect(glPanel, SIGNAL(openColorOptions()), this, SLOT(ShowDisplayOptionsDialog()));
+		connect(glPanel, SIGNAL(matchColors(QAction*)), this, SLOT(MatchColors(QAction*)));
+		connect(glPanel, SIGNAL(matchCamera(QAction*)), this, SLOT(MatchCamera(QAction*)));
+
 		for (std::vector<SubDomain*>::iterator it = subDomains.begin(); it != subDomains.end(); ++it)
 		{
 			SubDomain* currSubdomain = *it;
@@ -760,5 +764,25 @@ void Project::ProjectTreeItemChanged(QListWidgetItem *item, QListWidgetItem *)
 	if (selectedDomain && selectedDomain != visibleDomain)
 	{
 		SetVisibleDomain(selectedDomain);
+	}
+}
+
+
+void Project::MatchColors(QAction *action)
+{
+	if (action)
+	{
+		// TODO: Code matching color of another domain
+		std::cout << action->text().toStdString() << std::endl;
+	}
+}
+
+
+void Project::MatchCamera(QAction *action)
+{
+	if (action)
+	{
+		// TODO: Code matching the camera of another domain
+		std::cout << action->text().toStdString() << std::endl;
 	}
 }

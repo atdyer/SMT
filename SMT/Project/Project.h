@@ -99,6 +99,8 @@ class Project : public QObject
 
 		void	ProjectTreeItemChanged(QTreeWidgetItem *item, QTreeWidgetItem*);
 		void	ProjectTreeItemChanged(QListWidgetItem *item, QListWidgetItem*);
+		void	MatchColors(QAction *action);
+		void	MatchCamera(QAction *action);
 
 	signals:
 
