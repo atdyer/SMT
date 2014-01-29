@@ -13,6 +13,19 @@ OpenGLPanel::OpenGLPanel(QWidget *parent) :
 
 	viewportWidth = 0.0;
 	viewportHeight = 0.0;
+
+	rightClickMenu = 0;
+	matchColorsMenu = 0;
+	matchCameraMenu = 0;
+
+	colorOptionsAction = 0;
+	zoomToFitAction = 0;
+	matchFullColorsAction = 0;
+	matchFullCameraAction = 0;
+
+	/* Create context menu actions */
+	setContextMenuPolicy(Qt::DefaultContextMenu);
+	CreateMenus();
 }
 
 
@@ -104,10 +117,13 @@ void OpenGLPanel::wheelEvent(QWheelEvent *event)
  */
 void OpenGLPanel::mousePressEvent(QMouseEvent *event)
 {
-	if (activeDomain)
-		activeDomain->MouseClick(event);
-	if (activeNewDomain)
-		activeNewDomain->MouseClick(event);
+	if (event->button() == Qt::LeftButton)
+	{
+		if (activeDomain)
+			activeDomain->MouseClick(event);
+		if (activeNewDomain)
+			activeNewDomain->MouseClick(event);
+	}
 }
 
 
@@ -130,10 +146,66 @@ void OpenGLPanel::mouseMoveEvent(QMouseEvent *event)
  */
 void OpenGLPanel::mouseReleaseEvent(QMouseEvent *event)
 {
-	if (activeDomain)
-		activeDomain->MouseRelease(event);
-	if (activeNewDomain)
-		activeNewDomain->MouseRelease(event);
+	if (event->button() == Qt::LeftButton)
+	{
+		if (activeDomain)
+			activeDomain->MouseRelease(event);
+		if (activeNewDomain)
+			activeNewDomain->MouseRelease(event);
+	}
+}
+
+
+void OpenGLPanel::contextMenuEvent(QContextMenuEvent *event)
+{
+	if (rightClickMenu)
+	{
+		rightClickMenu->exec(event->globalPos());
+	}
+}
+
+
+void OpenGLPanel::CreateMenus()
+{
+	rightClickMenu = new QMenu(this);
+	matchColorsMenu = new QMenu("Match Colors", this);
+	matchCameraMenu = new QMenu("Match Camera", this);
+
+	colorOptionsAction = new QAction("Color Settings...", this);
+	zoomToFitAction = new QAction("Zoom to Fit", this);
+	matchFullColorsAction = new QAction("Full Domain", this);
+	matchFullCameraAction = new QAction("Full Domain", this);
+
+
+	/* Top level menu */
+	rightClickMenu->addAction(colorOptionsAction);
+	rightClickMenu->addMenu(matchColorsMenu);
+	rightClickMenu->addSeparator();
+	rightClickMenu->addAction(zoomToFitAction);
+	rightClickMenu->addMenu(matchCameraMenu);
+
+	/* -- Match Colors Menu */
+	matchColorsMenu->addAction(matchFullColorsAction);
+	matchColorsMenu->addSeparator();
+
+	/* -- Match Camera Menu */
+	matchCameraMenu->addAction(matchFullCameraAction);
+	matchCameraMenu->addSeparator();
+
+}
+
+
+void OpenGLPanel::addSubdomainToMenus(QString domainName)
+{
+	if (matchColorsMenu && matchCameraMenu)
+	{
+		std::cout << "Added" << std::endl;
+		QAction *colorAction = new QAction(domainName, this);
+		QAction *cameraAction = new QAction(domainName, this);
+		matchColorsMenu->addAction(colorAction);
+		matchCameraMenu->addAction(cameraAction);
+	}
+
 }
 
 

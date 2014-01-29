@@ -81,7 +81,17 @@ void Project::SetNodalValues(QString subdomainName, unsigned int nodeNumber, QSt
 
 void Project::SetOpenGLPanel(OpenGLPanel *newPanel)
 {
-	glPanel = newPanel;
+	if (newPanel)
+	{
+		glPanel = newPanel;
+		connect(this, SIGNAL(subdomainCreated(QString)), glPanel, SLOT(addSubdomainToMenus(QString)));
+
+		for (std::vector<SubDomain*>::iterator it = subDomains.begin(); it != subDomains.end(); ++it)
+		{
+			SubDomain* currSubdomain = *it;
+			emit subdomainCreated(currSubdomain->GetDomainName());
+		}
+	}
 }
 
 
@@ -315,6 +325,7 @@ void Project::OpenProjectFile(QString filePath)
 		} else {
 			fullDomain = BuildFullDomain();
 			CreateAllSubdomains();
+			projectInitialized = true;
 		}
 	}
 }

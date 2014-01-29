@@ -4,6 +4,9 @@
 #include "OpenGL/glew.h"
 #include <QGLWidget>
 #include <QWheelEvent>
+#include <QContextMenuEvent>
+#include <QAction>
+#include <QMenu>
 
 #include "Layers/SelectionLayer.h"
 #include "SubdomainTools/CircleTool.h"
@@ -38,11 +41,27 @@ class OpenGLPanel : public QGLWidget
 		void	mousePressEvent(QMouseEvent *event);
 		void	mouseMoveEvent(QMouseEvent *event);
 		void	mouseReleaseEvent(QMouseEvent *event);
+		void	contextMenuEvent(QContextMenuEvent *event);
 
 	private:
 
 		int	viewportWidth;	/**< The width of the GL Panel in pixels */
 		int	viewportHeight;	/**< The height of the GL Panel in pixels */
+
+		/* Context Menu Stuff */
+		QMenu*		rightClickMenu;
+		QMenu*		matchColorsMenu;
+		QMenu*		matchCameraMenu;
+		QAction*	colorOptionsAction;
+		QAction*	zoomToFitAction;
+		QAction*	matchFullColorsAction;
+		QAction*	matchFullCameraAction;
+
+		void	CreateMenus();
+
+	public slots:
+
+		void	addSubdomainToMenus(QString domainName);
 
 	private slots:
 
