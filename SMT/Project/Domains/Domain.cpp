@@ -195,6 +195,38 @@ void Domain::UseTool(ToolType tool, SelectionType selection, SelectionMode mode)
 }
 
 
+QColor Domain::GetTerrainSolidOutline()
+{
+	if (fort14)
+		return fort14->GetSolidOutlineColor();
+	return QColor();
+}
+
+
+QColor Domain::GetTerrainSolidFill()
+{
+	if (fort14)
+		return fort14->GetSolidFillColor();
+	return QColor();
+}
+
+
+QGradientStops Domain::GetTerrainGradientOutline()
+{
+	if (fort14)
+		return fort14->GetGradientOutlineColors();
+	return QGradientStops();
+}
+
+
+QGradientStops Domain::GetTerrainGradientFill()
+{
+	if (fort14)
+		return fort14->GetGradientFillColors();
+	return QGradientStops();
+}
+
+
 void Domain::Zoom(float zoomAmount)
 {
 	if (camera)

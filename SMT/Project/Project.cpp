@@ -574,6 +574,12 @@ void Project::SetVisibleDomain(Domain *newDomain)
 
 		emit undoAvailable(visibleDomain->UndoAvailable());
 		emit redoAvailable(visibleDomain->RedoAvailable());
+
+		if (displayOptions && displayOptions->isVisible())
+		{
+			displayOptions->SetActiveDomain(visibleDomain);
+			displayOptions->update();
+		}
 	}
 }
 

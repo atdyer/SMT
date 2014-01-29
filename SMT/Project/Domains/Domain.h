@@ -43,6 +43,11 @@ class Domain : public QObject
 		bool	UndoAvailable();
 		void	UseTool(ToolType tool, SelectionType selection, SelectionMode mode);
 
+		QColor		GetTerrainSolidOutline();
+		QColor		GetTerrainSolidFill();
+		QGradientStops	GetTerrainGradientOutline();
+		QGradientStops	GetTerrainGradientFill();
+
 	protected:
 
 		GLCamera*	camera;
