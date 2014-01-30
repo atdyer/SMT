@@ -927,12 +927,18 @@ void Project::MatchCamera(QAction *action)
 					}
 				}
 
-				std::cout << aSub.nodeNumber << " -> " << aFull.nodeNumber << std::endl;
-				std::cout << bSub.nodeNumber << " -> " << bFull.nodeNumber << std::endl;
-
-				// Find those nodes in the full domain
+				std::cout << aSub.normX << " -> " << aFull.normX << std::endl;
+				std::cout << bSub.normX << " -> " << bFull.normX << std::endl;
 
 				// Create the scaling factor
+				float subDist = aSub.normX - bSub.normX;
+				float fullDist = aFull.normX - bFull.normX;
+				float scaling = fullDist/subDist;
+				std::cout << "Scaling factor: " << scaling << std::endl;
+
+				CameraSettings selectedSettings = selectedDomain->GetCameraSettings();
+				selectedSettings.zoomLevel *= scaling;
+				visibleDomain->SetCameraSettings(selectedSettings);
 			}
 
 			if (selectedDomain != fullDomain && visibleDomain == fullDomain)
