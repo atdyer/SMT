@@ -319,6 +319,19 @@ Domain* Project::DetermineDomain(QString domainName)
 }
 
 
+SubDomain* Project::DetermineSubdomain(Domain *domain)
+{
+	for (std::vector<SubDomain*>::iterator currSub = subDomains.begin();
+	     currSub != subDomains.end();
+	     ++currSub)
+	{
+		if ((*currSub) == domain)
+			return *currSub;
+	}
+	return 0;
+}
+
+
 void Project::Initialize()
 {
 	displayOptions = new DisplayOptionsDialog();
@@ -869,7 +882,73 @@ void Project::MatchCamera(QAction *action)
 {
 	if (action)
 	{
-		// TODO: Code matching the camera of another domain
-		std::cout << action->text().toStdString() << std::endl;
+		QString selectedDomainName = action->text();
+		Domain* selectedDomain = DetermineDomain(selectedDomainName);
+		if (selectedDomain && visibleDomain)
+		{
+			if (selectedDomain == fullDomain && visibleDomain != fullDomain)
+			{
+				// Pick two nodes from the subdomain
+				SubDomain *visibleSub = DetermineSubdomain(visibleDomain);
+				Node aSub, bSub, aFull, bFull;
+				aSub.nodeNumber = 0;
+				bSub.nodeNumber = 0;
+				aFull.nodeNumber = 0;
+				bFull.nodeNumber = 0;
+				if (visibleSub)
+				{
+					Fort14 *subFort = visibleSub->GetFort14();
+					if (subFort)
+					{
+						Node nodeA = subFort->GetNode(1);
+						Node nodeB = subFort->GetNode(2);
+
+						if (nodeA.nodeNumber)
+							aSub = nodeA;
+						if (nodeB.nodeNumber)
+							bSub = nodeB;
+					}
+				}
+
+				// Find their node numbers in the full domain
+				if (aSub.nodeNumber && bSub.nodeNumber)
+				{
+					Fort14 *fullFort = fullDomain->GetFort14();
+					Py140 *subPy = visibleSub->GetPy140();
+					if (fullFort && subPy)
+					{
+						Node nodeA = fullFort->GetNode(subPy->ConvertNewToOld(aSub.nodeNumber));
+						Node nodeB = fullFort->GetNode(subPy->ConvertNewToOld(bSub.nodeNumber));
+
+						if (nodeA.nodeNumber)
+							aFull = nodeA;
+						if (nodeB.nodeNumber)
+							bFull = nodeB;
+					}
+				}
+
+				std::cout << aSub.nodeNumber << " -> " << aFull.nodeNumber << std::endl;
+				std::cout << bSub.nodeNumber << " -> " << bFull.nodeNumber << std::endl;
+
+				// Find those nodes in the full domain
+
+				// Create the scaling factor
+			}
+
+			if (selectedDomain != fullDomain && visibleDomain == fullDomain)
+			{
+
+			}
+//			// Get camera info from selected domain
+//			CameraSettings selectedSettings = selectedDomain->GetCameraSettings();
+
+//			// Find two nodes in common between the domains
+
+
+//			// Calculate a normalized scaling factor
+
+//			// Apply camera info to visible domain
+//			visibleDomain->SetCameraSettings(selectedSettings);
+		}
 	}
 }

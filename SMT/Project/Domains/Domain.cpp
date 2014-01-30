@@ -195,6 +195,21 @@ void Domain::UseTool(ToolType tool, SelectionType selection, SelectionMode mode)
 }
 
 
+CameraSettings Domain::GetCameraSettings()
+{
+	if (camera)
+		return camera->GetCameraSettings();
+	return CameraSettings(0.0, 0.0, 0.0);
+}
+
+
+void Domain::SetCameraSettings(CameraSettings newSettings)
+{
+	if (camera)
+		camera->SetCameraSettings(newSettings);
+}
+
+
 QColor Domain::GetTerrainSolidOutline()
 {
 	if (fort14)

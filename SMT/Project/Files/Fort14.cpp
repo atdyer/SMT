@@ -334,6 +334,17 @@ float Fort14::GetMinZ()
 }
 
 
+Node Fort14::GetNode(int nodeNumber)
+{
+	for (std::vector<Node>::iterator it = nodes.begin(); it != nodes.end(); ++it)
+	{
+		Node currNode = *it;
+		if (currNode.nodeNumber == nodeNumber)
+			return currNode;
+	}
+}
+
+
 int Fort14::GetNumElements()
 {
 	return numElements;

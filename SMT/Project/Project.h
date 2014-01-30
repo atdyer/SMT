@@ -65,6 +65,7 @@ class Project : public QObject
 		Domain*		DetermineSelectedDomain(QTreeWidgetItem *item);
 		Domain*		DetermineSelectedDomain(QListWidgetItem *item);
 		Domain*		DetermineDomain(QString domainName);
+		SubDomain*	DetermineSubdomain(Domain *domain);
 		void		Initialize();
 		void		OpenProjectFile(QString filePath);
 		void		PopulateProjectTree();

@@ -33,9 +33,9 @@ class Py140 : public QObject
 
 	private:
 
-		QString			domainName;
+		QString		domainName;
 		ProjectFile*	projectFile;
-		QString			targetFile;
+		QString		targetFile;
 
 		std::map<unsigned int, unsigned int>	newToOldNodes;
 		std::map<unsigned int, unsigned int>	oldToNewNodes;

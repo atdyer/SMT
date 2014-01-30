@@ -44,6 +44,7 @@ class Fort14 : public QObject
 		float			GetMinX();
 		float			GetMinY();
 		float			GetMinZ();
+		Node			GetNode(int nodeNumber);
 		int			GetNumElements();
 		int			GetNumNodes();
 		ShaderType		GetOutlineShaderType();

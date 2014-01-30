@@ -22,7 +22,7 @@ class Domain : public QObject
 		~Domain();
 
 		void		Draw();
-		Fort14*	GetFort14();
+		Fort14*		GetFort14();
 		virtual QString	GetPath() = 0;
 		virtual bool	IsFullDomain() = 0;
 
@@ -42,6 +42,9 @@ class Domain : public QObject
 		void	Undo();
 		bool	UndoAvailable();
 		void	UseTool(ToolType tool, SelectionType selection, SelectionMode mode);
+
+		CameraSettings	GetCameraSettings();
+		void		SetCameraSettings(CameraSettings newSettings);
 
 		QColor		GetTerrainSolidOutline();
 		QColor		GetTerrainSolidFill();

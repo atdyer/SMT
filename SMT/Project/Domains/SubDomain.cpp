@@ -59,6 +59,12 @@ Fort015* SubDomain::GetFort015()
 }
 
 
+Py140* SubDomain::GetPy140()
+{
+	return py140;
+}
+
+
 QString SubDomain::GetPath()
 {
 	if (projectFile)

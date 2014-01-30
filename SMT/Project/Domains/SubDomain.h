@@ -38,6 +38,7 @@ class SubDomain : public Domain
 		virtual bool	IsFullDomain();
 
 		Fort015*	GetFort015();
+		Py140*		GetPy140();
 		virtual QString	GetPath();
 		QString		GetDomainName();
 		Node*		GetSelectedNode();

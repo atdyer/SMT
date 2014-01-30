@@ -6,6 +6,19 @@
 #include "string.h"
 
 
+struct CameraSettings
+{
+		float panX;
+		float panY;
+		float zoomLevel;
+		CameraSettings(float x, float y, float z) :
+			panX(x),
+			panY(y),
+			zoomLevel(z)
+		{}
+};
+
+
 /**
  * @brief This class is used to represent a camera within the OpenGL context.
  *
@@ -56,6 +69,9 @@ class GLCamera
 		void	GetProjectedPoint(float x, float y, float *resultX, float *resultY);
 		float	GetViewportWidth();
 		float	GetViewportHeight();
+
+		CameraSettings	GetCameraSettings();
+		void		SetCameraSettings(CameraSettings newSettings);
 
 		unsigned int		GetID();
 		static unsigned int	GetNumCameras();

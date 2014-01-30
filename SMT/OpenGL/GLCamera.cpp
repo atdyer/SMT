@@ -224,6 +224,22 @@ float GLCamera::GetViewportHeight()
 }
 
 
+CameraSettings GLCamera::GetCameraSettings()
+{
+	return CameraSettings(panX, panY, zoomLevel);
+}
+
+
+void GLCamera::SetCameraSettings(CameraSettings newSettings)
+{
+	zoomLevel = newSettings.zoomLevel;
+	UpdateProjection();
+	panX = newSettings.panX;
+	panY = newSettings.panY;
+	UpdateModel();
+}
+
+
 /**
  * @brief Updates the Model Matrix, which is responsible for panning
  */
