@@ -797,30 +797,57 @@ void Project::MatchColors(QAction *action)
 			// Get the colors of the selected domain
 			QColor solidFill = selectedDomain->GetTerrainSolidFill();
 			QColor solidOutline = selectedDomain->GetTerrainSolidOutline();
-			QGradientStops gradientFill = selectedDomain->GetTerrainGradientFill();
+			QGradientStops selectedGradientFill = selectedDomain->GetTerrainGradientFill();
+			QGradientStops selectedGradientOutline = selectedDomain->GetTerrainGradientOutline();
 
 			// Calculate colors that fit in the range of the current domain (gradient only)
 			float selectedRange[2] = {selectedDomain->GetTerrainMinZ(), selectedDomain->GetTerrainMaxZ()};
 			float currentRange[2] = {visibleDomain->GetTerrainMinZ(), visibleDomain->GetTerrainMaxZ()};
 
+			QGradientStops newStops;
+			for (int i=0; i<selectedGradientFill.count(); ++i)
+			{
+				QGradientStop currentStop = selectedGradientFill[i];
+				float percentage = currentStop.first;
+				QColor color = currentStop.second;
+
+				float selectedValue = selectedRange[0] + percentage*(selectedRange[1] - selectedRange[0]);
+				if (selectedValue >= currentRange[0] && selectedValue <= currentRange[1])
+				{
+					QGradientStop newStop;
+					newStop.first = (selectedValue - currentRange[0]) / (currentRange[1] - currentRange[0]);
+					newStop.second = color;
+					newStops.append(newStop);
+
+					std::cout << selectedRange[0] << " -> (" <<
+									 percentage << ", " <<
+									 selectedValue <<
+									 ") -> " <<
+									 selectedRange[1] <<
+									 std::endl;
+				}
+			}
+
+
 			// Set the colors of the current domain
 			visibleDomain->SetTerrainSolidFill(solidFill);
 			visibleDomain->SetTerrainSolidOutline(solidOutline);
+			visibleDomain->SetTerrainGradientFill(newStops);
 
-			std::cout << "Solid Fill: " << solidFill.red() <<
-				     ", " << solidFill.green() <<
-				     ", " << solidFill.blue() <<
-				     ", " << solidFill.alpha() << std::endl;
-			std::cout << "Gradient Fill: " << std::endl;
-			for (int i=0; i<gradientFill.count(); ++i)
-			{
-				QGradientStop stop = gradientFill[i];
-				std::cout << stop.first << " - (" <<
-					     stop.second.red() << ", " <<
-					     stop.second.green() << ", " <<
-					     stop.second.blue() << ", " <<
-					     stop.second.alpha() << ")" << std::endl;
-			}
+//			std::cout << "Solid Fill: " << solidFill.red() <<
+//				     ", " << solidFill.green() <<
+//				     ", " << solidFill.blue() <<
+//				     ", " << solidFill.alpha() << std::endl;
+//			std::cout << "Gradient Fill: " << std::endl;
+//			for (int i=0; i<selectedGradientFill.count(); ++i)
+//			{
+//				QGradientStop stop = selectedGradientFill[i];
+//				std::cout << stop.first << " - (" <<
+//					     stop.second.red() << ", " <<
+//					     stop.second.green() << ", " <<
+//					     stop.second.blue() << ", " <<
+//					     stop.second.alpha() << ")" << std::endl;
+//			}
 		}
 
 		// Set the colors of the current domain
