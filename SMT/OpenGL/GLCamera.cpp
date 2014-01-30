@@ -232,11 +232,12 @@ CameraSettings GLCamera::GetCameraSettings()
 
 void GLCamera::SetCameraSettings(CameraSettings newSettings)
 {
-	zoomLevel = newSettings.zoomLevel;
-	UpdateProjection();
+	ResetView();
 	panX = newSettings.panX;
 	panY = newSettings.panY;
 	UpdateModel();
+	zoomLevel = newSettings.zoomLevel;
+	UpdateProjection();
 }
 
 

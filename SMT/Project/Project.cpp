@@ -927,34 +927,37 @@ void Project::MatchCamera(QAction *action)
 					}
 				}
 
-				std::cout << aSub.normX << " -> " << aFull.normX << std::endl;
-				std::cout << bSub.normX << " -> " << bFull.normX << std::endl;
-
 				// Create the scaling factor
 				float subDist = aSub.normX - bSub.normX;
 				float fullDist = aFull.normX - bFull.normX;
 				float scaling = fullDist/subDist;
-				std::cout << "Scaling factor: " << scaling << std::endl;
 
+				// Create the offset factors
+				float subMaxX = visibleSub->GetFort14()->GetMaxX();
+				float subMinX = visibleSub->GetFort14()->GetMinX();
+				float subMidX = subMinX + (subMaxX - subMinX) / 2.0;
+				float subMaxY = visibleSub->GetFort14()->GetMaxY();
+				float subMinY = visibleSub->GetFort14()->GetMinY();
+				float subMidY = subMinY + (subMaxY - subMinY) / 2.0;
+				float subMax = fmax(subMaxX-subMinX, subMaxY-subMinY);
+
+				float fullMaxX = fullDomain->GetFort14()->GetMaxX();
+				float fullMinX = fullDomain->GetFort14()->GetMinX();
+				float fullMidX = fullMinX + (fullMaxX - fullMinX) / 2.0;
+				float fullMaxY = fullDomain->GetFort14()->GetMaxY();
+				float fullMinY = fullDomain->GetFort14()->GetMinY();
+				float fullMidY = fullMinY + (fullMaxY - fullMinY) / 2.0;
+
+				float xOffset = (subMidX - fullMidX) / subMax;
+				float yOffset = (subMidY - fullMidY) / subMax;
+
+				// Apply the new settings
 				CameraSettings selectedSettings = selectedDomain->GetCameraSettings();
 				selectedSettings.zoomLevel *= scaling;
+				selectedSettings.panX = selectedSettings.panX/scaling + xOffset;
+				selectedSettings.panY = selectedSettings.panY/scaling + yOffset;
 				visibleDomain->SetCameraSettings(selectedSettings);
 			}
-
-			if (selectedDomain != fullDomain && visibleDomain == fullDomain)
-			{
-
-			}
-//			// Get camera info from selected domain
-//			CameraSettings selectedSettings = selectedDomain->GetCameraSettings();
-
-//			// Find two nodes in common between the domains
-
-
-//			// Calculate a normalized scaling factor
-
-//			// Apply camera info to visible domain
-//			visibleDomain->SetCameraSettings(selectedSettings);
 		}
 	}
 }
