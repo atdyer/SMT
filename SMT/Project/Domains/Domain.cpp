@@ -227,6 +227,22 @@ QGradientStops Domain::GetTerrainGradientFill()
 }
 
 
+float Domain::GetTerrainMinZ()
+{
+	if (fort14)
+		return fort14->GetMinZ();
+	return 0.0;
+}
+
+
+float Domain::GetTerrainMaxZ()
+{
+	if (fort14)
+		return fort14->GetMaxZ();
+	return 0.0;
+}
+
+
 void Domain::Zoom(float zoomAmount)
 {
 	if (camera)

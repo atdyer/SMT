@@ -48,6 +48,9 @@ class Domain : public QObject
 		QGradientStops	GetTerrainGradientOutline();
 		QGradientStops	GetTerrainGradientFill();
 
+		float		GetTerrainMinZ();
+		float		GetTerrainMaxZ();
+
 	protected:
 
 		GLCamera*	camera;

@@ -297,15 +297,24 @@ Domain* Project::DetermineSelectedDomain(QListWidgetItem *item)
 	if (item)
 	{
 		QString itemText = item->text();
-		for (std::vector<SubDomain*>::iterator currSub = subDomains.begin();
-		     currSub != subDomains.end();
-		     ++currSub)
-		{
-			if ((*currSub)->GetDomainName() == itemText)
-				return *currSub;
-		}
+		return DetermineDomain(itemText);
 	}
 
+	return 0;
+}
+
+
+Domain* Project::DetermineDomain(QString domainName)
+{
+	if (domainName == QString("Full Domain"))
+		return fullDomain;
+	for (std::vector<SubDomain*>::iterator currSub = subDomains.begin();
+	     currSub != subDomains.end();
+	     ++currSub)
+	{
+		if ((*currSub)->GetDomainName() == domainName)
+			return *currSub;
+	}
 	return 0;
 }
 
@@ -778,8 +787,43 @@ void Project::MatchColors(QAction *action)
 {
 	if (action)
 	{
-		// TODO: Code matching color of another domain
-		std::cout << action->text().toStdString() << std::endl;
+		// Get the colors of the selected domain
+		QString selectedDomainName = action->text();
+		std::cout << "-------------------------------\n" <<
+			     selectedDomainName.toStdString() << "\n----------" << std::endl;
+		Domain* selectedDomain = DetermineDomain(selectedDomainName);
+		if (selectedDomain && visibleDomain)
+		{
+			// Get the colors of the selected domain
+			QColor solidFill = selectedDomain->GetTerrainSolidFill();
+			QColor solidOutline = selectedDomain->GetTerrainSolidOutline();
+			QGradientStops gradientFill = selectedDomain->GetTerrainGradientFill();
+
+			// Calculate colors that fit in the range of the current domain (gradient only)
+			float selectedRange[2] = {selectedDomain->GetTerrainMinZ(), selectedDomain->GetTerrainMaxZ()};
+			float currentRange[2] = {visibleDomain->GetTerrainMinZ(), visibleDomain->GetTerrainMaxZ()};
+
+			// Set the colors of the current domain
+			visibleDomain->SetTerrainSolidFill(solidFill);
+			visibleDomain->SetTerrainSolidOutline(solidOutline);
+
+			std::cout << "Solid Fill: " << solidFill.red() <<
+				     ", " << solidFill.green() <<
+				     ", " << solidFill.blue() <<
+				     ", " << solidFill.alpha() << std::endl;
+			std::cout << "Gradient Fill: " << std::endl;
+			for (int i=0; i<gradientFill.count(); ++i)
+			{
+				QGradientStop stop = gradientFill[i];
+				std::cout << stop.first << " - (" <<
+					     stop.second.red() << ", " <<
+					     stop.second.green() << ", " <<
+					     stop.second.blue() << ", " <<
+					     stop.second.alpha() << ")" << std::endl;
+			}
+		}
+
+		// Set the colors of the current domain
 	}
 }
 
