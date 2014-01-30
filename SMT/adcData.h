@@ -148,4 +148,7 @@ enum SelectionType {NodeSelection, ElementSelection};
 enum SelectionMode {Select, Deselect};
 
 
+
+
+
 #endif // ADCDATA_H

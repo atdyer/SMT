@@ -787,70 +787,80 @@ void Project::MatchColors(QAction *action)
 {
 	if (action)
 	{
-		// Get the colors of the selected domain
 		QString selectedDomainName = action->text();
-		std::cout << "-------------------------------\n" <<
-			     selectedDomainName.toStdString() << "\n----------" << std::endl;
 		Domain* selectedDomain = DetermineDomain(selectedDomainName);
 		if (selectedDomain && visibleDomain)
 		{
-			// Get the colors of the selected domain
-			QColor solidFill = selectedDomain->GetTerrainSolidFill();
-			QColor solidOutline = selectedDomain->GetTerrainSolidOutline();
-			QGradientStops selectedGradientFill = selectedDomain->GetTerrainGradientFill();
-			QGradientStops selectedGradientOutline = selectedDomain->GetTerrainGradientOutline();
+			// Get the active shader types
+			ShaderType outlineType = selectedDomain->GetTerrainOutlineType();
+			ShaderType fillType = selectedDomain->GetTerrainFillType();
 
-			// Calculate colors that fit in the range of the current domain (gradient only)
-			float selectedRange[2] = {selectedDomain->GetTerrainMinZ(), selectedDomain->GetTerrainMaxZ()};
-			float currentRange[2] = {visibleDomain->GetTerrainMinZ(), visibleDomain->GetTerrainMaxZ()};
-
-			QGradientStops newStops;
-			for (int i=0; i<selectedGradientFill.count(); ++i)
+			if (outlineType == SolidShaderType)
 			{
-				QGradientStop currentStop = selectedGradientFill[i];
-				float percentage = currentStop.first;
-				QColor color = currentStop.second;
-
-				float selectedValue = selectedRange[0] + percentage*(selectedRange[1] - selectedRange[0]);
-				if (selectedValue >= currentRange[0] && selectedValue <= currentRange[1])
+				// Copy the solid outline color from the selected domain
+				QColor solidOutline = selectedDomain->GetTerrainSolidOutline();
+				visibleDomain->SetTerrainSolidOutline(solidOutline);
+			}
+			else if (outlineType == GradientShaderType)
+			{
+				// Copy the outline gradient from the selected domain
+				// Convert percentages in gradient stops to elevation values
+				// Convert these elevation values back into percentages in the range of the selected domain
+				float selectedRange[2] = {selectedDomain->GetTerrainMinZ(), selectedDomain->GetTerrainMaxZ()};
+				float currentRange[2] = {visibleDomain->GetTerrainMinZ(), visibleDomain->GetTerrainMaxZ()};
+				QGradientStops selectedGradientOutline = selectedDomain->GetTerrainGradientOutline();
+				QGradientStops newStopsOutline;
+				for (int i=0; i<selectedGradientOutline.count(); ++i)
 				{
-					QGradientStop newStop;
-					newStop.first = (selectedValue - currentRange[0]) / (currentRange[1] - currentRange[0]);
-					newStop.second = color;
-					newStops.append(newStop);
+					QGradientStop currentStop = selectedGradientOutline[i];
+					float percentage = currentStop.first;
+					QColor color = currentStop.second;
 
-					std::cout << selectedRange[0] << " -> (" <<
-									 percentage << ", " <<
-									 selectedValue <<
-									 ") -> " <<
-									 selectedRange[1] <<
-									 std::endl;
+					float selectedValue = selectedRange[1] - percentage*(selectedRange[1] - selectedRange[0]);
+					if (selectedValue >= currentRange[0] && selectedValue <= currentRange[1])
+					{
+						QGradientStop newStop;
+						newStop.first = (currentRange[1] - selectedValue) / (currentRange[1] - currentRange[0]);
+						newStop.second = color;
+						newStopsOutline.append(newStop);
+					}
 				}
+				visibleDomain->SetTerrainGradientOutline(newStopsOutline);
 			}
 
+			if (fillType == SolidShaderType)
+			{
+				// Copy the solid fill color from the selected domain
+				QColor solidFill = selectedDomain->GetTerrainSolidFill();
+				visibleDomain->SetTerrainSolidFill(solidFill);
+			}
+			else if (fillType == GradientShaderType)
+			{
+				// Copy the fill gradient from the selected domain
+				// Convert percentages in gradient stops to elevation values
+				// Convert these elevation values back into percentages in the range of the selected domain
+				float selectedRange[2] = {selectedDomain->GetTerrainMinZ(), selectedDomain->GetTerrainMaxZ()};
+				float currentRange[2] = {visibleDomain->GetTerrainMinZ(), visibleDomain->GetTerrainMaxZ()};
+				QGradientStops selectedGradientFill = selectedDomain->GetTerrainGradientFill();
+				QGradientStops newStopsFill;
+				for (int i=0; i<selectedGradientFill.count(); ++i)
+				{
+					QGradientStop currentStop = selectedGradientFill[i];
+					float percentage = currentStop.first;
+					QColor color = currentStop.second;
 
-			// Set the colors of the current domain
-			visibleDomain->SetTerrainSolidFill(solidFill);
-			visibleDomain->SetTerrainSolidOutline(solidOutline);
-			visibleDomain->SetTerrainGradientFill(newStops);
-
-//			std::cout << "Solid Fill: " << solidFill.red() <<
-//				     ", " << solidFill.green() <<
-//				     ", " << solidFill.blue() <<
-//				     ", " << solidFill.alpha() << std::endl;
-//			std::cout << "Gradient Fill: " << std::endl;
-//			for (int i=0; i<selectedGradientFill.count(); ++i)
-//			{
-//				QGradientStop stop = selectedGradientFill[i];
-//				std::cout << stop.first << " - (" <<
-//					     stop.second.red() << ", " <<
-//					     stop.second.green() << ", " <<
-//					     stop.second.blue() << ", " <<
-//					     stop.second.alpha() << ")" << std::endl;
-//			}
+					float selectedValue = selectedRange[1] - percentage*(selectedRange[1] - selectedRange[0]);
+					if (selectedValue >= currentRange[0] && selectedValue <= currentRange[1])
+					{
+						QGradientStop newStop;
+						newStop.first = (currentRange[1] - selectedValue) / (currentRange[1] - currentRange[0]);
+						newStop.second = color;
+						newStopsFill.append(newStop);
+					}
+				}
+				visibleDomain->SetTerrainGradientFill(newStopsFill);
+			}
 		}
-
-		// Set the colors of the current domain
 	}
 }
 

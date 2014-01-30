@@ -227,6 +227,22 @@ QGradientStops Domain::GetTerrainGradientFill()
 }
 
 
+ShaderType Domain::GetTerrainOutlineType()
+{
+	if (fort14)
+		return fort14->GetOutlineShaderType();
+	return NoShaderType;
+}
+
+
+ShaderType Domain::GetTerrainFillType()
+{
+	if (fort14)
+		return fort14->GetFillShaderType();
+	return NoShaderType;
+}
+
+
 float Domain::GetTerrainMinZ()
 {
 	if (fort14)

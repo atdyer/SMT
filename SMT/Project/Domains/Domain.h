@@ -47,6 +47,8 @@ class Domain : public QObject
 		QColor		GetTerrainSolidFill();
 		QGradientStops	GetTerrainGradientOutline();
 		QGradientStops	GetTerrainGradientFill();
+		ShaderType	GetTerrainOutlineType();
+		ShaderType	GetTerrainFillType();
 
 		float		GetTerrainMinZ();
 		float		GetTerrainMaxZ();
