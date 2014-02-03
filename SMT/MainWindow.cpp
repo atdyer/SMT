@@ -124,6 +124,76 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 			}
 		}
 	}
+
+	else if (event->key() == Qt::Key_0)
+	{
+		if (currentProject)
+			if (event->modifiers() & Qt::AltModifier)
+				currentProject->DisplayDomain(0);
+	}
+
+	else if (event->key() == Qt::Key_1)
+	{
+		if (currentProject)
+			if (event->modifiers() & Qt::AltModifier)
+				currentProject->DisplayDomain(1);
+	}
+
+	else if (event->key() == Qt::Key_2)
+	{
+		if (currentProject)
+			if (event->modifiers() & Qt::AltModifier)
+				currentProject->DisplayDomain(2);
+	}
+
+	else if (event->key() == Qt::Key_3)
+	{
+		if (currentProject)
+			if (event->modifiers() & Qt::AltModifier)
+				currentProject->DisplayDomain(3);
+	}
+
+	else if (event->key() == Qt::Key_4)
+	{
+		if (currentProject)
+			if (event->modifiers() & Qt::AltModifier)
+				currentProject->DisplayDomain(4);
+	}
+
+	else if (event->key() == Qt::Key_5)
+	{
+		if (currentProject)
+			if (event->modifiers() & Qt::AltModifier)
+				currentProject->DisplayDomain(5);
+	}
+
+	else if (event->key() == Qt::Key_6)
+	{
+		if (currentProject)
+			if (event->modifiers() & Qt::AltModifier)
+				currentProject->DisplayDomain(6);
+	}
+
+	else if (event->key() == Qt::Key_7)
+	{
+		if (currentProject)
+			if (event->modifiers() & Qt::AltModifier)
+				currentProject->DisplayDomain(7);
+	}
+
+	else if (event->key() == Qt::Key_8)
+	{
+		if (currentProject)
+			if (event->modifiers() & Qt::AltModifier)
+				currentProject->DisplayDomain(8);
+	}
+
+	else if (event->key() == Qt::Key_9)
+	{
+		if (currentProject)
+			if (event->modifiers() & Qt::AltModifier)
+				currentProject->DisplayDomain(9);
+	}
 }
 
 

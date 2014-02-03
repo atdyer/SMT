@@ -53,6 +53,32 @@ Project::~Project()
 }
 
 
+void Project::DisplayDomain(int index)
+{
+	if (index == 0 && fullDomain)
+	{
+		SetVisibleDomain(fullDomain);
+		if (projectTree)
+		{
+			projectTree->setCurrentItem(projectTree->findItems("Full Domain", Qt::MatchExactly | Qt::MatchRecursive).first());
+		}
+	}
+	else if (index <= subDomains.size())
+	{
+		SubDomain *targetDomain = subDomains.at(index-1);
+		if (targetDomain)
+		{
+			QString name = targetDomain->GetDomainName();
+			SetVisibleDomain(subDomains.at(index-1));
+			if (projectTree)
+			{
+				projectTree->setCurrentItem(projectTree->findItems(name, Qt::MatchExactly | Qt::MatchRecursive).first());
+			}
+		}
+	}
+}
+
+
 bool Project::IsInitialized()
 {
 	return projectInitialized;
