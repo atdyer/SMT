@@ -72,6 +72,10 @@ class Project : public QObject
 		void		PopulateProjectTree();
 		void		SetVisibleDomain(Domain *newDomain);
 
+		void	MatchFullCamera(SubDomain *targetSub);	// Matches subdomain camera to full domain camera
+		void	MatchSubCamera(SubDomain *targetSub);	// Matches full domain camera to subdomain camera
+		void	MatchSubCamera(SubDomain *originSub, SubDomain *targetSub); // Matches originSub camera to targetSub camera
+
 	public slots:
 
 		void	CreateNewSubdomain();

@@ -632,6 +632,159 @@ void Project::SetVisibleDomain(Domain *newDomain)
 }
 
 
+void Project::MatchFullCamera(SubDomain *targetSub)
+{
+	// Pick two nodes from the subdomain
+	Node aSub, bSub, aFull, bFull;
+	aSub.nodeNumber = 0;
+	bSub.nodeNumber = 0;
+	aFull.nodeNumber = 0;
+	bFull.nodeNumber = 0;
+	if (targetSub)
+	{
+		Fort14 *subFort = targetSub->GetFort14();
+		if (subFort)
+		{
+			Node nodeA = subFort->GetNode(1);
+			Node nodeB = subFort->GetNode(2);
+
+			if (nodeA.nodeNumber)
+				aSub = nodeA;
+			if (nodeB.nodeNumber)
+				bSub = nodeB;
+		}
+	}
+
+	// Find their node numbers in the full domain
+	if (aSub.nodeNumber && bSub.nodeNumber)
+	{
+		Fort14 *fullFort = fullDomain->GetFort14();
+		Py140 *subPy = targetSub->GetPy140();
+		if (fullFort && subPy)
+		{
+			Node nodeA = fullFort->GetNode(subPy->ConvertNewToOld(aSub.nodeNumber));
+			Node nodeB = fullFort->GetNode(subPy->ConvertNewToOld(bSub.nodeNumber));
+
+			if (nodeA.nodeNumber)
+				aFull = nodeA;
+			if (nodeB.nodeNumber)
+				bFull = nodeB;
+		}
+	}
+
+	// Create the scaling factor
+	float subDist = aSub.normX - bSub.normX;
+	float fullDist = aFull.normX - bFull.normX;
+	float scaling = fullDist/subDist;
+
+	// Create the offset factors
+	float subMaxX = targetSub->GetFort14()->GetMaxX();
+	float subMinX = targetSub->GetFort14()->GetMinX();
+	float subMidX = subMinX + (subMaxX - subMinX) / 2.0;
+	float subMaxY = targetSub->GetFort14()->GetMaxY();
+	float subMinY = targetSub->GetFort14()->GetMinY();
+	float subMidY = subMinY + (subMaxY - subMinY) / 2.0;
+	float subMax = fmax(subMaxX-subMinX, subMaxY-subMinY);
+
+	float fullMaxX = fullDomain->GetFort14()->GetMaxX();
+	float fullMinX = fullDomain->GetFort14()->GetMinX();
+	float fullMidX = fullMinX + (fullMaxX - fullMinX) / 2.0;
+	float fullMaxY = fullDomain->GetFort14()->GetMaxY();
+	float fullMinY = fullDomain->GetFort14()->GetMinY();
+	float fullMidY = fullMinY + (fullMaxY - fullMinY) / 2.0;
+
+	float xOffset = (subMidX - fullMidX) / subMax;
+	float yOffset = (subMidY - fullMidY) / subMax;
+
+	// Apply the new settings
+	CameraSettings selectedSettings = fullDomain->GetCameraSettings();
+	selectedSettings.zoomLevel *= scaling;
+	selectedSettings.panX = selectedSettings.panX/scaling + xOffset;
+	selectedSettings.panY = selectedSettings.panY/scaling + yOffset;
+	visibleDomain->SetCameraSettings(selectedSettings);
+}
+
+
+void Project::MatchSubCamera(SubDomain *targetSub)
+{
+	// Pick two nodes from the subdomain
+	Node aSub, bSub, aFull, bFull;
+	aSub.nodeNumber = 0;
+	bSub.nodeNumber = 0;
+	aFull.nodeNumber = 0;
+	bFull.nodeNumber = 0;
+	if (targetSub)
+	{
+		Fort14 *subFort = targetSub->GetFort14();
+		if (subFort)
+		{
+			Node nodeA = subFort->GetNode(1);
+			Node nodeB = subFort->GetNode(2);
+
+			if (nodeA.nodeNumber)
+				aSub = nodeA;
+			if (nodeB.nodeNumber)
+				bSub = nodeB;
+		}
+	}
+
+	// Find their node numbers in the full domain
+	if (aSub.nodeNumber && bSub.nodeNumber)
+	{
+		Fort14 *fullFort = fullDomain->GetFort14();
+		Py140 *subPy = targetSub->GetPy140();
+		if (fullFort && subPy)
+		{
+			Node nodeA = fullFort->GetNode(subPy->ConvertNewToOld(aSub.nodeNumber));
+			Node nodeB = fullFort->GetNode(subPy->ConvertNewToOld(bSub.nodeNumber));
+
+			if (nodeA.nodeNumber)
+				aFull = nodeA;
+			if (nodeB.nodeNumber)
+				bFull = nodeB;
+		}
+	}
+
+	// Create the scaling factor
+	float subDist = aSub.normX - bSub.normX;
+	float fullDist = aFull.normX - bFull.normX;
+	float scaling = fullDist/subDist;
+
+	// Create the offset factors
+	float subMaxX = targetSub->GetFort14()->GetMaxX();
+	float subMinX = targetSub->GetFort14()->GetMinX();
+	float subMidX = subMinX + (subMaxX - subMinX) / 2.0;
+	float subMaxY = targetSub->GetFort14()->GetMaxY();
+	float subMinY = targetSub->GetFort14()->GetMinY();
+	float subMidY = subMinY + (subMaxY - subMinY) / 2.0;
+
+	float fullMaxX = fullDomain->GetFort14()->GetMaxX();
+	float fullMinX = fullDomain->GetFort14()->GetMinX();
+	float fullMidX = fullMinX + (fullMaxX - fullMinX) / 2.0;
+	float fullMaxY = fullDomain->GetFort14()->GetMaxY();
+	float fullMinY = fullDomain->GetFort14()->GetMinY();
+	float fullMidY = fullMinY + (fullMaxY - fullMinY) / 2.0;
+	float fullMax = fmax(fullMaxX-fullMinX, fullMaxY-fullMinY);
+
+	float xOffset = (subMidX - fullMidX) / fullMax;
+	float yOffset = (subMidY - fullMidY) / fullMax;
+
+	// Apply the new settings
+	CameraSettings selectedSettings = targetSub->GetCameraSettings();
+	selectedSettings.zoomLevel /= scaling;
+	selectedSettings.panX = selectedSettings.panX*scaling - xOffset;
+	selectedSettings.panY = selectedSettings.panY*scaling - yOffset;
+	fullDomain->SetCameraSettings(selectedSettings);
+}
+
+
+void Project::MatchSubCamera(SubDomain *originSub, SubDomain *targetSub)
+{
+	MatchSubCamera(targetSub);
+	MatchFullCamera(originSub);
+}
+
+
 void Project::CreateNewSubdomain()
 {
 	if (fullDomain && projectFile)
@@ -914,75 +1067,24 @@ void Project::MatchCamera(QAction *action)
 		{
 			if (selectedDomain == fullDomain && visibleDomain != fullDomain)
 			{
-				// Pick two nodes from the subdomain
-				SubDomain *visibleSub = DetermineSubdomain(visibleDomain);
-				Node aSub, bSub, aFull, bFull;
-				aSub.nodeNumber = 0;
-				bSub.nodeNumber = 0;
-				aFull.nodeNumber = 0;
-				bFull.nodeNumber = 0;
-				if (visibleSub)
-				{
-					Fort14 *subFort = visibleSub->GetFort14();
-					if (subFort)
-					{
-						Node nodeA = subFort->GetNode(1);
-						Node nodeB = subFort->GetNode(2);
+				SubDomain *targetSub = DetermineSubdomain(visibleDomain);
+				if (targetSub)
+					MatchFullCamera(targetSub);
+			}
 
-						if (nodeA.nodeNumber)
-							aSub = nodeA;
-						if (nodeB.nodeNumber)
-							bSub = nodeB;
-					}
-				}
+			else if (selectedDomain != fullDomain && visibleDomain == fullDomain)
+			{
+				SubDomain *targetSub = DetermineSubdomain(selectedDomain);
+				if (targetSub)
+					MatchSubCamera(targetSub);
+			}
 
-				// Find their node numbers in the full domain
-				if (aSub.nodeNumber && bSub.nodeNumber)
-				{
-					Fort14 *fullFort = fullDomain->GetFort14();
-					Py140 *subPy = visibleSub->GetPy140();
-					if (fullFort && subPy)
-					{
-						Node nodeA = fullFort->GetNode(subPy->ConvertNewToOld(aSub.nodeNumber));
-						Node nodeB = fullFort->GetNode(subPy->ConvertNewToOld(bSub.nodeNumber));
-
-						if (nodeA.nodeNumber)
-							aFull = nodeA;
-						if (nodeB.nodeNumber)
-							bFull = nodeB;
-					}
-				}
-
-				// Create the scaling factor
-				float subDist = aSub.normX - bSub.normX;
-				float fullDist = aFull.normX - bFull.normX;
-				float scaling = fullDist/subDist;
-
-				// Create the offset factors
-				float subMaxX = visibleSub->GetFort14()->GetMaxX();
-				float subMinX = visibleSub->GetFort14()->GetMinX();
-				float subMidX = subMinX + (subMaxX - subMinX) / 2.0;
-				float subMaxY = visibleSub->GetFort14()->GetMaxY();
-				float subMinY = visibleSub->GetFort14()->GetMinY();
-				float subMidY = subMinY + (subMaxY - subMinY) / 2.0;
-				float subMax = fmax(subMaxX-subMinX, subMaxY-subMinY);
-
-				float fullMaxX = fullDomain->GetFort14()->GetMaxX();
-				float fullMinX = fullDomain->GetFort14()->GetMinX();
-				float fullMidX = fullMinX + (fullMaxX - fullMinX) / 2.0;
-				float fullMaxY = fullDomain->GetFort14()->GetMaxY();
-				float fullMinY = fullDomain->GetFort14()->GetMinY();
-				float fullMidY = fullMinY + (fullMaxY - fullMinY) / 2.0;
-
-				float xOffset = (subMidX - fullMidX) / subMax;
-				float yOffset = (subMidY - fullMidY) / subMax;
-
-				// Apply the new settings
-				CameraSettings selectedSettings = selectedDomain->GetCameraSettings();
-				selectedSettings.zoomLevel *= scaling;
-				selectedSettings.panX = selectedSettings.panX/scaling + xOffset;
-				selectedSettings.panY = selectedSettings.panY/scaling + yOffset;
-				visibleDomain->SetCameraSettings(selectedSettings);
+			else if (selectedDomain != fullDomain && visibleDomain != fullDomain)
+			{
+				SubDomain *targetSub = DetermineSubdomain(selectedDomain);
+				SubDomain *originSub = DetermineSubdomain(visibleDomain);
+				if (targetSub && originSub)
+					MatchSubCamera(originSub, targetSub);
 			}
 		}
 	}
