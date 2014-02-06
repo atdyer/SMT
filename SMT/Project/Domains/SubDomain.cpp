@@ -17,7 +17,8 @@ SubDomain::SubDomain(QString domainName, ProjectFile *projectFile, QObject *pare
 	maxele(0),
 	maxvel(0),
 	py140(0),
-	py141(0)
+	py141(0),
+	editedNodes()
 {
 	CreateAllFiles();
 	selectionLayerSubdomain = new SubDomainSelectionLayer(fort14, this);
@@ -108,11 +109,24 @@ void SubDomain::ResetNodalValues(unsigned int nodeNumber, Fort14 *fullDomainFort
 }
 
 
+void SubDomain::ResetAllNodalValues(Fort14 *fullDomainFort14)
+{
+	for (std::set<unsigned int>::iterator it = editedNodes.begin();
+	     it != editedNodes.end(); ++it)
+	{
+		unsigned int currNode = *it;
+		ResetNodalValues(currNode, fullDomainFort14);
+	}
+	editedNodes.clear();
+}
+
+
 void SubDomain::SetNodalValues(unsigned int nodeNumber, QString x, QString y, QString z)
 {
 	if (fort14)
 	{
 		fort14->SetNodalValues(nodeNumber, x, y, z);
+		editedNodes.insert(nodeNumber);
 	}
 }
 

@@ -93,6 +93,18 @@ bool Project::IsInitialized()
 }
 
 
+void Project::ResetAllNodalValues(QString subdomainName)
+{
+	Domain *currentDomain = DetermineDomain(subdomainName);
+	if (currentDomain && fullDomain)
+	{
+		SubDomain *currentSubdomain = DetermineSubdomain(currentDomain);
+		if (currentSubdomain)
+			currentSubdomain->ResetAllNodalValues(fullDomain->GetFort14());
+	}
+}
+
+
 void Project::ResetNodalValues(QString subdomainName, unsigned int nodeNumber)
 {
 	Domain *currentDomain = DetermineDomain(subdomainName);

@@ -36,6 +36,7 @@ class Project : public QObject
 
 		void	DisplayDomain(int index);
 		bool	IsInitialized();
+		void	ResetAllNodalValues(QString subdomainName);
 		void	ResetNodalValues(QString subdomainName, unsigned int nodeNumber);
 		void	SetNodalValues(QString subdomainName, unsigned int nodeNumber, QString x, QString y, QString z);
 		void	SetOpenGLPanel(OpenGLPanel *newPanel);

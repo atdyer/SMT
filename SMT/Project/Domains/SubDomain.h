@@ -2,6 +2,7 @@
 #define SUBDOMAIN_H
 
 #include <iostream>
+#include <set>
 
 #include <QObject>
 #include <QProgressBar>
@@ -44,6 +45,7 @@ class SubDomain : public Domain
 		Node*		GetSelectedNode();
 
 		void	ResetNodalValues(unsigned int nodeNumber, Fort14 *fullDomainFort14);
+		void	ResetAllNodalValues(Fort14 *fullDomainFort14);
 		void	SetNodalValues(unsigned int nodeNumber, QString x, QString y, QString z);
 
 	private:
@@ -64,6 +66,8 @@ class SubDomain : public Domain
 		Maxvel63*	maxvel;
 		Py140*		py140;
 		Py141*		py141;
+
+		std::set<unsigned int>	editedNodes;
 
 		void	CreateAllFiles();
 
