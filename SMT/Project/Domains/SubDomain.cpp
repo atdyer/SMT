@@ -85,6 +85,29 @@ Node* SubDomain::GetSelectedNode()
 }
 
 
+void SubDomain::ResetNodalValues(unsigned int nodeNumber, Fort14 *fullDomainFort14)
+{
+	if (fullDomainFort14 && py140 && fort14)
+	{
+		// Get the full domain node number from the py.140 file
+		unsigned int fullDomainNodeNumber = py140->ConvertNewToOld(nodeNumber);
+
+		// Get the original nodal values from the full domain fort.14
+		Node originalNode = fullDomainFort14->GetNode(fullDomainNodeNumber);
+
+		QString xDat (originalNode.xDat.data());
+		QString yDat (originalNode.yDat.data());
+		QString zDat (originalNode.zDat.data());
+
+		// Set the subdomain nodal values
+		fort14->SetNodalValues(nodeNumber, xDat, yDat, zDat);
+
+		// Update the UI with the reset values
+		emit editNode(nodeNumber, xDat, yDat, zDat);
+	}
+}
+
+
 void SubDomain::SetNodalValues(unsigned int nodeNumber, QString x, QString y, QString z)
 {
 	if (fort14)

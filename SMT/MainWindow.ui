@@ -931,7 +931,7 @@ border-top-right-radius: 4px;
               <item>
                <widget class="QPushButton" name="applyEditButton">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="text">
                  <string>Apply</string>
@@ -941,7 +941,7 @@ border-top-right-radius: 4px;
               <item>
                <widget class="QPushButton" name="resetEditButton">
                 <property name="enabled">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                 <property name="text">
                  <string>Reset</string>
@@ -962,6 +962,29 @@ border-top-right-radius: 4px;
                </size>
               </property>
              </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="resetSubdomainChangesButton">
+              <property name="text">
+               <string>Reset All</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="saveSubdomainChangesButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="font">
+               <font>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Save Changes</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>

@@ -48,6 +48,13 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->editYLoc->setValidator(new QDoubleValidator());
 	ui->editZLoc->setValidator(new QDoubleValidator());
 
+	// Connect editing subdomain buttons
+	connect(ui->editXLoc, SIGNAL(returnPressed()), this, SLOT(setNodeValues()));
+	connect(ui->editYLoc, SIGNAL(returnPressed()), this, SLOT(setNodeValues()));
+	connect(ui->editZLoc, SIGNAL(returnPressed()), this, SLOT(setNodeValues()));
+	connect(ui->applyEditButton, SIGNAL(clicked()), this, SLOT(setNodeValues()));
+	connect(ui->resetEditButton, SIGNAL(clicked()), this, SLOT(resetCurrentNodeValues()));
+
 	// Connect menu bar actions
 	connect(ui->actionNew_Project, SIGNAL(triggered()), this, SLOT(createProject()));
 	connect(ui->actionOpen_Project, SIGNAL(triggered()), this, SLOT(openProject()));
@@ -282,10 +289,6 @@ void MainWindow::CreateProject(bool currentProjectFile)
 
 	/* Subdomain Editing */
 	connect(currentProject, SIGNAL(editNode(uint,QString,QString,QString)), this, SLOT(editNode(uint,QString,QString,QString)));
-	connect(ui->editXLoc, SIGNAL(returnPressed()), this, SLOT(setNodeValues()));
-	connect(ui->editYLoc, SIGNAL(returnPressed()), this, SLOT(setNodeValues()));
-	connect(ui->editZLoc, SIGNAL(returnPressed()), this, SLOT(setNodeValues()));
-	connect(ui->applyEditButton, SIGNAL(clicked()), this, SLOT(setNodeValues()));
 
 	/* U/I Updates */
 	connect(currentProject, SIGNAL(mouseX(float)), this, SLOT(showMouseX(float)));
@@ -468,6 +471,23 @@ void MainWindow::setNodeValues()
 					       ui->editYLoc->text(),
 					       ui->editZLoc->text());
 	}
+}
+
+
+void MainWindow::resetCurrentNodeValues()
+{
+	if (currentProject)
+	{
+		QString currentSubdomain = ui->editSubdomainList->currentItem()->text();
+		unsigned int nodeNumber = ui->editNodeNumber->text().toUInt();
+		currentProject->ResetNodalValues(currentSubdomain, nodeNumber);
+	}
+}
+
+
+void MainWindow::resetAllNodalValues()
+{
+
 }
 
 

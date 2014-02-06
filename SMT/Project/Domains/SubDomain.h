@@ -43,6 +43,7 @@ class SubDomain : public Domain
 		QString		GetDomainName();
 		Node*		GetSelectedNode();
 
+		void	ResetNodalValues(unsigned int nodeNumber, Fort14 *fullDomainFort14);
 		void	SetNodalValues(unsigned int nodeNumber, QString x, QString y, QString z);
 
 	private:

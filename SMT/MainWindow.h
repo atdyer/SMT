@@ -75,6 +75,8 @@ class MainWindow : public QMainWindow
 
 		/* Node editing slots */
 		void	setNodeValues();
+		void	resetCurrentNodeValues();
+		void	resetAllNodalValues();
 
 		/* Extra */
 		void	printText(QString text);
