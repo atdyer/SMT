@@ -209,6 +209,13 @@ bool FullDomainSelectionLayer::DataLoaded()
 }
 
 
+void FullDomainSelectionLayer::ClearSelection()
+{
+	ElementState *emptyState = new ElementState();
+	UseNewState(emptyState);
+}
+
+
 unsigned int FullDomainSelectionLayer::GetNumNodesSelected()
 {
 	return 0;

@@ -62,6 +62,10 @@ void Project::DisplayDomain(int index)
 		{
 			projectTree->setCurrentItem(projectTree->findItems("Full Domain", Qt::MatchExactly | Qt::MatchRecursive).first());
 		}
+		if (editSubdomainList)
+		{
+			editSubdomainList->clearSelection();
+		}
 	}
 	else if (index <= subDomains.size())
 	{
@@ -73,6 +77,10 @@ void Project::DisplayDomain(int index)
 			if (projectTree)
 			{
 				projectTree->setCurrentItem(projectTree->findItems(name, Qt::MatchExactly | Qt::MatchRecursive).first());
+			}
+			if (editSubdomainList)
+			{
+				editSubdomainList->setCurrentItem(editSubdomainList->findItems(name, Qt::MatchExactly | Qt::MatchRecursive).first());
 			}
 		}
 	}
@@ -115,6 +123,7 @@ void Project::SetOpenGLPanel(OpenGLPanel *newPanel)
 		connect(glPanel, SIGNAL(openColorOptions()), this, SLOT(ShowDisplayOptionsDialog()));
 		connect(glPanel, SIGNAL(matchColors(QAction*)), this, SLOT(MatchColors(QAction*)));
 		connect(glPanel, SIGNAL(matchCamera(QAction*)), this, SLOT(MatchCamera(QAction*)));
+		connect(glPanel, SIGNAL(clearSelections()), this, SLOT(ClearSelections()));
 
 		for (std::vector<SubDomain*>::iterator it = subDomains.begin(); it != subDomains.end(); ++it)
 		{
@@ -628,6 +637,36 @@ void Project::SetVisibleDomain(Domain *newDomain)
 			displayOptions->SetActiveDomain(visibleDomain);
 			displayOptions->update();
 		}
+
+		if (projectTree)
+		{
+			if (visibleDomain == fullDomain)
+				projectTree->setCurrentItem(projectTree->findItems("Full Domain", Qt::MatchExactly | Qt::MatchRecursive).first());
+			else
+			{
+				SubDomain *targetDomain = DetermineSubdomain(visibleDomain);
+				if (targetDomain)
+				{
+					QString name = targetDomain->GetDomainName();
+					projectTree->setCurrentItem(projectTree->findItems(name, Qt::MatchExactly | Qt::MatchRecursive).first());
+				}
+			}
+		}
+
+		if (editSubdomainList)
+		{
+			if (visibleDomain == fullDomain)
+				editSubdomainList->clearSelection();
+			else
+			{
+				SubDomain *targetDomain = DetermineSubdomain(visibleDomain);
+				if (targetDomain)
+				{
+					QString name = targetDomain->GetDomainName();
+					editSubdomainList->setCurrentItem(editSubdomainList->findItems(name, Qt::MatchExactly | Qt::MatchRecursive).first());
+				}
+			}
+		}
 	}
 }
 
@@ -1087,5 +1126,14 @@ void Project::MatchCamera(QAction *action)
 					MatchSubCamera(originSub, targetSub);
 			}
 		}
+	}
+}
+
+
+void Project::ClearSelections()
+{
+	if (visibleDomain)
+	{
+		visibleDomain->ClearSelections();
 	}
 }

@@ -76,6 +76,12 @@ bool SubDomainSelectionLayer::DataLoaded()
 }
 
 
+void SubDomainSelectionLayer::ClearSelection()
+{
+	currentNode = 0;
+}
+
+
 unsigned int SubDomainSelectionLayer::GetNumNodesSelected()
 {
 	if (currentNode)

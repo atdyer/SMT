@@ -48,6 +48,12 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->editYLoc->setValidator(new QDoubleValidator());
 	ui->editZLoc->setValidator(new QDoubleValidator());
 
+	// Connect menu bar actions
+	connect(ui->actionNew_Project, SIGNAL(triggered()), this, SLOT(createProject()));
+	connect(ui->actionOpen_Project, SIGNAL(triggered()), this, SLOT(openProject()));
+	connect(ui->actionClose_Project, SIGNAL(triggered()), this, SLOT(closeProject()));
+	connect(ui->actionExit, SIGNAL(triggered()), this, SIGNAL(quit()));
+
 }
 
 MainWindow::~MainWindow()
@@ -271,6 +277,8 @@ void MainWindow::CreateProject(bool currentProjectFile)
 
 	connect(ui->undoButton, SIGNAL(clicked()), currentProject, SLOT(Undo()));
 	connect(ui->redoButton, SIGNAL(clicked()), currentProject, SLOT(Redo()));
+	connect(ui->actionUndo, SIGNAL(triggered()), currentProject, SLOT(Undo()));
+	connect(ui->actionRedo, SIGNAL(triggered()), currentProject, SLOT(Redo()));
 
 	/* Subdomain Editing */
 	connect(currentProject, SIGNAL(editNode(uint,QString,QString,QString)), this, SLOT(editNode(uint,QString,QString,QString)));
@@ -382,6 +390,17 @@ void MainWindow::createProject()
 void MainWindow::openProject()
 {
 	CreateProject(false);
+}
+
+
+void MainWindow::closeProject()
+{
+	if (currentProject)
+	{
+		delete currentProject;
+		currentProject = 0;
+	}
+	ui->projectTree->clear();
 }
 
 

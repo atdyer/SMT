@@ -28,6 +28,15 @@ Domain::~Domain()
 }
 
 
+void Domain::ClearSelections()
+{
+	if (selectionLayer)
+	{
+		selectionLayer->ClearSelection();
+	}
+}
+
+
 void Domain::Draw()
 {
 	if (fort14)

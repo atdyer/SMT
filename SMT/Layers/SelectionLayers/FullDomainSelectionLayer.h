@@ -30,6 +30,7 @@ class FullDomainSelectionLayer : public SelectionLayer
 		virtual void	LoadDataToGPU();
 		virtual void	SetData(QString fileLocation);
 		virtual bool	DataLoaded();
+		virtual void	ClearSelection();
 
 		virtual unsigned int	GetNumNodesSelected();
 		virtual unsigned int	GetNumElementsSelected();

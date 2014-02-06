@@ -80,6 +80,7 @@ class OpenGLPanel : public QGLWidget
 		void	openColorOptions();
 		void	matchColors(QAction*);
 		void	matchCamera(QAction*);
+		void	clearSelections();
 
 };
 

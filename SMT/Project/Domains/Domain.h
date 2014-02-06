@@ -21,6 +21,7 @@ class Domain : public QObject
 		Domain(ProjectFile *projectFile, QObject *parent=0);
 		~Domain();
 
+		void		ClearSelections();
 		void		Draw();
 		Fort14*		GetFort14();
 		virtual QString	GetPath() = 0;

@@ -216,6 +216,7 @@ void OpenGLPanel::CreateMenus()
 	connect(colorOptionsAction, SIGNAL(triggered()), this, SIGNAL(openColorOptions()));
 	connect(colorActionGroup, SIGNAL(triggered(QAction*)), this, SIGNAL(matchColors(QAction*)));
 	connect(cameraActionGroup, SIGNAL(triggered(QAction*)), this, SIGNAL(matchCamera(QAction*)));
+	connect(clearSelectionsAction, SIGNAL(triggered()), this, SIGNAL(clearSelections()));
 
 }
 

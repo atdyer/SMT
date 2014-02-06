@@ -38,6 +38,7 @@ class SelectionLayer : public Layer
 
 		virtual void	Draw() = 0;
 		virtual void	LoadDataToGPU() = 0;
+		virtual void	ClearSelection() = 0;
 
 		virtual unsigned int	GetNumNodesSelected();
 		virtual unsigned int	GetNumElementsSelected();

@@ -683,26 +683,13 @@ void Fort14::LoadGL()
 		}
 	}
 }
-#include <sys/time.h>
-#include <ctime>
-typedef unsigned long long ts;
-static ts getTS()
-{
-	struct timeval now;
-	gettimeofday(&now, NULL);
-	return now.tv_usec + (ts)now.tv_sec*1000000;
-}
 
 void Fort14::PopulateQuadtree()
 {
 	if (!quadtree && nodes.size() && elements.size())
 	{
-		std::cout << minX << ", " << maxX << std::endl;
 		int size = 250;
-		ts startTime = getTS();
 		quadtree = new Quadtree(nodes, elements, size, (minX-midX)/max, (maxX-midX)/max, (minY-midY)/max, (maxY-midY)/max);
-		ts buildTime = getTS() - startTime;
-		std::cout << size << "\t" << buildTime / 1000000.0L << std::endl;
 		quadtree->SetCamera(camera);
 	}
 }
@@ -718,7 +705,7 @@ void Fort14::ReadFile()
 		{
 			QThread *thread = new QThread();
 			Fort14Reader *worker = new Fort14Reader(filePath, &nodes, &elements, &elevationBoundaries,
-								&flowBoundaries, true, this);
+								&flowBoundaries, true, 0);
 
 			// Move to thread and prepare to start reading
 			worker->moveToThread(thread);

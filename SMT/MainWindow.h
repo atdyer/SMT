@@ -61,6 +61,7 @@ class MainWindow : public QMainWindow
 		/* Project buttons */
 		void	createProject();
 		void	openProject();
+		void	closeProject();
 
 		/* Left side pane slots */
 		void	addSubdomainToList(QString s);
@@ -77,6 +78,10 @@ class MainWindow : public QMainWindow
 
 		/* Extra */
 		void	printText(QString text);
+
+	signals:
+
+		void	quit();
 };
 
 #endif // MAINWINDOW_H

@@ -80,7 +80,6 @@ class Project : public QObject
 
 		void	CreateNewSubdomain();
 		void	EditProjectSettings();
-		void	Redo();
 		void	RunFullDomain();
 		void	RunSubdomain(QString subdomain);
 		void	SaveProject();
@@ -97,10 +96,10 @@ class Project : public QObject
 		void	SelectSingleSubdomainNode();
 
 		void	ShowDisplayOptionsDialog();
-
 		void	ToggleQuadtreeVisible();
 
 		void	Undo();
+		void	Redo();
 
 	private slots:
 
@@ -108,6 +107,7 @@ class Project : public QObject
 		void	ProjectTreeItemChanged(QListWidgetItem *item, QListWidgetItem*);
 		void	MatchColors(QAction *action);
 		void	MatchCamera(QAction *action);
+		void	ClearSelections();
 
 	signals:
 
