@@ -7,6 +7,7 @@
 
 #include "Project/Files/ProjectFile.h"
 #include "Project/Files/Workers/Fort14Reader.h"
+#include "Project/Files/Workers/Fort14Writer.h"
 
 #include "OpenGL/Shaders/GLShader.h"
 #include "OpenGL/Shaders/GradientShader.h"

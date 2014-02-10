@@ -435,7 +435,8 @@ void Fort14::RefreshGL()
 
 void Fort14::SaveChanges()
 {
-
+	Fort14Writer writer (GetFilePath(), &nodes, &elements, this);
+	writer.SaveFile();
 }
 
 

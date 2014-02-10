@@ -918,6 +918,17 @@ void Project::SaveProject()
 }
 
 
+void Project::SaveSubdomainChanges(QString subdomain)
+{
+	Domain *targetDomain = DetermineDomain(subdomain);
+	SubDomain *targetSubdomain = DetermineSubdomain(targetDomain);
+	if (targetSubdomain)
+	{
+		targetSubdomain->SaveAllChanges();
+	}
+}
+
+
 void Project::SelectFullDomainCircleElements()
 {
 	if (fullDomain)

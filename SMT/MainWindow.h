@@ -77,6 +77,7 @@ class MainWindow : public QMainWindow
 		void	setNodeValues();
 		void	resetCurrentNodeValues();
 		void	resetAllNodalValues();
+		void	saveAllSubdomainChanges();
 
 		/* Extra */
 		void	printText(QString text);

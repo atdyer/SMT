@@ -973,7 +973,7 @@ border-top-right-radius: 4px;
             <item>
              <widget class="QPushButton" name="saveSubdomainChangesButton">
               <property name="enabled">
-               <bool>false</bool>
+               <bool>true</bool>
               </property>
               <property name="font">
                <font>

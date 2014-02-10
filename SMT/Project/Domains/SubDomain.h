@@ -46,6 +46,7 @@ class SubDomain : public Domain
 
 		void	ResetNodalValues(unsigned int nodeNumber, Fort14 *fullDomainFort14);
 		void	ResetAllNodalValues(Fort14 *fullDomainFort14);
+		void	SaveAllChanges();
 		void	SetNodalValues(unsigned int nodeNumber, QString x, QString y, QString z);
 
 	private:

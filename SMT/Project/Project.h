@@ -85,6 +85,7 @@ class Project : public QObject
 		void	RunFullDomain();
 		void	RunSubdomain(QString subdomain);
 		void	SaveProject();
+		void	SaveSubdomainChanges(QString subdomain);
 
 		void	SelectFullDomainCircleElements();
 		void	SelectFullDomainClickElements();

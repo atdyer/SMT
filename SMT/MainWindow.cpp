@@ -55,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->applyEditButton, SIGNAL(clicked()), this, SLOT(setNodeValues()));
 	connect(ui->resetEditButton, SIGNAL(clicked()), this, SLOT(resetCurrentNodeValues()));
 	connect(ui->resetSubdomainChangesButton, SIGNAL(clicked()), this, SLOT(resetAllNodalValues()));
+	connect(ui->saveSubdomainChangesButton, SIGNAL(clicked()), this, SLOT(saveAllSubdomainChanges()));
 
 	// Connect menu bar actions
 	connect(ui->actionNew_Project, SIGNAL(triggered()), this, SLOT(createProject()));
@@ -492,6 +493,16 @@ void MainWindow::resetAllNodalValues()
 	{
 		QString currentSubdomain = ui->editSubdomainList->currentItem()->text();
 		currentProject->ResetAllNodalValues(currentSubdomain);
+	}
+}
+
+
+void MainWindow::saveAllSubdomainChanges()
+{
+	if (currentProject)
+	{
+		QString currentSubdomain = ui->editSubdomainList->currentItem()->text();
+		currentProject->SaveSubdomainChanges(currentSubdomain);
 	}
 }
 

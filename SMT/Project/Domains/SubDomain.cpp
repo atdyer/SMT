@@ -121,6 +121,15 @@ void SubDomain::ResetAllNodalValues(Fort14 *fullDomainFort14)
 }
 
 
+void SubDomain::SaveAllChanges()
+{
+	if (fort14)
+	{
+		fort14->SaveChanges();
+	}
+}
+
+
 void SubDomain::SetNodalValues(unsigned int nodeNumber, QString x, QString y, QString z)
 {
 	if (fort14)

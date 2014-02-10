@@ -33,11 +33,11 @@ SubdomainCreator::~SubdomainCreator()
 
 
 bool SubdomainCreator::CreateSubdomain(QString newName,
-					   ProjectFile *projFile,
-					   QString targetDir,
-					   FullDomain *fDomain,
-					   int version,
-					   int recordFrequency)
+				       ProjectFile *projFile,
+				       QString targetDir,
+				       FullDomain *fDomain,
+				       int version,
+				       int recordFrequency)
 {
 	fullDomain = fDomain;
 	projectFile = projFile;
