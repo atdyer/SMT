@@ -433,6 +433,12 @@ void Fort14::RefreshGL()
 }
 
 
+void Fort14::SaveChanges()
+{
+
+}
+
+
 void Fort14::SetCamera(GLCamera *camera)
 {
 	this->camera = camera;

@@ -57,6 +57,7 @@ class Fort14 : public QObject
 		QColor			GetSolidOutlineColor();
 
 		void			RefreshGL();
+		void			SaveChanges();
 		void			SetCamera(GLCamera *camera);
 		void			SetGradientBoundaryColors(QGradientStops newStops);
 		void			SetGradientFillColors(QGradientStops newStops);
