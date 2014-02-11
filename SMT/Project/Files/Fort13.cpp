@@ -139,20 +139,195 @@ void Fort13::SetNumNodes(unsigned int newNumNodes)
  */
 void Fort13::SetNodalAttributes(std::vector<NodalAttribute> newAttributes, Py140 *py140)
 {
-	if (!isFullDomain)
+	if (!isFullDomain && py140)
 	{
+		// Loop through the full domain attributes
+		for (std::vector<NodalAttribute>::iterator currAttribute = newAttributes.begin();
+		     currAttribute != newAttributes.end();
+		     ++currAttribute)
+		{
+			// Create the corresponding subdomain attribute
+			NodalAttribute newAttribute;
+			newAttribute.attributeName = (*currAttribute).attributeName;
+			newAttribute.units = (*currAttribute).units;
+			newAttribute.valuesPerNode = (*currAttribute).valuesPerNode;
+			newAttribute.defaultValues = (*currAttribute).defaultValues;
 
+			// Loop through the nodes of the full domain attribute
+			for (std::vector<QString>::iterator currNodeLine = (*currAttribute).nonDefaultLines.begin();
+			     currNodeLine != (*currAttribute).nonDefaultLines.end();
+			     ++currNodeLine)
+			{
+				// Split the string and retrieve the node number
+				QStringList splitString = (*currNodeLine).split(QRegExp("\\s+"));
+				if (!splitString.empty())
+				{
+					unsigned int nodeNumber = splitString.at(0).toUInt();
+
+					// If the node number has a subdomain counterpart, it needs to be added
+					// to the subdomain fort.13 file
+					if (py140->HasOldNode(nodeNumber))
+					{
+						// Convert to the subdomain node number
+						unsigned int subdomainNodeNumber = py140->ConvertOldToNew(nodeNumber);
+
+						// Build the text line for the subdomain fort.13
+						QString newLine = QString::number(subdomainNodeNumber);
+						for (int i=1; i<splitString.size(); ++i)
+						{
+							newLine += "\t";
+							newLine += splitString.at(i);
+						}
+
+						// Add the text line to the subdomain attribute
+						newAttribute.nonDefaultLines.push_back(newLine);
+					}
+				}
+			}
+		}
+
+		// Set the number of nodes
+		numNodes = py140->GetNumNodes();
+
+		// Set the number of attributes
+		numAttributes = attributes.size();
 	}
 }
 
 
 void Fort13::ReadFile()
 {
+	if (!targetFile.isEmpty())
+	{
+		attributes.clear();
 
+		std::ifstream file (targetFile.toStdString().data());
+		if (file.is_open())
+		{
+			std::string currentLine;
+
+			// Read the header line
+			std::getline(file, currentLine);
+			headerLine = QString(currentLine.data());
+
+			// Read the number of nodes line
+			std::getline(file, currentLine);
+			std::stringstream(currentLine) >> numNodes;
+
+			// Read the number of attributes line
+			std::getline(file, currentLine);
+			std::stringstream(currentLine) >> numAttributes;
+
+			// Read the attribute properties
+			for (unsigned int i=0; i<numAttributes; ++i)
+			{
+				NodalAttribute newAttribute;
+
+				// Read the attribute name
+				std::getline(file, currentLine);
+				newAttribute.attributeName = QString(currentLine.data());
+
+				// Read the attribute units
+				std::getline(file, currentLine);
+				newAttribute.units = QString(currentLine.data());
+
+				// Read the number of values per node for the attribute
+				std::getline(file, currentLine);
+				newAttribute.valuesPerNode = QString(currentLine.data());
+
+				// Read the default values for the attribute
+				std::getline(file, currentLine);
+				newAttribute.defaultValues = QString(currentLine.data());
+
+				// Add the new attribute to the list of attributes
+				attributes.push_back(newAttribute);
+			}
+
+			// Read non-default values for each attribute
+			for (std::vector<NodalAttribute>::iterator currAttribute = attributes.begin();
+			     currAttribute != attributes.end();
+			     ++currAttribute)
+			{
+				// Skip the attribute name line
+				std::getline(file, currentLine);
+
+				// Get the number of non-default nodes
+				int numNonDefault;
+				std::getline(file, currentLine);
+				std::stringstream(currentLine) >> numNonDefault;
+
+				// Get all of the non-default values
+				for (int i=0; i<numNonDefault; ++i)
+				{
+					std::getline(file, currentLine);
+					(*currAttribute).nonDefaultLines.push_back(QString(currentLine.data()));
+				}
+			}
+
+			// Close the file
+			file.close();
+		}
+	}
 }
 
 
 void Fort13::WriteFile()
 {
+	// Only allow modification of subdomain files
+	if (!isFullDomain && !targetFile.isEmpty())
+	{
+		std::ofstream file (targetFile.toStdString().data());
+		if (file.is_open())
+		{
+			// Write the header line
+			file << headerLine.toStdString().data() << '\n';
 
+			// Write the number of nodes
+			file << numNodes << '\n';
+
+			// Write the number of attributes
+			file << numAttributes << '\n';
+
+			// Write the attribute properties
+			for (std::vector<NodalAttribute>::iterator currAttribute = attributes.begin();
+			     currAttribute != attributes.end();
+			     ++currAttribute)
+			{
+				// Write the attribute name
+				file << (*currAttribute).attributeName.toStdString().data() << '\n';
+
+				// Write the attribute units
+				file << (*currAttribute).units.toStdString().data() << '\n';
+
+				// Write the number of values per node
+				file << (*currAttribute).valuesPerNode.toStdString().data() << '\n';
+
+				// Write the default attribute values
+				file << (*currAttribute).defaultValues.toStdString().data() << '\n';
+			}
+
+			// Write the non-default nodal attribute values
+			for (std::vector<NodalAttribute>::iterator currAttribute = attributes.begin();
+			     currAttribute != attributes.end();
+			     ++currAttribute)
+			{
+				// Write the attribute name
+				file << (*currAttribute).attributeName.toStdString().data() << '\n';
+
+				// Write the number of non-default values
+				file << (*currAttribute).nonDefaultLines.size() << '\n';
+
+				// Write each of the non-default value lines
+				for (std::vector<QString>::iterator currLine = (*currAttribute).nonDefaultLines.begin();
+				     currLine != (*currAttribute).nonDefaultLines.end();
+				     ++currLine)
+				{
+					file << (*currLine).toStdString().data();
+				}
+			}
+
+			// Close the file
+			file.close();
+		}
+	}
 }

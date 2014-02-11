@@ -28,6 +28,7 @@ class Py140 : public QObject
 		std::vector<unsigned int>		ConvertOldToNew(std::vector<unsigned int> oldVector);
 		QString					GetFilePath();
 		std::map<unsigned int, unsigned int>	GetNewToOld();
+		unsigned int				GetNumNodes();
 		std::map<unsigned int, unsigned int>	GetOldToNew();
 		bool					HasOldNode(unsigned int nodeNum);
 

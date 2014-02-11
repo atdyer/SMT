@@ -159,6 +159,12 @@ std::map<unsigned int, unsigned int> Py140::GetNewToOld()
 }
 
 
+unsigned int Py140::GetNumNodes()
+{
+	return newToOldNodes.size();
+}
+
+
 std::map<unsigned int, unsigned int> Py140::GetOldToNew()
 {
 	if (!oldToNewNodes.size())

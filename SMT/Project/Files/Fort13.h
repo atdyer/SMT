@@ -5,6 +5,9 @@
 #include <QString>
 
 #include <vector>
+#include <istream>
+#include <fstream>
+#include <sstream>
 
 #include "Project/Files/ProjectFile.h"
 #include "Project/Files/Py140.h"
@@ -14,8 +17,17 @@ struct NodalAttribute {
 		QString	units;
 		QString	valuesPerNode;
 		QString	defaultValues;
-		std::vector<unsigned int>	nonDefaultNodes;
 		std::vector<QString>		nonDefaultLines;
+
+		NodalAttribute() :
+			attributeName(),
+			units(),
+			valuesPerNode(),
+			defaultValues(),
+			nonDefaultLines()
+		{
+			nonDefaultLines.clear();
+		}
 };
 
 class Fort13 : public QObject
