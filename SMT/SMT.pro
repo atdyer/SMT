@@ -93,7 +93,8 @@ SOURCES += main.cpp\
     Adcirc/FullDomainRunner.cpp \
     Adcirc/SubdomainCreator.cpp \
     Layers/SelectionLayers/SubDomainSelectionLayer.cpp \
-    Project/Files/Workers/Fort14Writer.cpp
+    Project/Files/Workers/Fort14Writer.cpp \
+    Project/Files/Fort13.cpp
 
 HEADERS  += MainWindow.h \
     OpenGL/wglew.h \
@@ -178,7 +179,8 @@ HEADERS  += MainWindow.h \
     Adcirc/FullDomainRunner.h \
     Adcirc/SubdomainCreator.h \
     Layers/SelectionLayers/SubDomainSelectionLayer.h \
-    Project/Files/Workers/Fort14Writer.h
+    Project/Files/Workers/Fort14Writer.h \
+    Project/Files/Fort13.h
 
 FORMS    += MainWindow.ui \
     Widgets/ShaderOptionsStackedWidget.ui \

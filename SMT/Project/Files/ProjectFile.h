@@ -25,6 +25,7 @@ class ProjectFile : public QDomDocument
 		/* Getter Functions */
 		QString		GetAdcircLocation();
 		QString		GetFullDomainDirectory();
+		QString		GetFullDomainFort13();
 		QString		GetFullDomainFort14();
 		QString		GetFullDomainFort15();
 		QString		GetFullDomainFort63();
@@ -40,6 +41,7 @@ class ProjectFile : public QDomDocument
 		QString		GetProjectName();
 		QString		GetSubDomainBNList(QString subdomainName);
 		QString		GetSubDomainDirectory(QString subdomainName);
+		QString		GetSubDomainFort13(QString subdomainName);
 		QString		GetSubDomainFort14(QString subdomainName);
 		QString		GetSubDomainFort15(QString subdomainName);
 		QString		GetSubDomainFort63(QString subdomainName);
@@ -77,6 +79,7 @@ class ProjectFile : public QDomDocument
 		void	SetFullDomainMaxvel(QString newLoc);
 		void	SetSubDomainBNList(QString subDomain, QString newLoc);
 		void	SetSubDomainDirectory(QString subDomain, QString newLoc);
+		void	SetSubDomainFort13(QString subDomain, QString newLoc);
 		void	SetSubDomainFort14(QString subDomain, QString newLoc);
 		void	SetSubDomainFort15(QString subDomain, QString newLoc);
 		void	SetSubDomainFort63(QString subDomain, QString newLoc);

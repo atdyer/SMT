@@ -157,6 +157,12 @@ QString ProjectFile::GetFullDomainDirectory()
 }
 
 
+QString ProjectFile::GetFullDomainFort13()
+{
+	return GetAttribute(TAG_FULL_DOMAIN, ATTR_FORT13LOCATION);
+}
+
+
 QString ProjectFile::GetFullDomainFort14()
 {
 	return GetAttribute(TAG_FULL_DOMAIN, ATTR_FORT14LOCATION);
@@ -244,6 +250,12 @@ QString ProjectFile::GetSubDomainBNList(QString subdomainName)
 QString ProjectFile::GetSubDomainDirectory(QString subdomainName)
 {
 	return GetAttributeSubdomain(subdomainName, ATTR_DIRECTORY);
+}
+
+
+QString ProjectFile::GetSubDomainFort13(QString subdomainName)
+{
+	return GetAttributeSubdomain(subdomainName, ATTR_FORT13LOCATION);
 }
 
 
@@ -503,6 +515,12 @@ void ProjectFile::SetSubDomainBNList(QString subDomain, QString newLoc)
 void ProjectFile::SetSubDomainDirectory(QString subDomain, QString newLoc)
 {
 	SetAttributeSubdomain(subDomain, ATTR_DIRECTORY, newLoc);
+}
+
+
+void ProjectFile::SetSubDomainFort13(QString subDomain, QString newLoc)
+{
+	SetAttributeSubdomain(subDomain, ATTR_FORT13LOCATION, newLoc);
 }
 
 
