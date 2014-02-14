@@ -242,7 +242,7 @@ void SubdomainCreator::CreateSubdomainVersion1(int recordFrequency)
 
 bool SubdomainCreator::CreateBNListVersion1(std::vector boundaryNodes)
 {
-
+	// Version 1 boundary list only needs outer boundaries
 }
 
 
@@ -254,12 +254,20 @@ void SubdomainCreator::CreateSubdomainVersion2()
 
 bool SubdomainCreator::CreateBNListVersion2(std::vector boundaryNodes)
 {
-
+	// Version 2 boundary list needs inner and outer boundaries
 }
 
 
 Fort015* SubdomainCreator::GetFullDomainFort015(int version, int recordFrequency)
 {
+	//
+	// Retrieve the full domain fort.015. If one does not exist, create one
+	// and set the version and record frequency. If one does exist,
+	// check the requested version and record frequency against the existing
+	// values. If there is a mismatch, warn the user and ask them if
+	// they want to continue. If they do not want to continue, return 0.
+	//
+
 	if (projectFile)
 	{
 		// Get the fort.015 file path from the project file
@@ -275,13 +283,42 @@ Fort015* SubdomainCreator::GetFullDomainFort015(int version, int recordFrequency
 			Fort015 *fullFort015 = new Fort015(projectFile);
 		}
 	}
+
+	// Unable to retrieve or create the full domain fort.015, so return 0
 	return 0;
 }
 
 
-std::vector<Node*> SubdomainCreator::GetSelectedNodes(std::vector selectedElements)
+std::vector<Node*> SubdomainCreator::GetSelectedNodes(std::vector<Element*> selectedElements)
 {
+	//
+	// Use a standard library set to find the unique set of selected nodes
+	//
+	std::set<Node*> selectedSet;
+	Element *currElement = 0;
+	for (std::vector<Element*>::iterator it=selectedElements.begin(); it != selectedElements.end(); ++it)
+	{
+		currElement = *it;
+		if (currElement)
+		{
+			selectedSet.insert(currElement->n1);
+			selectedSet.insert(currElement->n2);
+			selectedSet.insert(currElement->n3);
+		}
+	}
 
+	//
+	// Transfer the items of the set into a vector
+	//
+	std::vector<Node*> selectedNodes;
+	selectedNodes.reserve(selectedSet.size());
+	for (std::set<Node*>::iterator it=selectedSet.begin(); it != selectedSet.end(); ++it)
+	{
+		selectedNodes.push_back(*it);
+	}
+
+	// Return the list of nodes
+	return selectedNodes;
 }
 
 
