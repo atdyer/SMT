@@ -260,7 +260,22 @@ bool SubdomainCreator::CreateBNListVersion2(std::vector boundaryNodes)
 
 Fort015* SubdomainCreator::GetFullDomainFort015(int version, int recordFrequency)
 {
+	if (projectFile)
+	{
+		// Get the fort.015 file path from the project file
+		QString fileLoc = projectFile->GetFullDomainFort015();
+		if (fileLoc.isEmpty())
+		{
+			// There is no full domain fort.015 file, so try to create it
+			QString fullDir = projectFile->GetFullDomainDirectory();
+			if (fullDir.isEmpty())
+				return 0;
 
+//			project
+			Fort015 *fullFort015 = new Fort015(projectFile);
+		}
+	}
+	return 0;
 }
 
 
@@ -484,25 +499,4 @@ bool SubdomainCreator::WarnSubdomainFilesExist(QString targetDir)
 			/* Should never be reached */
 			return false;
 	}
-}
-
-
-Fort015* SubdomainCreator::GetFullDomainFort015(int version, int recordFrequency)
-{
-	if (projectFile)
-	{
-		// Get the fort.015 file path from the project file
-		QString fileLoc = projectFile->GetFullDomainFort015();
-		if (fileLoc.isEmpty())
-		{
-			// There is no full domain fort.015 file, so try to create it
-			QString fullDir = projectFile->GetFullDomainDirectory();
-			if (fullDir.isEmpty())
-				return 0;
-
-			project
-			Fort015 *fullFort015 = new Fort015(projectFile);
-		}
-	}
-	return 0;
 }
