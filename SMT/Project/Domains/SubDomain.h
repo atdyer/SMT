@@ -12,6 +12,7 @@
 #include "Layers/SelectionLayers/SubDomainSelectionLayer.h"
 
 #include "Project/Files/BNList14.h"
+#include "Project/Files/Fort13.h"
 #include "Project/Files/Fort14.h"
 #include "Project/Files/Fort15.h"
 #include "Project/Files/Fort22.h"
@@ -55,6 +56,7 @@ class SubDomain : public Domain
 
 		BNList14*	bnList;
 		QString		domainName;
+		Fort13*		fort13;
 		Fort15*		fort15;
 		Fort22*		fort22;
 		Fort63*		fort63;

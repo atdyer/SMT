@@ -32,6 +32,122 @@ SubdomainCreator::~SubdomainCreator()
 }
 
 
+/**
+ * @brief Creates a version 1 subdomain
+ */
+void SubdomainCreator::CreateSubdomainVersion1(int recordFrequency)
+{
+	// fullDomain set by SubdomainCreator::CreateSubdomain()
+	// projectFile set by SubdomainCreator::CreateSubdomain()
+	// subdomainName set by SubdomainCreator::CreateSubdomain()
+
+
+	// Make sure the target directory (it will always be the name
+	// of the subdomain) exists.
+	QString newDirPath = targetDir + QDir::separator() + subdomainName;
+	if (QDir(newDirPath).exists())
+	{
+		// The directory exists. Check for ADCIRC files.
+		if (CheckForExistingSubdomainFiles(newDirPath))
+		{
+			// ADCIRC files exist in the directory. Ask the user
+			// if they'd like to overwrite.
+			if (!WarnSubdomainFilesExist(newDirPath))
+				return false;
+		}
+	} else {
+		// The directory doesn't exist, so create it.
+		QDir().mkdir(newDirPath);
+	}
+
+
+	// Start creating the subdomain by getting the fort.015 file from the full domain
+	// Checks are performed here to ensure that the subdomain version/record frequency
+	// are matched between the full and subdomain
+	Fort015 *fort015Full = GetFullDomainFort015(1, recordFrequency);
+
+	if (!fort015Full)
+	{
+		std::cout << "Error getting full domain fort.015 file" << std::endl;
+		return false;
+	}
+
+
+	// Create the subdomain fort.015 file
+	Fort015 *fort015Sub = new Fort015(subdomainName, projectFile);
+	if (fort015Sub)
+	{
+		// The version 1 subdomain has a very simple fort.015 file.
+		// All we need to do is set the subdomain version and record
+		// frequency, and we are able to write the file and close it.
+		fort015Sub->SetSubdomainApproach(1);
+		fort015Sub->SetRecordFrequency(recordFrequency);
+		fort015Sub->WriteFile();
+		delete fort015Sub;
+	} else {
+		std::cout << "Error creating the subdomain fort.015 file" << std::endl;
+		return false;
+	}
+
+
+	// Get the selected elements from the full domain and determine the selected
+	// set of nodes.
+	if (!fullDomain)
+	{
+		std::cout << "Error accessing the full domain" << std::endl;
+		return false;
+	}
+	std::vector<Element*> selectedElements = fullDomain->GetSelectedElements();
+	std::vector<Node*> selectedNodes = GetSelectedNodes(selectedElements);
+
+
+	// Map the subdomain nodes/elements to the full domain nodes/elements
+	// This process creates the py.140 and py.141 files
+	Py140 *py140 = CreatePy140(selectedNodes);
+	Py141 *py141 = CreatePy141(selectedElements);
+	if (!py140)
+	{
+		std::cout << "Error creating the py.140 file for the new subdomain" << std::endl;
+		return false;
+	}
+	if (!py141)
+	{
+		std::cout << "Error creating the py.141 file for the new subdomain" << std::endl;
+		return false;
+	}
+
+
+	// Get the boundary nodes from the selection and create the bnlist.14 file
+	std::vector<unsigned int> boundaryNodes = fullDomain->GetOuterBoundaryNodes();
+	bool bnListCreated = CreateBNListVersion1(boundaryNodes);
+	if (!bnListCreated)
+	{
+		std::cout << "Error creating the bnlist.14 file for the new subdomain" << std::endl;
+		return false;
+	}
+
+
+	// Add the boundary nodes to the full domain fort.015 file
+	fort015Full->AddBoundaryNodes(boundaryNodes);
+	fort015Full->WriteFile();
+
+
+	// Create a fort.13 file for the subdomain (if it's needed)
+	Fort13 *fort13 = CreateFort13(py140);
+	if (fort13)
+		std::cout << "Subdomain fort.13 file created" << std::endl;
+
+
+	// Create a fort.14 file for the subdomain
+	Fort14* fort14 = CreateFort14(py140, py141);
+	if (!fort14)
+	{
+		std::cout << "Error creating the fort.14 file for the new subdomain" << std::endl;
+		return false;
+	}
+}
+
+
 bool SubdomainCreator::CreateSubdomain(QString newName,
 				       ProjectFile *projFile,
 				       QString targetDir,
@@ -78,7 +194,7 @@ bool SubdomainCreator::CreateSubdomain(QString newName,
 		}
 		if (fullFreq != 0 && fullFreq != recordFrequency)
 		{
-			// Throw record frequency mismatch warning
+			// Throw record frequency mismatch warningtar
 		}
 		fort015Full->SetSubdomainApproach(version);
 		fort015Full->SetRecordFrequency(recordFrequency);
@@ -314,4 +430,25 @@ bool SubdomainCreator::WarnSubdomainFilesExist(QString targetDir)
 			/* Should never be reached */
 			return false;
 	}
+}
+
+
+Fort015* SubdomainCreator::GetFullDomainFort015(int version, int recordFrequency)
+{
+	if (projectFile)
+	{
+		// Get the fort.015 file path from the project file
+		QString fileLoc = projectFile->GetFullDomainFort015();
+		if (fileLoc.isEmpty())
+		{
+			// There is no full domain fort.015 file, so try to create it
+			QString fullDir = projectFile->GetFullDomainDirectory();
+			if (fullDir.isEmpty())
+				return 0;
+
+			project
+			Fort015 *fullFort015 = new Fort015(projectFile);
+		}
+	}
+	return 0;
 }

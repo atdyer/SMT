@@ -11,6 +11,7 @@
 
 #include "Layers/SelectionLayers/FullDomainSelectionLayer.h"
 
+#include "Project/Files/Fort13.h"
 #include "Project/Files/Fort14.h"
 #include "Project/Files/Fort15.h"
 #include "Project/Files/Fort22.h"
@@ -45,6 +46,7 @@ class FullDomain : public Domain
 
 		FullDomainSelectionLayer*	selectionLayerFullDomain;
 
+		Fort13*		fort13;
 		Fort15*		fort15;
 		Fort22*		fort22;
 		Fort63*		fort63;

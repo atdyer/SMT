@@ -4,6 +4,7 @@
 FullDomain::FullDomain(ProjectFile *projectFile, QObject *parent) :
 	Domain(projectFile, parent),
 	selectionLayerFullDomain(0),
+	fort13(0),
 	fort15(0),
 	fort22(0),
 	fort63(0),
@@ -77,6 +78,7 @@ std::vector<Element*> FullDomain::GetSelectedElements()
 
 void FullDomain::CreateAllFiles()
 {
+	fort13 = new Fort13(projectFile, this);
 	fort14 = new Fort14(projectFile, this);
 	fort15 = new Fort15(projectFile, this);
 	fort22 = new Fort22(projectFile, this);

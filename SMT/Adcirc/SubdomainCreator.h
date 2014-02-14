@@ -11,6 +11,39 @@
 #include "Project/Files/Py140.h"
 #include "Project/Files/Py141.h"
 
+
+/**
+ * @brief Creates a new subdomain from an existing full domain
+ *
+ * This class is used to create new subdomains from an existing full domain.
+ * The following steps are followed when creating a subdomain:
+ *
+ * - Check the full domain for a fort.015 file. If it has one already,
+ *   the full domain already has subdomains and the same subdomain version
+ *   (and record frequency) must be used. If the user is trying to
+ *   use a different subdomain version, alert them that the
+ *   appropriate one will be automatically used.
+ * - The currently selected elements are retrieved from the full domain,
+ *   along with the boundaries of the selection. Some sanity checks are
+ *   performed on the selection just to be sure that a valid subdomain
+ *   is being created.
+ * - Create new node and element numbers for the subdomain and write the
+ *   py.140 and py.141 files.
+ * - Get the appropriate boundary nodes (outer for version 1, inner and outer
+ *   for version 2) and write the bnlist.14 file.
+ * - Create the new fort.14 file
+ * - Create the new subdomain fort.015 file
+ * - Check for a full domain fort.13 file. If one exists, create the subdomain
+ *   fort.13 file
+ * - Update the project file with all newly created file locations.
+ *
+ *
+ * Because of minor nuances that keep arising between the version 1 and version 2
+ * methods, a separate function has been created for each. They are extremely
+ * similar but making modifications to each will be more simple moving forward
+ * if they are separated.
+ *
+ */
 class SubdomainCreator
 {
 	public:
@@ -26,19 +59,36 @@ class SubdomainCreator
 
 	private:
 
-		BNList14*				bnList;
-		Fort015*				fort015Full;
-		Fort015*				fort015Sub;
+//		BNList14*				bnList;
+//		Fort015*				fort015Full;
+//		Fort015*				fort015Sub;
 		FullDomain*				fullDomain;
-		std::vector<unsigned int>		innerBoundaryNodes;
-		std::vector<unsigned int>		outerBoundaryNodes;
-		Py140*				py140;
-		Py141*				py141;
-		ProjectFile*			projectFile;
-		std::vector<Element*>			selectedElements;
-		std::vector<Node*>			selectedNodes;
+//		std::vector<unsigned int>		innerBoundaryNodes;
+//		std::vector<unsigned int>		outerBoundaryNodes;
+//		Py140*					py140;
+//		Py141*					py141;
+		ProjectFile*				projectFile;
+//		std::vector<Element*>			selectedElements;
+//		std::vector<Node*>			selectedNodes;
 		QString					subdomainName;
 
+		// Methods for creating version 1 subdomains
+		void	CreateSubdomainVersion1(int recordFrequency);
+		bool	CreateBNListVersion1(std::vector<unsigned int> boundaryNodes);
+
+		// Methods for creating version 2 subdomains
+		void	CreateSubdomainVersion2();
+		bool	CreateBNListVersion2();
+
+		// Methods that apply to creating both versions
+		Fort015*		GetFullDomainFort015(int version, int recordFrequency);
+		std::vector<Node*>	GetSelectedNodes(std::vector<Element*> selectedElements);
+		Fort13*			CreateFort13(Py140 *py140);
+		Fort14*			CreateFort14(Py140 *py140, Py141 *py141);
+		Py140*			CreatePy140(std::vector<Node*> selectedNodes);
+		Py141*			CreatePy141(std::vector<Element*> selectedElements);
+
+		// Older methods
 		bool	CheckForExistingSubdomainFiles(QString targetDir);
 		void	FindBoundaries(int version);
 		void	FindUniqueNodes();

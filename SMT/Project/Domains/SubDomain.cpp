@@ -6,6 +6,7 @@ SubDomain::SubDomain(QString domainName, ProjectFile *projectFile, QObject *pare
 	selectionLayerSubdomain(0),
 	bnList(0),
 	domainName(domainName),
+	fort13(0),
 	fort15(0),
 	fort22(0),
 	fort63(0),
@@ -143,6 +144,7 @@ void SubDomain::SetNodalValues(unsigned int nodeNumber, QString x, QString y, QS
 void SubDomain::CreateAllFiles()
 {
 	bnList = new BNList14(domainName, projectFile, this);
+	fort13 = new Fort13(domainName, projectFile, this);
 	fort14 = new Fort14(domainName, projectFile, this);
 	fort15 = new Fort15(domainName, projectFile, this);
 	fort22 = new Fort22(domainName, projectFile, this);

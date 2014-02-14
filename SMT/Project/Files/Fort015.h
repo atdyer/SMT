@@ -54,7 +54,7 @@ class Fort015 : public QObject
 		std::set<unsigned int>	innerBoundaryNodes;
 		bool			isFullDomainFile;
 		std::set<unsigned int>	outerBoundaryNodes;
-		ProjectFile*	projectFile;
+		ProjectFile*		projectFile;
 		int			recordFrequency;
 		int			subdomainApproach;
 		QString			targetFile;
