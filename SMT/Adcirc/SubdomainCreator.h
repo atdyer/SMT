@@ -78,7 +78,7 @@ class SubdomainCreator
 
 		// Methods for creating version 2 subdomains
 		void	CreateSubdomainVersion2();
-		bool	CreateBNListVersion2();
+		bool	CreateBNListVersion2(std::vector<unsigned int> boundaryNodes);
 
 		// Methods that apply to creating both versions
 		Fort015*		GetFullDomainFort015(int version, int recordFrequency);

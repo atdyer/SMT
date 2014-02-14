@@ -32,6 +32,98 @@ SubdomainCreator::~SubdomainCreator()
 }
 
 
+bool SubdomainCreator::CreateSubdomain(QString newName,
+				       ProjectFile *projFile,
+				       QString targetDir,
+				       FullDomain *fDomain,
+				       int version,
+				       int recordFrequency)
+{
+	fullDomain = fDomain;
+	projectFile = projFile;
+	subdomainName = newName;
+
+	// Make sure target directory exists
+	if (!QDir(targetDir).exists())
+	{
+		QDir().mkdir(targetDir);
+		std::cout << QDir(targetDir).exists() << std::endl;
+	} else {
+		if (CheckForExistingSubdomainFiles(targetDir))
+		{
+			if (!WarnSubdomainFilesExist(targetDir))
+				return false;
+		}
+	}
+
+	if (fullDomain && projectFile && !targetDir.isEmpty() && projectFile->AddSubdomain(subdomainName))
+	{
+		// Set the subdomain's target directory
+		projectFile->SetSubDomainDirectory(subdomainName, targetDir);
+
+		// Get the full domain fort.015 file
+		if (fort015Full)
+		{
+			fort015Full->WriteFile();
+			delete fort015Full;
+		}
+		fort015Full = new Fort015(projectFile);
+
+		// Check for version and record frequency compatibility
+		int fullVersion = fort015Full->GetSubdomainApproach();
+		int fullFreq = fort015Full->GetRecordFrequency();
+		if (fullVersion != 0 && fullVersion != version)
+		{
+			// Throw version mismatch warning
+		}
+		if (fullFreq != 0 && fullFreq != recordFrequency)
+		{
+			// Throw record frequency mismatch warningtar
+		}
+		fort015Full->SetSubdomainApproach(version);
+		fort015Full->SetRecordFrequency(recordFrequency);
+
+		// Get the subdomain fort.015
+		if (fort015Sub)
+		{
+			fort015Sub->WriteFile();
+			delete fort015Sub;
+		}
+		fort015Sub = new Fort015(subdomainName, projectFile);
+		fort015Sub->SetSubdomainApproach(version);
+		fort015Sub->SetRecordFrequency(recordFrequency);
+		fort015Sub->WriteFile();
+
+
+		// Get elements (and nodes) that are selected in the full domain
+		selectedElements = fullDomain->GetSelectedElements();
+		FindUniqueNodes();
+
+		// Map the subdomain nodes/elements to the full domain nodes/elements
+		MapOldToNewNodes();
+		MapOldToNewElements();
+
+		// Get the boundaries of the selected elements, write the bnlist.14 file,
+		// and add the nodes to the full fort.015 file
+		innerBoundaryNodes = fullDomain->GetInnerBoundaryNodes();
+		outerBoundaryNodes = fullDomain->GetOuterBoundaryNodes();
+		FindBoundaries(version);
+		if (version == 1)
+			fort015Full->AddBoundaryNodes(outerBoundaryNodes);
+		else if (version == 2)
+		{
+			fort015Full->AddInnerBoundaryNodes(innerBoundaryNodes);
+			fort015Full->AddOuterBoundaryNodes(outerBoundaryNodes);
+		}
+		fort015Full->WriteFile();
+
+		// Write new fort.14 file
+		return WriteFort14();
+	}
+	return false;
+}
+
+
 /**
  * @brief Creates a version 1 subdomain
  */
@@ -148,95 +240,57 @@ void SubdomainCreator::CreateSubdomainVersion1(int recordFrequency)
 }
 
 
-bool SubdomainCreator::CreateSubdomain(QString newName,
-				       ProjectFile *projFile,
-				       QString targetDir,
-				       FullDomain *fDomain,
-				       int version,
-				       int recordFrequency)
+bool SubdomainCreator::CreateBNListVersion1(std::vector boundaryNodes)
 {
-	fullDomain = fDomain;
-	projectFile = projFile;
-	subdomainName = newName;
 
-	// Make sure target directory exists
-	if (!QDir(targetDir).exists())
-	{
-		QDir().mkdir(targetDir);
-		std::cout << QDir(targetDir).exists() << std::endl;
-	} else {
-		if (CheckForExistingSubdomainFiles(targetDir))
-		{
-			if (!WarnSubdomainFilesExist(targetDir))
-				return false;
-		}
-	}
-
-	if (fullDomain && projectFile && !targetDir.isEmpty() && projectFile->AddSubdomain(subdomainName))
-	{
-		// Set the subdomain's target directory
-		projectFile->SetSubDomainDirectory(subdomainName, targetDir);
-
-		// Get the full domain fort.015 file
-		if (fort015Full)
-		{
-			fort015Full->WriteFile();
-			delete fort015Full;
-		}
-		fort015Full = new Fort015(projectFile);
-
-		// Check for version and record frequency compatibility
-		int fullVersion = fort015Full->GetSubdomainApproach();
-		int fullFreq = fort015Full->GetRecordFrequency();
-		if (fullVersion != 0 && fullVersion != version)
-		{
-			// Throw version mismatch warning
-		}
-		if (fullFreq != 0 && fullFreq != recordFrequency)
-		{
-			// Throw record frequency mismatch warningtar
-		}
-		fort015Full->SetSubdomainApproach(version);
-		fort015Full->SetRecordFrequency(recordFrequency);
-
-		// Get the subdomain fort.015
-		if (fort015Sub)
-		{
-			fort015Sub->WriteFile();
-			delete fort015Sub;
-		}
-		fort015Sub = new Fort015(subdomainName, projectFile);
-		fort015Sub->SetSubdomainApproach(version);
-		fort015Sub->SetRecordFrequency(recordFrequency);
-		fort015Sub->WriteFile();
+}
 
 
-		// Get elements (and nodes) that are selected in the full domain
-		selectedElements = fullDomain->GetSelectedElements();
-		FindUniqueNodes();
+void SubdomainCreator::CreateSubdomainVersion2()
+{
 
-		// Map the subdomain nodes/elements to the full domain nodes/elements
-		MapOldToNewNodes();
-		MapOldToNewElements();
+}
 
-		// Get the boundaries of the selected elements, write the bnlist.14 file,
-		// and add the nodes to the full fort.015 file
-		innerBoundaryNodes = fullDomain->GetInnerBoundaryNodes();
-		outerBoundaryNodes = fullDomain->GetOuterBoundaryNodes();
-		FindBoundaries(version);
-		if (version == 1)
-			fort015Full->AddBoundaryNodes(outerBoundaryNodes);
-		else if (version == 2)
-		{
-			fort015Full->AddInnerBoundaryNodes(innerBoundaryNodes);
-			fort015Full->AddOuterBoundaryNodes(outerBoundaryNodes);
-		}
-		fort015Full->WriteFile();
 
-		// Write new fort.14 file
-		return WriteFort14();
-	}
-	return false;
+bool SubdomainCreator::CreateBNListVersion2(std::vector boundaryNodes)
+{
+
+}
+
+
+Fort015* SubdomainCreator::GetFullDomainFort015(int version, int recordFrequency)
+{
+
+}
+
+
+std::vector<Node*> SubdomainCreator::GetSelectedNodes(std::vector selectedElements)
+{
+
+}
+
+
+Fort13* SubdomainCreator::CreateFort13(Py140 *py140)
+{
+
+}
+
+
+Fort14* SubdomainCreator::CreateFort14(Py140 *py140, Py141 *py141)
+{
+
+}
+
+
+Py140* SubdomainCreator::CreatePy140(std::vector selectedNodes)
+{
+
+}
+
+
+Py141* SubdomainCreator::CreatePy141(std::vector selectedElements)
+{
+
 }
 
 
