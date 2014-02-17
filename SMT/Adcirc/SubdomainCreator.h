@@ -43,6 +43,10 @@
  * similar but making modifications to each will be more simple moving forward
  * if they are separated.
  *
+ * Note: Will probably rethink fort.015 process. It seems it would probably be
+ *	 more useful to set the subdomain version and record frequency at the
+ *	 start of a project and then never ask the user again for those values.
+ *
  */
 class SubdomainCreator
 {
@@ -73,30 +77,33 @@ class SubdomainCreator
 		QString					subdomainName;
 
 		// Methods for creating version 1 subdomains
-		void	CreateSubdomainVersion1(int recordFrequency);
-		bool	CreateBNListVersion1(std::vector<unsigned int> boundaryNodes);
+		bool	CreateSubdomainVersion1(QString targetDir, int recordFrequency);
+		bool	CreateBNListVersion1(std::vector<unsigned int> boundaryNodes, Py140 *py140);
 
 		// Methods for creating version 2 subdomains
-		void	CreateSubdomainVersion2();
-		bool	CreateBNListVersion2(std::vector<unsigned int> boundaryNodes);
+		bool	CreateSubdomainVersion2(QString targetDir, int recordFrequency);
+		bool	CreateBNListVersion2(std::vector<unsigned int> innerBoundaryNodes, std::vector<unsigned int> outerBoundaryNodes, Py140 *py140);
 
 		// Methods that apply to creating both versions
 		Fort015*		GetFullDomainFort015(int version, int recordFrequency);
 		std::vector<Node*>	GetSelectedNodes(std::vector<Element*> selectedElements);
 		Fort13*			CreateFort13(Py140 *py140);
-		Fort14*			CreateFort14(Py140 *py140, Py141 *py141);
+		bool			CreateFort14(std::vector<Node *> selectedNodes, std::vector<Element*> selectedElements,
+						     Py140 *py140, Py141 *py141);
 		Py140*			CreatePy140(std::vector<Node*> selectedNodes);
 		Py141*			CreatePy141(std::vector<Element*> selectedElements);
 
 		// Older methods
 		bool	CheckForExistingSubdomainFiles(QString targetDir);
-		void	FindBoundaries(int version);
-		void	FindUniqueNodes();
-		void	MapOldToNewElements();
-		void	MapOldToNewNodes();
-		bool	WriteFort14();
+//		void	FindBoundaries(int version);
+//		void	FindUniqueNodes();
+//		void	MapOldToNewElements();
+//		void	MapOldToNewNodes();
+//		bool	WriteFort14();
 
 		bool	WarnSubdomainFilesExist(QString targetDir);
+		bool	WarnFort015Mismatch(int requestedVersion, int actualVersion,
+					    int requestedFrequency, int actualFrequency);
 };
 
 #endif // SUBDOMAINCREATOR_NEW_H

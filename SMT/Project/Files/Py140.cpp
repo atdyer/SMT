@@ -36,8 +36,11 @@ Py140::Py140(QString domainName, ProjectFile *projectFile, QObject *parent) :
 			if (!targetDirectory.isEmpty() && QDir(targetDirectory).exists())
 			{
 				targetFile = targetDirectory + QDir::separator() + "py.140";
+				std::cout << "Setting py.140 to: " << targetFile.toStdString().data() << std::endl;
 				projectFile->SetSubDomainPy140(domainName, targetFile);
 			} else {
+				std::cout << "Subdomain directory does not exist" << std::endl;
+				std::cout << targetDirectory.toStdString().data() << std::endl;
 				// Throw a warning that the subdomain directory doesn't exist
 			}
 		} else {

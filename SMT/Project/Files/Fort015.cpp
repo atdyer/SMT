@@ -218,6 +218,8 @@ void Fort015::WriteFile()
 			file.close();
 			projectFile->SetSubDomainFort015(domainName, targetFile);
 		}
+	} else {
+		std::cout << "Unable to write fort.015 file" << std::endl;
 	}
 }
 
