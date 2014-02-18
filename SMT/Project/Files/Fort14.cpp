@@ -712,7 +712,7 @@ void Fort14::ReadFile()
 		{
 			QThread *thread = new QThread();
 			Fort14Reader *worker = new Fort14Reader(filePath, &nodes, &elements, &elevationBoundaries,
-								&flowBoundaries, true, 0);
+								&flowBoundaries, true, this);
 
 			// Move to thread and prepare to start reading
 			worker->moveToThread(thread);

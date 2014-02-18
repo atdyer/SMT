@@ -1041,9 +1041,11 @@ void Project::ProjectTreeItemChanged(QTreeWidgetItem *item, QTreeWidgetItem *)
 
 void Project::ProjectTreeItemChanged(QListWidgetItem *item, QListWidgetItem *)
 {
+	std::cout << "Project tree item changed: " << item->text().toStdString().data() << std::endl;
 	Domain *selectedDomain = DetermineSelectedDomain(item);
 	if (selectedDomain && selectedDomain != visibleDomain)
 	{
+		std::cout << "Found selected domain" << std::endl;
 		SetVisibleDomain(selectedDomain);
 	}
 }
