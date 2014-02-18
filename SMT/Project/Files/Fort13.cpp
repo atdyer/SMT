@@ -141,6 +141,9 @@ void Fort13::SetNodalAttributes(std::vector<NodalAttribute> newAttributes, Py140
 {
 	if (!isFullDomain && py140)
 	{
+		// Clear any current attributes
+		attributes.clear();
+
 		// Loop through the full domain attributes
 		for (std::vector<NodalAttribute>::iterator currAttribute = newAttributes.begin();
 		     currAttribute != newAttributes.end();
@@ -184,6 +187,9 @@ void Fort13::SetNodalAttributes(std::vector<NodalAttribute> newAttributes, Py140
 					}
 				}
 			}
+
+			// Add the new attribute to the list of subdomain attributes
+			attributes.push_back(newAttribute);
 		}
 
 		// Set the number of nodes
@@ -191,6 +197,8 @@ void Fort13::SetNodalAttributes(std::vector<NodalAttribute> newAttributes, Py140
 
 		// Set the number of attributes
 		numAttributes = attributes.size();
+	} else {
+		std::cout << "Unable to set nodal attributes" << std::endl;
 	}
 }
 
@@ -322,7 +330,7 @@ void Fort13::WriteFile()
 				     currLine != (*currAttribute).nonDefaultLines.end();
 				     ++currLine)
 				{
-					file << (*currLine).toStdString().data();
+					file << (*currLine).toStdString().data() << '\n';
 				}
 			}
 

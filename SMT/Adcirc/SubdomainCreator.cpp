@@ -163,6 +163,10 @@ bool SubdomainCreator::CreateSubdomainVersion1(QString targetDir, int recordFreq
 		// The directory doesn't exist, so create it.
 		QDir().mkdir(newDirPath);
 	}
+
+	// Create the subdomain in the project file
+	if (!projectFile->AddSubdomain(subdomainName))
+		return false;
 	projectFile->SetSubDomainDirectory(subdomainName, newDirPath);
 
 
@@ -304,10 +308,10 @@ bool SubdomainCreator::CreateSubdomainVersion2(QString targetDir, int recordFreq
 		QDir().mkdir(newDirPath);
 	}
 
+	// Create the subdomain in the project file
 	if (!projectFile->AddSubdomain(subdomainName))
 		return false;
 	projectFile->SetSubDomainDirectory(subdomainName, newDirPath);
-	std::cout << "Subdomain Directory: " << projectFile->GetSubDomainDirectory(subdomainName).toStdString().data() << std::endl;
 
 
 	// Start creating the subdomain by getting the fort.015 file from the full domain
@@ -474,6 +478,8 @@ Fort015* SubdomainCreator::GetFullDomainFort015(int version, int recordFrequency
 					if (WarnFort015Mismatch(version, currentVersion,
 								recordFrequency, currentFrequency))
 						return fullFort015;
+				} else {
+					return fullFort015;
 				}
 			}
 		}
