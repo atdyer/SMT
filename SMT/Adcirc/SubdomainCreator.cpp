@@ -317,7 +317,7 @@ bool SubdomainCreator::CreateSubdomainVersion2(QString targetDir, int recordFreq
 	// Start creating the subdomain by getting the fort.015 file from the full domain
 	// Checks are performed here to ensure that the subdomain version/record frequency
 	// are matched between the full and subdomain
-	Fort015 *fort015Full = GetFullDomainFort015(1, recordFrequency);
+	Fort015 *fort015Full = GetFullDomainFort015(2, recordFrequency);
 
 	if (!fort015Full)
 	{
@@ -862,6 +862,8 @@ bool SubdomainCreator::WarnSubdomainFilesExist(QString targetDir)
 
 bool SubdomainCreator::WarnFort015Mismatch(int requestedVersion, int actualVersion, int requestedFrequency, int actualFrequency)
 {
+	std::cout << "Warning: fort.015 mismatch" << std::endl;
+
 	bool version = requestedVersion == actualVersion;
 	bool frequency = requestedFrequency == actualFrequency;
 	QMessageBox msg;
