@@ -1,9 +1,9 @@
-#SMT - The ADCIRC Subdomain Modeling Tool
+#SMT - ADCIRC Subdomain Modeling Tool
 -------------------------------------------------------------------------------
 
 ##About SMT
 -------------------------------------------------------------------------------
-Descriptions of SMT goes here.
+![](https://github.com/atdyer/SMT/blob/master/images/quadtree.png)
 
 
 ##Compiling
@@ -59,3 +59,4 @@ Install to some specified directory:
 ### Windows
 
 ***Windows installation instructions coming soon***
+
