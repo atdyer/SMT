@@ -18,7 +18,7 @@ you choose will be dependent on your system and how comfortable you are working 
 command-line environment. If you are comfortable using the command-line, the easiest
 method is to use your distro's package manager:
 
-* In Ubuntu/Debian: `sudo apt-get install libqt4-dev libqt4-opengl-dev zliblg-dev`
+* In Ubuntu/Debian: `sudo apt-get install libqt4-dev libqt4-opengl-dev libglew1.6-dev`
 * In Fedora:        `yum install qt-devel`
 * In Arch Linux:    `pacman -S qt`
 * In Mac OS X with [Homebrew](http://mxcl.github.io/homebrew/): `brew install qt`
@@ -58,7 +58,6 @@ Note that compiling will probably take a few minutes to complete.
 
 You can now use SMT by running bin/SMT. Assuming you are still in the SMT/ directory:
 
-    $ cd bin/
     $ ./SMT
 
 ### Windows
