@@ -3,13 +3,18 @@
 | SMT is in active development, and as such, I expect that you will probably run into some speedbumps or find some bugs that I've overlooked. Should this be the case, I encourage you to report these problems/bugs to me (either by email or through github) so that they can be fixed for future users. Additionally, be sure to pull the code frequently as bug fixes and updates to the software will be happening continuously. |
 | -Tristan |
 
-#SMT - ADCIRC Subdomain Modeling Tool
+#ADCIRC Subdomain Modeling Tool
 -------------------------------------------------------------------------------
+
+Welcome to the ADCIRC Subdomain Modeling Tool (SMT) github repository. This page will contain
+the latest version of the SMT code and user manual (located in the Wiki). Please check
+back frequently for updates!
 
 ##About SMT
 -------------------------------------------------------------------------------
 ![](https://raw.githubusercontent.com/atdyer/SMT/master/images/caseStudy_allCreated.png)
 
+This section will contain a brief description of SMT. Soon...
 
 ##Compiling and Running SMT
 -------------------------------------------------------------------------------
