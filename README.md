@@ -1,12 +1,12 @@
-SMT - The ADCIRC Subdomain Modeling Tool
+#SMT - The ADCIRC Subdomain Modeling Tool
 -------------------------------------------------------------------------------
 
-#About SMT
+##About SMT
 -------------------------------------------------------------------------------
 Descriptions of SMT goes here.
 
 
-#Compiling
+##Compiling
 -------------------------------------------------------------------------------
 
 ### Linux/Mac OS X
@@ -36,7 +36,7 @@ and installing from the [Qt Downloads Page](http://qt-project.org/downloads)
 ***Further Windows instructions coming soon***
 
   
-Installing
+##Installing
 ---------------------------------------------------
 
 ### Linux/Mac OS X
