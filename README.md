@@ -3,7 +3,7 @@
 
 ##About SMT
 -------------------------------------------------------------------------------
-![](https://raw.githubusercontent.com/atdyer/SMT/master/images/quadtree.png)
+![](https://raw.githubusercontent.com/atdyer/SMT/master/images/caseStudy_allCreated.png)
 
 
 ##Compiling
