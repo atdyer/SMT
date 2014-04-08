@@ -1,3 +1,8 @@
+| A note to ADCIRC Developers and SMT Users |
+|:-------------------------------------------:|
+| SMT is in active development, and as such, I expect that you will probably run into some speedbumps or find some bugs that I've overlooked. Should this be the case, I encourage you to report these problems/bugs to me (either by email or through github) so that they can be fixed for future users. Additionally, be sure to pull the code frequently as bug fixes and updates to the software will be happening continuously. |
+| -Tristan |
+
 #SMT - ADCIRC Subdomain Modeling Tool
 -------------------------------------------------------------------------------
 
@@ -72,4 +77,5 @@ and installing from the [Qt Downloads Page](http://qt-project.org/downloads)
 -------------------------------------------------------------------------------
 
 ***User Manual Coming Soon***
+
 
