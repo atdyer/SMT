@@ -56,7 +56,8 @@ Note that compiling will probably take a few minutes to complete.
 
 #####Run SMT
 
-You can now use SMT by running bin/SMT. Assuming you are still in the SMT/ directory:
+You can now use SMT by running the newly created executable.
+Assuming you are still in the SMT/ directory:
 
     $ ./SMT
 
