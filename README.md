@@ -7,7 +7,7 @@
 -------------------------------------------------------------------------------
 
 Welcome to the ADCIRC Subdomain Modeling Tool (SMT) github repository. This page will contain
-the latest version of the SMT code and [user manual](wiki/SMT-User-Manual.md). Please check
+the latest version of the SMT code and user manual (located in the wiki). Please check
 back frequently for updates!
 
 ##About SMT
