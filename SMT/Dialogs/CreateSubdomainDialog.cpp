@@ -7,12 +7,36 @@ CreateSubdomainDialog::CreateSubdomainDialog(QWidget *parent) :
 {
 	ui->setupUi(this);
 
-	connect(ui->browseButton, SIGNAL(clicked()), this, SLOT(BrowseForFolder()));
+	ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
+	ui->existsMessage->setVisible(false);
+
+	ui->locationMessage->setStyleSheet("color: rgb(200, 0, 0);");
+	ui->existsMessage->setStyleSheet("color: rgb(200, 0, 0);");
+
+	connect(ui->subdomainName, SIGNAL(textChanged(QString)), this, SLOT(nameChanged(QString)));
 }
 
 CreateSubdomainDialog::~CreateSubdomainDialog()
 {
 	delete ui;
+}
+
+
+bool CreateSubdomainDialog::CreateTargetDir()
+{
+	bool dirSuccess = QDir().mkdir(targetDir);
+	std::cout << dirSuccess << std::endl;
+
+	if (dirSuccess)
+	{
+		return true;
+	} else {
+		QMessageBox::warning(this, tr("Create New Subdomain"),
+				     tr("Unable to create directory for new subomain:\n") + targetDir,
+				     QMessageBox::Ok);
+
+		return false;
+	}
 }
 
 
@@ -32,43 +56,47 @@ QString CreateSubdomainDialog::GetSubdomainName()
 }
 
 
-int CreateSubdomainDialog::GetSubdomainVersion()
+QString CreateSubdomainDialog::GetSubdomainDirectory()
 {
-	if (ui->subdomainVersion->currentIndex() == 0)
-		return 1;
-	else
-		return 2;
+	return targetDir;
 }
 
 
-QString CreateSubdomainDialog::GetTargetDirectory()
+void CreateSubdomainDialog::SetFullDomainDirectory(QString dir)
 {
-	return ui->targetDir->text();
+	fullDir = QDir::cleanPath(dir) + QDir::separator();
+	ui->locationMessage->setText(fullDir);
 }
 
 
-void CreateSubdomainDialog::SetDefaultDirectory(QString dir)
+void CreateSubdomainDialog::nameChanged(QString newName)
 {
-	defaultDir = dir;
-}
 
+	targetDir = fullDir + newName;
 
-void CreateSubdomainDialog::BrowseForFolder()
-{
-	QStringList selections;
-	QFileDialog dialog(0, "Choose New Subdomain Directory", QDir::homePath());
-	dialog.setModal(true);
-	dialog.setFileMode(QFileDialog::Directory);
-	dialog.setOption(QFileDialog::ShowDirsOnly, true);
-	dialog.setDirectory(defaultDir);
-	if (dialog.exec())
+	if (targetDir.toStdString() == fullDir.toStdString())
 	{
-		selections = dialog.selectedFiles();
-		if (!selections.isEmpty())
-		{
-			ui->targetDir->setText(selections.first());
-		}
+		ui->existsMessage->setText("Enter a Subdomain Name");
+		ui->existsMessage->setVisible(true);
+
 	} else {
-		return;
+
+		ui->existsMessage->setText("Subdomain already exists. Please choose another name.");
+		ui->existsMessage->setVisible(false);
+
+		if (QDir(targetDir).exists())
+		{
+			ui->existsMessage->setVisible(true);
+			ui->locationMessage->setStyleSheet("color: rgb(200, 0, 0);");
+			ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
+		} else {
+			ui->existsMessage->setVisible(false);
+			ui->locationMessage->setStyleSheet("color: rgb(0, 150, 0);");
+			ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
+
+		}
 	}
+
+	ui->locationMessage->setText(targetDir);
+
 }

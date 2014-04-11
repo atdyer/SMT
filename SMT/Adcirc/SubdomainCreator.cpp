@@ -148,7 +148,7 @@ bool SubdomainCreator::CreateSubdomainVersion1(QString targetDir, int recordFreq
 
 	// Make sure the target directory (it will always be the name
 	// of the subdomain) exists.
-	QString newDirPath = targetDir + QDir::separator() + subdomainName;
+	QString newDirPath = targetDir;
 	if (QDir(newDirPath).exists())
 	{
 		// The directory exists. Check for ADCIRC files.

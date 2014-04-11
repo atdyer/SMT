@@ -853,12 +853,12 @@ void Project::CreateNewSubdomain()
 	if (fullDomain && projectFile)
 	{
 		CreateSubdomainDialog dlg;
-		dlg.SetDefaultDirectory(projectFile->GetFullDomainDirectory());
-		if (dlg.exec())
+		dlg.SetFullDomainDirectory(projectFile->GetFullDomainDirectory());
+		if (dlg.exec() && dlg.CreateTargetDir())
 		{
 			QString name = dlg.GetSubdomainName();
-			QString targetDir = dlg.GetTargetDirectory();
-			int version = dlg.GetSubdomainVersion();
+			QString targetDir = dlg.GetSubdomainDirectory();
+			int version = 1;
 			int recordFrequency = dlg.GetRecordFrequency();
 
 			if (!name.isEmpty() && !targetDir.isEmpty() && (version == 1 || version == 2) && recordFrequency > 0)

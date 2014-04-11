@@ -3,6 +3,11 @@
 
 #include <QDialog>
 #include <QFileDialog>
+#include <QPushButton>
+#include <QDir>
+#include <QCloseEvent>
+#include <QMessageBox>
+#include <iostream>
 
 namespace Ui {
 	class CreateSubdomainDialog;
@@ -16,21 +21,23 @@ class CreateSubdomainDialog : public QDialog
 		explicit CreateSubdomainDialog(QWidget *parent = 0);
 		~CreateSubdomainDialog();
 
+		bool	CreateTargetDir();
+
 		int	GetRecordFrequency();
 		QString	GetSubdomainName();
-		int	GetSubdomainVersion();
-		QString	GetTargetDirectory();
+		QString GetSubdomainDirectory();
 
-		void	SetDefaultDirectory(QString dir);
+		void	SetFullDomainDirectory(QString dir);
 		
 	private:
 		Ui::CreateSubdomainDialog *ui;
 
-		QString	defaultDir;
+		QString	fullDir;
+		QString targetDir;
 
 	private slots:
 
-		void	BrowseForFolder();
+		void	nameChanged(QString newName);
 };
 
 #endif // CREATESUBDOMAINDIALOG_H
