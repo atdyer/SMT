@@ -85,26 +85,6 @@ Fort015::Fort015(QString domainName, ProjectFile *projectFile, QObject *parent) 
 }
 
 
-///*
-// * New subdomain constructor
-// */
-//Fort015::Fort015(QString domainName, ProjectFile *projectFile, QString targetDir, QObject *parent) :
-//	QObject(parent),
-//	domainName(domainName),
-//	boundaryNodes(),
-//	enforceBN(0),
-//	innerBoundaryNodes(),
-//	isFullDomainFile(false),
-//	outerBoundaryNodes(),
-//	projectFile(projectFile),
-//	recordFrequency(0),
-//	subdomainApproach(0),
-//	targetFile()
-//{
-//	targetFile = targetDir + QDir::separator() + "fort.015";
-//}
-
-
 void Fort015::AddBoundaryNodes(std::vector<unsigned int> newNodes)
 {
 	for (std::vector<unsigned int>::iterator it = newNodes.begin(); it != newNodes.end(); ++it)
@@ -140,24 +120,18 @@ bool Fort015::FileExists()
 
 std::set<unsigned int> Fort015::GetBoundaryNodes()
 {
-//	if (!boundaryNodes.size())
-//		ReadFile();
 	return boundaryNodes;
 }
 
 
 std::set<unsigned int> Fort015::GetInnerBoundaryNodes()
 {
-//	if (!innerBoundaryNodes.size())
-//		ReadFile();
 	return innerBoundaryNodes;
 }
 
 
 std::set<unsigned int> Fort015::GetOuterBoundaryNodes()
 {
-//	if (!outerBoundaryNodes.size())
-//		ReadFile();
 	return outerBoundaryNodes;
 }
 
@@ -194,18 +168,15 @@ void Fort015::WriteFile()
 		if (isFullDomainFile)
 		{
 			file << subdomainApproach << "\t!NOUTGS\n";
-			file << recordFrequency << "\tNSPOOLGS\n";
+			file << recordFrequency << "\t!NSPOOLGS\n";
 			file << "0\t!enforceBN\n";
-			file << outerBoundaryNodes.size() << "\t!nobnr\n";
-			for (std::set<unsigned int>::iterator it = outerBoundaryNodes.begin(); it != outerBoundaryNodes.end(); ++it)
+			file << boundaryNodes.size() << "\t!ncbnr\n";
+			for (std::set<unsigned int>::iterator it = boundaryNodes.begin(); it != boundaryNodes.end(); ++it)
 			{
 				file << *it << "\n";
 			}
-			file << innerBoundaryNodes.size() << "\t!nibnr\n";
-			for (std::set<unsigned int>::iterator it = innerBoundaryNodes.begin(); it != innerBoundaryNodes.end(); ++it)
-			{
-				file << *it << "\n";
-			}
+			file << "0\t!nobnr\n";
+			file << "0\t!nibnr\n";
 			file.close();
 			projectFile->SetFullDomainFort015(targetFile);
 		} else {
@@ -285,31 +256,3 @@ void Fort015::ReadFile()
 		file.close();
 	}
 }
-
-
-//QString Fort015::GetFilePath()
-//{
-//	QString targetFile ("");
-//	if (projectFile)
-//	{
-//		if (isFullDomainFile)
-//		{
-//			targetFile = projectFile->GetFullDomainFort015();
-//		}
-//		else if (!domainName.isEmpty())
-//		{
-//			targetFile = projectFile->GetSubDomainFort015(domainName);
-//		}
-
-//		if (targetFile.isEmpty() && (isFullDomainFile || !domainName.isEmpty()))
-//		{
-//			QDir targetDirectory (isFullDomainFile ? projectFile->GetFullDomainDirectory() : projectFile->GetSubDomainDirectory(domainName));
-//			if (targetDirectory.exists())
-//			{
-//				targetFile = targetDirectory.absolutePath() + QDir::separator() + "fort.015";
-//				isFullDomainFile ? projectFile->SetFullDomainFort015(targetFile) : projectFile->SetSubDomainFort015(domainName, targetFile);
-//			}
-//		}
-//	}
-//	return targetFile;
-//}

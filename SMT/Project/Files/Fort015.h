@@ -17,13 +17,7 @@ class Fort015 : public QObject
 		explicit Fort015(QObject *parent=0);
 		Fort015(ProjectFile *projectFile, QObject *parent=0);
 		Fort015(QString domainName, ProjectFile *projectFile, QObject *parent=0);
-//		Fort015(QString domainName, ProjectFile *projectFile, QString targetDir, QObject *parent=0);
 
-//		void	AddInnerBoundaryNodes(std::vector<unsigned int> newNodes);
-//		void	AddOuterBoundaryNodes(std::vector<unsigned int> newNodes);
-//		void	SetApproach(int approach);
-//		void	SetRecordFrequency(int frequency);
-//		void	WriteFile();
 
 		void			AddBoundaryNodes(std::vector<unsigned int> newNodes);
 		void			AddInnerBoundaryNodes(std::vector<unsigned int> newNodes);
@@ -40,13 +34,6 @@ class Fort015 : public QObject
 
 	private:
 
-//		QString			domainName;
-//		std::set<unsigned int>	innerBoundaryNodes;
-//		bool			isFullDomainFile;
-//		std::set<unsigned int>	outerBoundaryNodes;
-//		ProjectFile*	projectFile;
-//		int			recordFrequency;
-//		int			subdomainApproach;
 
 		QString			domainName;
 		std::set<unsigned int>	boundaryNodes;
@@ -59,7 +46,7 @@ class Fort015 : public QObject
 		int			subdomainApproach;
 		QString			targetFile;
 
-//		QString	GetFilePath();
+
 		void	ReadFile();
 };
 

@@ -63,17 +63,8 @@ class SubdomainCreator
 
 	private:
 
-//		BNList14*				bnList;
-//		Fort015*				fort015Full;
-//		Fort015*				fort015Sub;
 		FullDomain*				fullDomain;
-//		std::vector<unsigned int>		innerBoundaryNodes;
-//		std::vector<unsigned int>		outerBoundaryNodes;
-//		Py140*					py140;
-//		Py141*					py141;
 		ProjectFile*				projectFile;
-//		std::vector<Element*>			selectedElements;
-//		std::vector<Node*>			selectedNodes;
 		QString					subdomainName;
 
 		// Methods for creating version 1 subdomains
@@ -95,11 +86,6 @@ class SubdomainCreator
 
 		// Older methods
 		bool	CheckForExistingSubdomainFiles(QString targetDir);
-//		void	FindBoundaries(int version);
-//		void	FindUniqueNodes();
-//		void	MapOldToNewElements();
-//		void	MapOldToNewNodes();
-//		bool	WriteFort14();
 
 		bool	WarnSubdomainFilesExist(QString targetDir);
 		bool	WarnFort015Mismatch(int requestedVersion, int actualVersion,
