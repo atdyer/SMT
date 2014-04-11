@@ -12,10 +12,10 @@ bool StopIsLessThan(const QGradientStop &stop1, const QGradientStop &stop2)
  */
 GradientShader::GradientShader()
 {
-	vertexSource =	"#version 130"
+	vertexSource =	"#version 110"
 			"\n"
-			"in vec4 in_Position;"
-			"out vec4 ex_Color;"
+			"attribute vec4 in_Position;"
+			"varying vec4 ex_Color;"
 			"uniform mat4 MVPMatrix;"
 			"uniform int stopCount;"
 			"uniform float values[10];"
@@ -23,20 +23,21 @@ GradientShader::GradientShader()
 			"void main(void)"
 			"{"
 			"	ex_Color = colors[0];"
-			"	for (int i=1; i<min(stopCount, 10); ++i)"
+			"	for (int i=1; i<stopCount; ++i)"
 			"	{"
-			"		ex_Color = mix(ex_Color, colors[i], smoothstep(values[i-1], values[i], in_Position.z));"
+			"		float t = clamp((in_Position.z - values[i-1]) / (values[i]-values[i-1]), 0.0, 1.0);"
+			"		ex_Color = mix(ex_Color, colors[i], t*t*(3.0 - 2.0*t));"
 			"	}"
 			"	gl_Position = MVPMatrix*in_Position;"
 			"}";
 
-	fragSource =	"#version 130"
+	fragSource =	"#version 110"
 			"\n"
-			"in vec4 ex_Color;"
-			"out vec4 out_Color;"
+			"attribute vec4 ex_Color;"
+//			"out vec4 out_Color;"
 			"void main(void)"
 			"{"
-			"	out_Color = ex_Color;"
+			"	gl_FragColor = ex_Color;"
 			"}";
 
 	lowValue = 0.0;

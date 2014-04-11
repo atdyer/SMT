@@ -9,10 +9,10 @@
  */
 SolidShader::SolidShader()
 {
-	vertexSource =  "#version 130"
+	vertexSource =  "#version 110"
 			"\n"
-			"in vec4 in_Position;"
-			"out vec4 ex_Color;"
+			"attribute vec4 in_Position;"
+			"varying vec4 ex_Color;"
 			"uniform mat4 MVPMatrix;"
 			"uniform vec4 ColorVector;"
 			"void main(void)"
@@ -21,13 +21,13 @@ SolidShader::SolidShader()
 			"       ex_Color = ColorVector;"
 			"}";
 
-	fragSource =	"#version 130"
+	fragSource =	"#version 110"
 			"\n"
-			"in vec4 ex_Color;"
-			"out vec4 out_Color;"
+			"attribute vec4 ex_Color;"
+//			"varying vec4 out_Color;"
 			"void main(void)"
 			"{"
-			"	out_Color = ex_Color;"
+			"	gl_FragColor = ex_Color;"
 			"}";
 
 	color = QColor(1.0, 1.0, 1.0, 1.0);
