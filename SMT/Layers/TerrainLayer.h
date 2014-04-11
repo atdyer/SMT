@@ -85,9 +85,6 @@ class TerrainLayer : public Layer
 		/* Visibility Methods */
 		void	ToggleQuadtreeVisible();
 
-		// Large Domain Functions
-		void	UpdateZoomLevel(float zoomAmount);
-
 
 
 	protected:

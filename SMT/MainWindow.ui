@@ -25,8 +25,23 @@
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QVBoxLayout" name="verticalLayout_2">
+    <property name="leftMargin">
+     <number>4</number>
+    </property>
+    <property name="topMargin">
+     <number>4</number>
+    </property>
+    <property name="rightMargin">
+     <number>4</number>
+    </property>
+    <property name="bottomMargin">
+     <number>4</number>
+    </property>
     <item>
      <layout class="QHBoxLayout" name="topLayout">
+      <property name="spacing">
+       <number>4</number>
+      </property>
       <item>
        <layout class="QVBoxLayout" name="leftSideLayout">
         <property name="sizeConstraint">
@@ -143,46 +158,6 @@
             </property>
            </widget>
           </item>
-          <item>
-           <spacer name="horizontalSpacer">
-            <property name="orientation">
-             <enum>Qt::Horizontal</enum>
-            </property>
-            <property name="sizeType">
-             <enum>QSizePolicy::Ignored</enum>
-            </property>
-            <property name="sizeHint" stdset="0">
-             <size>
-              <width>40</width>
-              <height>20</height>
-             </size>
-            </property>
-           </spacer>
-          </item>
-          <item>
-           <widget class="QToolButton" name="openFileButton">
-            <property name="enabled">
-             <bool>false</bool>
-            </property>
-            <property name="toolTip">
-             <string>Open File</string>
-            </property>
-            <property name="statusTip">
-             <string>Open File</string>
-            </property>
-            <property name="whatsThis">
-             <string>Open File</string>
-            </property>
-            <property name="text">
-             <string/>
-            </property>
-            <property name="icon">
-             <iconset theme="document-open">
-              <normaloff/>
-             </iconset>
-            </property>
-           </widget>
-          </item>
          </layout>
         </item>
         <item>
@@ -219,7 +194,7 @@ border-top-right-radius: 4px;
            <number>1</number>
           </property>
           <property name="currentIndex">
-           <number>2</number>
+           <number>0</number>
           </property>
           <property name="tabSpacing">
            <number>0</number>
@@ -230,7 +205,7 @@ border-top-right-radius: 4px;
              <x>0</x>
              <y>0</y>
              <width>256</width>
-             <height>525</height>
+             <height>551</height>
             </rect>
            </property>
            <property name="styleSheet">
@@ -301,8 +276,8 @@ border-top-right-radius: 4px;
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>198</width>
-             <height>525</height>
+             <width>206</width>
+             <height>555</height>
             </rect>
            </property>
            <attribute name="label">
@@ -777,7 +752,7 @@ border-top-right-radius: 4px;
              <x>0</x>
              <y>0</y>
              <width>256</width>
-             <height>525</height>
+             <height>555</height>
             </rect>
            </property>
            <attribute name="label">
@@ -994,7 +969,7 @@ border-top-right-radius: 4px;
              <x>0</x>
              <y>0</y>
              <width>258</width>
-             <height>525</height>
+             <height>555</height>
             </rect>
            </property>
            <attribute name="label">
@@ -1061,8 +1036,8 @@ border-top-right-radius: 4px;
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>168</width>
-             <height>525</height>
+             <width>150</width>
+             <height>555</height>
             </rect>
            </property>
            <attribute name="label">
@@ -1176,7 +1151,7 @@ border-top-right-radius: 4px;
      <x>0</x>
      <y>0</y>
      <width>1105</width>
-     <height>25</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

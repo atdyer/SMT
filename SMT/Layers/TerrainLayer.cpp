@@ -93,20 +93,28 @@ void TerrainLayer::Draw()
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 			if (fillShader->Use())
+			{
 				if (largeDomain)
+				{
 					glDrawElements(GL_TRIANGLES, numVisibleElements*3, GL_UNSIGNED_INT, (GLvoid*)0);
-				else
+				} else {
 					glDrawElements(GL_TRIANGLES, numElements*3, GL_UNSIGNED_INT, (GLvoid*)0);
+				}
+			}
 		}
 
 		if (outlineShader)
 		{
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			if (outlineShader->Use())
+			{
 				if (largeDomain)
+				{
 					glDrawElements(GL_TRIANGLES, numVisibleElements*3, GL_UNSIGNED_INT, (GLvoid*)0);
-				else
+				} else {
 					glDrawElements(GL_TRIANGLES, numElements*3, GL_UNSIGNED_INT, (GLvoid*)0);
+				}
+			}
 		}
 
 		if (!largeDomain && boundaryShader)
@@ -857,35 +865,6 @@ void TerrainLayer::SetGradientBoundary(QGradientStops newStops)
 void TerrainLayer::ToggleQuadtreeVisible()
 {
 	drawQuadtreeOutline = !drawQuadtreeOutline;
-}
-
-
-void TerrainLayer::UpdateZoomLevel(float zoomAmount)
-{
-	if (largeDomain && camera && quadtree)
-	{
-		/* Get the bounds of the viewport in domain space */
-		float xTopLeft, yTopLeft, xBotRight, yBotRight;
-		camera->GetUnprojectedPoint(0, 0, &xTopLeft, &yTopLeft);
-		camera->GetUnprojectedPoint(camera->GetViewportWidth(), camera->GetViewportHeight(), &xBotRight, &yBotRight);
-//		xTopLeft = GetUnprojectedX(xTopLeft);
-//		yTopLeft = GetUnprojectedY(yTopLeft);
-//		xBotRight = GetUnprojectedX(xBotRight);
-//		yBotRight = GetUnprojectedY(yBotRight);
-
-//		DEBUG(xTopLeft << " " << yTopLeft << " " << xBotRight << " " <<yBotRight);
-
-//		if (zoomAmount > 0)
-//			viewingDepth++;
-//		else if (zoomAmount < 0 && viewingDepth != 0)
-//			viewingDepth--;
-
-		/* Get the visible elements from the quadtree */
-		visibleElementLists = quadtree->GetElementsThroughDepth(viewingDepth, xTopLeft, xBotRight, yBotRight, yTopLeft);
-
-		/* Update the elements on the OpenGL context */
-		UpdateVisibleElements();
-	}
 }
 
 

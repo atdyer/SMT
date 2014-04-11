@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QListWidgetItem>
+#include <QToolBar>
 
 #include "Project/Project.h"
 #include "Dialogs/DisplayOptionsDialog.h"

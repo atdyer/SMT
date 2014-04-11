@@ -342,6 +342,8 @@ Node Fort14::GetNode(int nodeNumber)
 		if (currNode.nodeNumber == nodeNumber)
 			return currNode;
 	}
+	Node err;
+	return err;
 }
 
 
@@ -379,7 +381,9 @@ float Fort14::GetUnprojectedY(float y)
 
 std::vector<Element*> Fort14::GetSelectedElements()
 {
+	std::vector<Element*> selectedElements;
 
+	return selectedElements;
 }
 
 

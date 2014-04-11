@@ -43,7 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->openProjectButton, SIGNAL(clicked()), this, SLOT(openProject()));
 
 	// Set up the edit subdomains items
-	connect(ui->editSubdomainList, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(showSubdomain(QListWidgetItem*)));
+//	connect(ui->editSubdomainList, SIGNAL(itemChanged(QListWidgetItem*)), this, SLOT(showSubdomain(QListWidgetItem*)));
 	ui->editXLoc->setValidator(new QDoubleValidator());
 	ui->editYLoc->setValidator(new QDoubleValidator());
 	ui->editZLoc->setValidator(new QDoubleValidator());
@@ -62,6 +62,18 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionOpen_Project, SIGNAL(triggered()), this, SLOT(openProject()));
 	connect(ui->actionClose_Project, SIGNAL(triggered()), this, SLOT(closeProject()));
 	connect(ui->actionExit, SIGNAL(triggered()), this, SIGNAL(quit()));
+
+	// Try out moving the tool buttons into a toolbar
+	QToolBar* toolBar = new QToolBar(this);
+	toolBar->layout()->setSpacing(0);
+	toolBar->layout()->setContentsMargins(0, 0, 0, 0);
+	toolBar->setIconSize(QSize(18, 18));
+	toolBar->addWidget(ui->newProjectButton);
+	toolBar->addWidget(ui->openProjectButton);
+	toolBar->addWidget(ui->projectOptionsButton);
+	toolBar->addWidget(ui->saveProjectButton);
+	toolBar->addWidget(ui->addFileToProjectButton);
+	ui->projectButtonsLayout->addWidget(toolBar);
 
 }
 

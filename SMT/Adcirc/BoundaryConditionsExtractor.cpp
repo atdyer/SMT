@@ -12,6 +12,8 @@ bool BoundaryConditionsExtractor::ExtractBoundaryConditions(ProjectFile *file, F
 	fullDomain = full;
 	projectFile = file;
 	subDomains = subs;
+
+	return true;
 }
 
 

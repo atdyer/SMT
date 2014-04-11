@@ -13,13 +13,8 @@ std::vector<Node*> QuadtreeSearch::FindNodes(branch *root)
 	numFollowed = 0;
 	numLeaves = 0;
 
-	int earlyExit = SearchNodes(root);
+	SearchNodes(root);
 	BruteForceNodes();
-
-//	if (earlyExit)
-//		std::cout << "Early exit occurred" << std::endl;
-//	else
-//		std::cout << "Did not early exit" << std::endl;
 
 	return finalNodes;
 }
@@ -31,13 +26,8 @@ std::vector<Element*> QuadtreeSearch::FindElements(branch *root)
 	partialElements.clear();
 	numFollowed = 0;
 
-	int earlyExit = SearchElements(root);
+	SearchElements(root);
 	BruteForceElements();
-
-//	if (earlyExit)
-//		std::cout << "Early exit occurred" << std::endl;
-//	else
-//		std::cout << "Did not early exit" << std::endl;
 
 	return finalElements;
 }

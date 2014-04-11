@@ -9,9 +9,9 @@
  */
 SolidShader::SolidShader()
 {
-	vertexSource =  "#version 330"
+	vertexSource =  "#version 130"
 			"\n"
-			"layout(location=0) in vec4 in_Position;"
+			"in vec4 in_Position;"
 			"out vec4 ex_Color;"
 			"uniform mat4 MVPMatrix;"
 			"uniform vec4 ColorVector;"
@@ -21,7 +21,7 @@ SolidShader::SolidShader()
 			"       ex_Color = ColorVector;"
 			"}";
 
-	fragSource =	"#version 330"
+	fragSource =	"#version 130"
 			"\n"
 			"in vec4 ex_Color;"
 			"out vec4 out_Color;"
@@ -90,6 +90,7 @@ void SolidShader::CompileShader()
 	if (vertexShaderID && fragmentShaderID)
 	{
 		programID = glCreateProgram();
+		glBindAttribLocation(programID, 0, "in_Position");
 		glAttachShader(programID, vertexShaderID);
 		glAttachShader(programID, fragmentShaderID);
 		glLinkProgram(programID);

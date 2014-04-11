@@ -167,6 +167,9 @@ QGradientStops GradientSliderWidget::GetGradient()
 	{
 		return gradientFrame->GetStops();
 	}
+
+	QGradientStops none;
+	return none;
 }
 
 

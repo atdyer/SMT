@@ -117,8 +117,8 @@ void GLCamera::SetWindowSize(float l, float r, float b, float t, float n, float 
 	window[1] = r;
 	window[2] = b;
 	window[3] = t;
-//	window[4] = n;
-//	window[5] = f;
+	window[4] = n;
+	window[5] = f;
 
 	int viewport[4];
 	glGetIntegerv(GL_VIEWPORT, viewport);
