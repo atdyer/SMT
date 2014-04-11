@@ -193,4 +193,5 @@ FORMS    += MainWindow.ui \
 RESOURCES += \
     icons.qrc
 
-OTHER_FILES +=
+OTHER_FILES += \
+    copyright.txt
