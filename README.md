@@ -81,6 +81,6 @@ and installing from the [Qt Downloads Page](http://qt-project.org/downloads)
 ##Using SMT
 -------------------------------------------------------------------------------
 
-Check out the [User Manual](https://github.com/atdyer/SMT/wiki/SMT-User-Manual) for help on using SMT.
+Check out the [User Manual](https://github.com/atdyer/SMT/wiki/) for help on using SMT.
 
 
