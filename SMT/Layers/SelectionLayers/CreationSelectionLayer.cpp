@@ -302,7 +302,7 @@ void CreationSelectionLayer::SetTerrainLayer(TerrainLayer *newLayer)
  *
  * @param toolID The tool to be used for the next interaction
  */
-void CreationSelectionLayer::UseTool(ToolType tool, SelectionType)
+void CreationSelectionLayer::UseTool(ToolType tool, SelectionType, SelectionMode mode)
 {
 	activeToolType = tool;
 

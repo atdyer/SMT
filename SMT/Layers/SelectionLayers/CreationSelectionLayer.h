@@ -71,7 +71,7 @@ class CreationSelectionLayer : public SelectionLayer
 
 		virtual void	SetCamera(GLCamera *newCamera);
 		void	SetTerrainLayer(TerrainLayer* newLayer);
-		virtual void	UseTool(ToolType tool, SelectionType selection);
+		virtual void	UseTool(ToolType tool, SelectionType selection, SelectionMode mode);
 
 		void	MouseClick(QMouseEvent *event);
 		void	MouseMove(QMouseEvent *event);
