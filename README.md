@@ -16,6 +16,31 @@ back frequently for updates!
 
 This section will contain a brief description of SMT. Soon...
 
+
+##Installing SMT
+-------------------------------------------------------------------------------
+
+### System Requirements
+
+* Operating System
+    * Windows XP, Windows 7, Windows 8
+    * Ubuntu 11.10 or greater
+    * Mac OS X
+* Graphics Card
+    * OpenGL 2.0 or greater
+
+### Installing on Windows
+
+1. Download the latest version of SMT from the following link: [SMT for Windows](http://www4.ncsu.edu/~atdyer/smt-windows/)
+2. Unzip the .zip file by right-clicking on the folder and clicking Extract Here...
+3. Run SMT by double-clicking SMT.exe in the unzipped folder
+
+
+### Installing on Linux/Mac
+
+No pre-compiled versions are available yet. Please refer to the next section on compiling and running SMT
+
+
 ##Compiling and Running SMT
 -------------------------------------------------------------------------------
 
@@ -37,9 +62,6 @@ If you'd rather not use the command-line, Qt provides installers on their websit
 Install the Qt Application Framework by choosing the appropriate system and installing
 from the [Qt Downloads Page](http://qt-project.org/downloads).
 
-#####Update Graphics Drivers (optional, but recommended)
-
-*Instructions coming soon*
 
 #####Download the Source Code
 
@@ -71,10 +93,6 @@ Assuming you are still in the SMT/ directory:
 
     $ ./SMT
 
-### Windows
-
-Install the Qt Application Framework by choosing the appropriate system
-and installing from the [Qt Downloads Page](http://qt-project.org/downloads) 
 
 ***Further Windows instructions coming soon***
 
