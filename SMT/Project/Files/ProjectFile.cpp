@@ -938,7 +938,7 @@ QString ProjectFile::LinkFile(QString oldFile, QString newDir)
 	QString newLink = newDir + QDir::separator() + QFileInfo(oldFile).fileName();
 
 #ifdef Q_OS_WIN32
-	newLinkName.append(".lnk");
+	newLink.append(".lnk");
 #endif
 
 	if (CheckForExistingFile(newLink))

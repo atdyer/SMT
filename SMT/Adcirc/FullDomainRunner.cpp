@@ -82,7 +82,7 @@ bool FullDomainRunner::CheckForRequiredFiles()
 	if (adcExe.exists() && !adcirc)
 	{
 #ifdef Q_OS_WIN32
-		adcirc = adcExe.link(fullDomainPath + QDir::separator() + exeName + ".lnk");
+		adcirc = adcExe.link(fullDomainPath + QDir::separator() + adcircExecutableName + ".lnk");
 #else
 		adcirc = adcExe.link(fullDomainPath + QDir::separator() + adcircExecutableName);
 #endif
