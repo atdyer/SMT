@@ -26,9 +26,6 @@ GLShader::GLShader()
 }
 
 
-/**
- * @brief Deconstructor that tells the OpenGL context to delete the shader program
- */
 GLShader::~GLShader()
 {
 	shaderCount--;

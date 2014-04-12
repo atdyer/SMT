@@ -28,7 +28,7 @@ class GLShader
 
 		// Constructor/Destructor
 		GLShader();
-		~GLShader();
+		virtual ~GLShader();
 
 		// Function Definitions
 		bool	Use();

@@ -48,6 +48,11 @@ GradientShader::GradientShader()
 }
 
 
+GradientShader::~GradientShader()
+{
+}
+
+
 void GradientShader::SetGradientStops(const QGradientStops &newStops)
 {
 	gradientStops = newStops;

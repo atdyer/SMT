@@ -22,6 +22,7 @@ class GradientShader : public GLShader
 
 		// Constructor
 		GradientShader();
+		~GradientShader();
 
 		// Modification Functions
 		void	SetGradientStops(const QGradientStops &newStops);

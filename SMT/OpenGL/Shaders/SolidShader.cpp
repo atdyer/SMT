@@ -37,6 +37,12 @@ SolidShader::SolidShader()
 }
 
 
+SolidShader::~SolidShader()
+{
+
+}
+
+
 /**
  * @brief Set the color to be used in glDraw*() operations
  *

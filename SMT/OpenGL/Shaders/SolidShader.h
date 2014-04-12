@@ -18,6 +18,7 @@ class SolidShader : public GLShader
 
 		// Constructor
 		SolidShader();
+		~SolidShader();
 
 		// Modification Functions
 		void	SetColor(QColor newColor);
