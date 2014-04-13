@@ -17,6 +17,13 @@ back frequently for updates!
 This section will contain a brief description of SMT. Soon...
 
 
+##Using SMT
+-------------------------------------------------------------------------------
+
+Check out the [User Manual](https://github.com/atdyer/SMT/wiki/) for help on using SMT.
+
+
+
 ##Installing SMT
 -------------------------------------------------------------------------------
 
@@ -51,12 +58,5 @@ This section will contain a brief description of SMT. Soon...
 ### Installing on Mac OS X
 
 Instructions coming soon...
-
-
-
-##Using SMT
--------------------------------------------------------------------------------
-
-Check out the [User Manual](https://github.com/atdyer/SMT/wiki/) for help on using SMT.
 
 
