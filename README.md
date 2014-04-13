@@ -38,7 +38,14 @@ This section will contain a brief description of SMT. Soon...
 
 ### Installing on Linux/Mac
 
-No pre-compiled versions are available yet. Please refer to the next section on compiling and running SMT
+1. Download the latest version of SMT from the following link: [SMT for Linux](http://www4.ncsu.edu/~atdyer/smt-linux/)
+2. Unzip the .tar.gz using the following command:
+
+        $ tar -xzvf /path/to/download/SMT-Linux-vx.xx.tar.gz
+
+3. A new folder called 'SMT' will now be in your download directory. Run SMT using the following command:
+
+        $ sh /path/to/download/SMT/SMT.sh
 
 
 ##Compiling and Running SMT
