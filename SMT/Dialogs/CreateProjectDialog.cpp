@@ -300,12 +300,12 @@ void CreateProjectDialog::CheckForMinimumFields()
 		return;
 	}
 
-	if (!Fort15FileExists())
-	{
-		ui->warnLabel->setText("Choose a valid full domain fort.15 file");
-		ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
-		return;
-	}
+//	if (!Fort15FileExists())
+//	{
+//		ui->warnLabel->setText("Choose a valid full domain fort.15 file");
+//		ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
+//		return;
+//	}
 
 	ui->warnLabel->clear();
 	ui->buttonBox->button(QDialogButtonBox::Ok)->setEnabled(true);
