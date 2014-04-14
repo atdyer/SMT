@@ -39,8 +39,10 @@ Check out the [User Manual](https://github.com/atdyer/SMT/wiki/) for help on usi
 ### Installing on Windows
 
 1. Download the latest version of SMT from the following link: [SMT for Windows](http://www4.ncsu.edu/~atdyer/smt-windows/)
-2. Unzip the .zip file by right-clicking on the folder and clicking Extract Here...
+2. Unzip the .zip file by right-clicking on the folder and clicking Extract All...
 3. Run SMT by double-clicking SMT.exe in the unzipped folder
+
+        Note: You'll need to leave the SMT.exe file in the SMT folder. You can create a shortcut to SMT by right-
 
 
 ### Installing on Linux
