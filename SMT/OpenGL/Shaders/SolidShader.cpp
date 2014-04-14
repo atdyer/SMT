@@ -23,7 +23,7 @@ SolidShader::SolidShader()
 
 	fragSource =	"#version 110"
 			"\n"
-			"attribute vec4 ex_Color;"
+			"varying vec4 ex_Color;"
 //			"varying vec4 out_Color;"
 			"void main(void)"
 			"{"

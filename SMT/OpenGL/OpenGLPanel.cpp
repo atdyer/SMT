@@ -48,6 +48,11 @@ void OpenGLPanel::initializeGL()
 	if (err != GLEW_OK)
 	{
 		DEBUG("Error: GLEW unable to load OpenGL Extensions");
+
+		QMessageBox::critical(0, tr("OpenGL Error"),
+				      tr("GLEW unable to load OpenGL extensions"),
+				      QMessageBox::Ok);
+
 		exit(EXIT_FAILURE);
 	} else {
 		DEBUG("OpenGL Extensions Loaded");

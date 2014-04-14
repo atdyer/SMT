@@ -2,7 +2,8 @@
 #define GLSHADER_H
 
 #include "OpenGL/GLCamera.h"
-
+#include <QString>
+#include <QMessageBox>
 
 enum ShaderType {NoShaderType, SolidShaderType, GradientShaderType};
 
@@ -80,6 +81,7 @@ class GLShader
 		static unsigned int	nextID;		/**< The next available shaderID */
 		unsigned int		shaderID;	/**< A unique unsigned integer that identifies this Layer */
 
+		void printError(QString message);
 };
 
 #endif // GLSHADER_H

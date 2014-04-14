@@ -33,8 +33,8 @@ GradientShader::GradientShader()
 
 	fragSource =	"#version 110"
 			"\n"
-			"attribute vec4 ex_Color;"
-//			"out vec4 out_Color;"
+			"varying vec4 ex_Color;"
+//			"varying vec4 out_Color;"
 			"void main(void)"
 			"{"
 			"	gl_FragColor = ex_Color;"

@@ -148,6 +148,7 @@ GLuint GLShader::CompileShaderPart(const char *source, GLenum shaderType)
 			glGetShaderInfoLog(shaderID, 250, NULL, log);
 
 			DEBUG("Shader Log: " << log);
+			printError(QString(log));
 
 			return 0;
 		} else {
@@ -155,6 +156,13 @@ GLuint GLShader::CompileShaderPart(const char *source, GLenum shaderType)
 		}
 	} else {
 		DEBUG("Error creating shader");
+		printError("Error creating shader");
 		return 0;
 	}
+}
+
+
+void GLShader::printError(QString message)
+{
+	QMessageBox::critical(0, QString("OpenGL Error"), message, QMessageBox::Ok);
 }
