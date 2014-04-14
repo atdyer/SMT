@@ -42,7 +42,9 @@ Check out the [User Manual](https://github.com/atdyer/SMT/wiki/) for help on usi
 2. Unzip the .zip file by right-clicking on the folder and clicking Extract All...
 3. Run SMT by double-clicking SMT.exe in the unzipped folder
 
-        Note: You'll need to leave the SMT.exe file in the SMT folder. You can create a shortcut to SMT by right-clicking SMT.exe and clicking 'Pin to Taskbar', 'Pin to Start Menu', or 'Send to > Desktop'
+> Note: You'll need to leave the SMT.exe file in the SMT folder. 
+> You can create a shortcut to SMT by right-clicking SMT.exe and 
+> clicking 'Pin to Taskbar', 'Pin to Start Menu', or 'Send to > Desktop'
 
 
 ### Installing on Linux
