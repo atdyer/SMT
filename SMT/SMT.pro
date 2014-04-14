@@ -6,12 +6,14 @@
 
 QT       += core gui opengl xml
 
-LIBS += -lGLEW -lGLU
-
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+DEFINES += GLEW_STATIC
 
 TARGET = SMT
 TEMPLATE = app
+
+!win32 {
+	LIBS += -lGLU
+}
 
 
 SOURCES += main.cpp\
@@ -192,6 +194,3 @@ FORMS    += MainWindow.ui \
 
 RESOURCES += \
     icons.qrc
-
-OTHER_FILES += \
-    copyright.txt
