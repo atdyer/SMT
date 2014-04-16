@@ -277,7 +277,7 @@ border-top-right-radius: 4px;
              <x>0</x>
              <y>0</y>
              <width>206</width>
-             <height>555</height>
+             <height>551</height>
             </rect>
            </property>
            <attribute name="label">
@@ -752,7 +752,7 @@ border-top-right-radius: 4px;
              <x>0</x>
              <y>0</y>
              <width>256</width>
-             <height>555</height>
+             <height>551</height>
             </rect>
            </property>
            <attribute name="label">
@@ -969,7 +969,7 @@ border-top-right-radius: 4px;
              <x>0</x>
              <y>0</y>
              <width>258</width>
-             <height>555</height>
+             <height>551</height>
             </rect>
            </property>
            <attribute name="label">
@@ -1037,7 +1037,7 @@ border-top-right-radius: 4px;
              <x>0</x>
              <y>0</y>
              <width>150</width>
-             <height>555</height>
+             <height>551</height>
             </rect>
            </property>
            <attribute name="label">
@@ -1211,9 +1211,18 @@ border-top-right-radius: 4px;
      <property name="title">
       <string>Other Layers</string>
      </property>
+     <widget class="QMenu" name="menuOpenStreetMap">
+      <property name="title">
+       <string>OpenStreetMap</string>
+      </property>
+      <addaction name="actionStreet"/>
+      <addaction name="actionSatellite"/>
+      <addaction name="actionTerrain"/>
+     </widget>
      <addaction name="actionSea_Level"/>
      <addaction name="separator"/>
      <addaction name="actionOtherLayerOptions"/>
+     <addaction name="menuOpenStreetMap"/>
     </widget>
     <addaction name="actionColor_Options"/>
     <addaction name="menuOther_Layers"/>
@@ -1422,6 +1431,39 @@ border-top-right-radius: 4px;
    </property>
    <property name="shortcut">
     <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actionStreet">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Maps</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+M</string>
+   </property>
+  </action>
+  <action name="actionSatellite">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Satellite</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+S</string>
+   </property>
+  </action>
+  <action name="actionTerrain">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Terrain</string>
+   </property>
+   <property name="shortcut">
+    <string>Alt+T</string>
    </property>
   </action>
  </widget>

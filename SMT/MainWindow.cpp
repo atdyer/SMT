@@ -63,6 +63,11 @@ MainWindow::MainWindow(QWidget *parent) :
 	connect(ui->actionClose_Project, SIGNAL(triggered()), this, SLOT(closeProject()));
 	connect(ui->actionExit, SIGNAL(triggered()), this, SIGNAL(quit()));
 
+	// Connect map display features
+	connect(ui->actionStreet, SIGNAL(triggered()), ui->GLPanel, SLOT(toggleStreet()));
+	connect(ui->actionSatellite, SIGNAL(triggered()), ui->GLPanel, SLOT(toggleSattelite()));
+	connect(ui->actionTerrain, SIGNAL(triggered()), ui->GLPanel, SLOT(toggleTerrain()));
+
 	// Try out moving the tool buttons into a toolbar
 	QToolBar* toolBar = new QToolBar(this);
 	toolBar->layout()->setSpacing(0);

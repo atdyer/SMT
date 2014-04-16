@@ -13,6 +13,7 @@
 #include "OpenGL/GLCamera.h"
 
 #include "Layers/SelectionLayer.h"
+#include "Layers/OpenStreetMapLayer.h"
 
 class Domain : public QObject
 {
@@ -40,6 +41,10 @@ class Domain : public QObject
 		void	SetProgressBar(QProgressBar* newBar);
 		void	SetWindowSize(float w, float h);
 
+		void	ToggleStreet();
+		void	ToggleSatellite();
+		void	ToggleTerrain();
+
 		void	Undo();
 		bool	UndoAvailable();
 		void	UseTool(ToolType tool, SelectionType selection, SelectionMode mode);
@@ -59,11 +64,12 @@ class Domain : public QObject
 
 	protected:
 
-		GLCamera*	camera;
-		Fort14*		fort14;
-		QProgressBar*	progressBar;
-		ProjectFile*	projectFile;
-		SelectionLayer*	selectionLayer;
+		GLCamera*		camera;
+		Fort14*			fort14;
+		QProgressBar*		progressBar;
+		ProjectFile*		projectFile;
+		SelectionLayer*		selectionLayer;
+		OpenStreetMapLayer*	mapLayer;
 
 		/* Mouse Clicking and Moving Stuff */
 		ActionType	currentMode;	/**< The current mode used to determine where actions are sent */

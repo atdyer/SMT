@@ -241,6 +241,27 @@ void OpenGLPanel::addSubdomainToMenus(QString domainName)
 }
 
 
+void OpenGLPanel::toggleStreet()
+{
+	if (activeNewDomain)
+		activeNewDomain->ToggleStreet();
+}
+
+
+void OpenGLPanel::toggleSattelite()
+{
+	if (activeNewDomain)
+		activeNewDomain->ToggleSatellite();
+}
+
+
+void OpenGLPanel::toggleTerrain()
+{
+	if (activeNewDomain)
+		activeNewDomain->ToggleTerrain();
+}
+
+
 /**
  * @brief Sets the visible Domain
  *

@@ -7,6 +7,7 @@ Domain::Domain(ProjectFile *projectFile, QObject *parent) :
 	progressBar(0),
 	projectFile(projectFile),
 	selectionLayer(0),
+	mapLayer(0),
 	currentMode(DisplayAction),
 	oldx(0.0),
 	oldy(0.0),
@@ -19,12 +20,18 @@ Domain::Domain(ProjectFile *projectFile, QObject *parent) :
 	mouseMoved(false)
 {
 	camera = new GLCamera();
+	mapLayer = new OpenStreetMapLayer();
+	mapLayer->SetCamera(camera);
 }
 
 
 Domain::~Domain()
 {
-	delete camera;
+	if (camera)
+		delete camera;
+
+	if (mapLayer)
+		delete mapLayer;
 }
 
 
@@ -39,6 +46,9 @@ void Domain::ClearSelections()
 
 void Domain::Draw()
 {
+	if (mapLayer)
+		mapLayer->Draw();
+
 	if (fort14)
 		fort14->Draw();
 
@@ -159,6 +169,8 @@ void Domain::SetCamera(GLCamera *newCam)
 	camera = newCam;
 	if (fort14)
 		fort14->SetCamera(camera);
+	if (mapLayer)
+		mapLayer->SetCamera(camera);
 
 }
 
@@ -176,6 +188,33 @@ void Domain::SetWindowSize(float w, float h)
 
 	if (selectionLayer)
 		selectionLayer->WindowSizeChanged(w, h);
+}
+
+
+void Domain::ToggleStreet()
+{
+	std::cout << "Street" << std::endl;
+	if (mapLayer)
+		mapLayer->ToggleStreet();
+	emit updateGL();
+}
+
+
+void Domain::ToggleSatellite()
+{
+	std::cout << "Satellite" << std::endl;
+	if (mapLayer)
+		mapLayer->ToggleSatellite();
+	emit updateGL();
+}
+
+
+void Domain::ToggleTerrain()
+{
+	std::cout << "Terrain" << std::endl;
+	if (mapLayer)
+		mapLayer->ToggleTerrain();
+	emit updateGL();
 }
 
 

@@ -2,7 +2,7 @@
 #define GLDATA_H
 
 #include "glew.h"
-
+#include <QGLWidget>
 
 /**
  * @brief A 4x4 matrix of floating point values

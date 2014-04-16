@@ -15,6 +15,7 @@ TEMPLATE = app
 	LIBS += -lGLU
 }
 
+LIBS += -lcurl
 
 SOURCES += main.cpp\
         MainWindow.cpp \
@@ -96,7 +97,8 @@ SOURCES += main.cpp\
     Adcirc/SubdomainCreator.cpp \
     Layers/SelectionLayers/SubDomainSelectionLayer.cpp \
     Project/Files/Workers/Fort14Writer.cpp \
-    Project/Files/Fort13.cpp
+    Project/Files/Fort13.cpp \
+    Layers/OpenStreetMapLayer.cpp
 
 HEADERS  += MainWindow.h \
     OpenGL/wglew.h \
@@ -182,7 +184,8 @@ HEADERS  += MainWindow.h \
     Adcirc/SubdomainCreator.h \
     Layers/SelectionLayers/SubDomainSelectionLayer.h \
     Project/Files/Workers/Fort14Writer.h \
-    Project/Files/Fort13.h
+    Project/Files/Fort13.h \
+    Layers/OpenStreetMapLayer.h
 
 FORMS    += MainWindow.ui \
     Widgets/ShaderOptionsStackedWidget.ui \

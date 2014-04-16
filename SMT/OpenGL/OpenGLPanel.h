@@ -69,6 +69,10 @@ class OpenGLPanel : public QGLWidget
 
 		void	addSubdomainToMenus(QString domainName);
 
+		void	toggleStreet();
+		void	toggleSattelite();
+		void	toggleTerrain();
+
 	private slots:
 
 		void	UseCursor(const QCursor &cursorType);

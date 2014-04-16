@@ -38,7 +38,7 @@ class Layer : public QObject
 
 		// Constructor
 		Layer(QObject* parent = 0);
-		~Layer();
+		virtual ~Layer();
 
 		// Load to GPU method
 		virtual void	LoadDataToGPU() = 0;
