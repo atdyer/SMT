@@ -21,6 +21,8 @@ static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, voi
 
 OpenStreetMapLayer::OpenStreetMapLayer()
 {
+	fort14 = 0;
+
 	VAOId = 0;
 	VBOId = 0;
 	IBOId = 0;
@@ -32,18 +34,18 @@ OpenStreetMapLayer::OpenStreetMapLayer()
 	testTile.memory = (uchar*)malloc(1);
 	testTile.size = 0;
 
-	numNodes = 25;
-	numTriangles = 32;
+	surfaceDim = 2;
+	numNodes = surfaceDim*surfaceDim;
+	numTriangles = (surfaceDim-1)*(surfaceDim-1)*2;
 	nodes = 0;
 	triangles = 0;
 
 	camera = 0;
 	outlineShader = 0;
 	fillShader = 0;
+	mapShader = 0;
 
 	Initialize();
-
-	LoadTile(34.6345, -76.5231, 15);
 }
 
 
@@ -58,6 +60,8 @@ OpenStreetMapLayer::~OpenStreetMapLayer()
 		delete outlineShader;
 	if (fillShader)
 		delete fillShader;
+	if (mapShader)
+		delete mapShader;
 
 	if (VBOId)
 		glDeleteBuffers(1, &VBOId);
@@ -80,17 +84,28 @@ void OpenStreetMapLayer::Draw()
 	{
 		glBindVertexArray(VAOId);
 
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		if (fillShader && fillShader->Use())
-		{
-			glDrawElements(GL_TRIANGLES, numTriangles*3, GL_UNSIGNED_INT, (GLvoid*)0);
-		}
+//		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+//		if (fillShader && fillShader->Use())
+//		{
+//			glDrawElements(GL_TRIANGLES, numTriangles*3, GL_UNSIGNED_INT, (GLvoid*)0);
+//		}
 
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		if (outlineShader && outlineShader->Use())
+//		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+//		if (outlineShader && outlineShader->Use())
+//		{
+//			glDrawElements(GL_TRIANGLES, numTriangles*3, GL_UNSIGNED_INT, (GLvoid*)0);
+//		}
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texID);
+		if (mapShader && mapShader->Use())
 		{
+
 			glDrawElements(GL_TRIANGLES, numTriangles*3, GL_UNSIGNED_INT, (GLvoid*)0);
+
 		}
+		glBindTexture(GL_TEXTURE_2D, 0);
 
 		glBindVertexArray(0);
 		glUseProgram(0);
@@ -106,6 +121,8 @@ void OpenStreetMapLayer::SetCamera(GLCamera *newCamera)
 		outlineShader->SetCamera(camera);
 	if (fillShader)
 		fillShader->SetCamera(camera);
+	if (mapShader)
+		mapShader->SetCamera(camera);
 }
 
 
@@ -115,6 +132,65 @@ void OpenStreetMapLayer::ToggleStreet()
 	{
 		currentType = Street;
 		isVisible = true;
+
+		if (camera && fort14)
+		{
+			int zoom = 15;
+
+			// Convert screen coordinates to normalized coordinates
+			float normX, normY;
+			camera->GetUnprojectedPoint(camera->GetViewportWidth()/2.0, camera->GetViewportHeight()/2.0, &normX, &normY);
+			std::cout << "Normalized coordinates: " << normX << ", " << normY << std::endl;
+
+			// Convert normalized coordiantes to lat/long
+			float geoX = fort14->GetUnprojectedX(normX);
+			float geoY = fort14->GetUnprojectedY(normY);
+			std::cout << "Geographic coordinates: " << geoX << ", " << geoY << std::endl;
+
+			// Load the tile
+			LoadTile(geoY, geoX, zoom);
+
+			// Get the x, y tile coordinates
+			int tileX = lonToTileX(geoX, zoom);
+			int tileY = latToTileY(geoY, zoom);
+
+			// Convert tile coordinates to lat/long
+			float geoXnew = tileXToLon(tileX, zoom);
+			float geoYnew = tileYToLat(tileY, zoom);
+			float geoXnewNext = tileXToLon(tileX + 1, zoom);
+			float geoYnewNext = tileYToLat(tileY + 1, zoom);
+			std::cout << "New geographic coordinates: " << geoXnew << ", " << geoYnew << std::endl;
+
+			// Convert lat/long to normalized coordinates
+			float normXnew = fort14->GetNormalizedX(geoXnew);
+			float normYnew = fort14->GetNormalizedY(geoYnew);
+			float normXnewNext = fort14->GetNormalizedX(geoXnewNext);
+			float normYnewNext = fort14->GetNormalizedY(geoYnewNext);
+			std::cout << "New normalized coordinates: " << normXnew << ", " << normYnew << std::endl;
+
+			// Convert normalized to window coordinates
+			float windowXnew, windowYnew;
+			float windowXnewNext, windowYnewNext;
+			windowXnew = normXnew;
+			windowYnew = normYnew;
+			windowXnewNext = normXnewNext;
+			windowYnewNext = normYnewNext;
+//			camera->GetProjectedPoint(normXnew, normYnew, &windowXnew, &windowYnew);
+//			camera->GetProjectedPoint(normXnewNext, normYnewNext, &windowXnewNext, &windowYnewNext);
+
+			// Calculate the width and height
+			float width = windowXnewNext - windowXnew;
+			float height = windowYnewNext - windowYnew;
+
+			std::cout << "New render surface position: " << windowXnew << ", " << windowYnew << " -- " <<
+				     width << ", " << height << std::endl;
+
+			// Update the rendering surface
+			UpdateSurfacePosition(windowXnew, windowYnew, width, height);
+
+		}
+
+
 	} else if (currentType == Street) {
 		isVisible = false;
 	} else {
@@ -153,10 +229,9 @@ void OpenStreetMapLayer::ToggleTerrain()
 }
 
 
-void OpenStreetMapLayer::SetTestPoint(float x, float y)
+void OpenStreetMapLayer::SetFort14(Fort14 *newFort14)
 {
-	testX = x;
-	testY = y;
+	fort14 = newFort14;
 }
 
 
@@ -170,17 +245,18 @@ void OpenStreetMapLayer::Initialize()
 
 void OpenStreetMapLayer::InitializeRenderSurface()
 {
-	nodes = new float[4*numNodes];
+	nodes = new float[6*numNodes];
 	triangles = new int[3*numTriangles];
 
 	int counter = 0;
 
-	for (int i=0; i<5; ++i)
+	for (int i=0; i<surfaceDim; ++i)
 	{
-		for (int j=0; j<5; ++j)
+		for (int j=0; j<surfaceDim; ++j)
 		{
-			float x = -1.0 + 0.5*i;
-			float y = -1.0 + 0.5*j;
+			float stride = 2.0/(surfaceDim-1);
+			float x = -1.0 + stride*i;
+			float y = -1.0 + stride*j;
 			float z = 0.0;
 			float w = 1.0;
 
@@ -190,15 +266,19 @@ void OpenStreetMapLayer::InitializeRenderSurface()
 			nodes[counter++] = y;
 			nodes[counter++] = z;
 			nodes[counter++] = w;
+			nodes[counter++] = (x+1.0)/2.0;
+			nodes[counter++] = 1.0 - (y+1.0)/2.0;
+
+			std::cout << (x+1.0)/2.0 << ", " << (y+1.0)/2.0 << std::endl;
 		}
 	}
 
-	std::cout << "Added " << counter << " nodes" << std::endl;
+	std::cout << "Added " << counter << " nodal values" << std::endl;
 
 	counter = 0;
-	for (int i=0; i<20; i+=5)
+	for (int i=0; i<(surfaceDim-1)*surfaceDim; i+=surfaceDim)
 	{
-		for (int outer=i, inner=i+6; outer<i+4; ++outer, ++inner)
+		for (int outer=i, inner=i+surfaceDim+1; outer<i+surfaceDim-1; ++outer, ++inner)
 		{
 			int a = outer;
 			int b = outer+1;
@@ -230,20 +310,24 @@ void OpenStreetMapLayer::InitializeGL()
 	glBindVertexArray(VAOId);
 
 	// Send the vertex data
-	const size_t vboSize = 4*sizeof(GLfloat)*numNodes;
+	const size_t vboSize = 6*sizeof(GLfloat)*numNodes;
 	glBindBuffer(GL_ARRAY_BUFFER, VBOId);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 0);
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 6*sizeof(GLfloat), 0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 6*sizeof(GLfloat), (GLvoid *)(0 + 4*sizeof(GLfloat)));
 	glBufferData(GL_ARRAY_BUFFER, vboSize, NULL, GL_STATIC_DRAW);
 	GLfloat* glNodeData = (GLfloat *)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 	if (glNodeData)
 	{
 		for (int i=0; i<numNodes; i++)
 		{
-			glNodeData[4*i+0] = (GLfloat)nodes[4*i+0];
-			glNodeData[4*i+1] = (GLfloat)nodes[4*i+1];
-			glNodeData[4*i+2] = (GLfloat)nodes[4*i+2];
-			glNodeData[4*i+3] = (GLfloat)nodes[4*i+3];
+			glNodeData[6*i+0] = (GLfloat)nodes[6*i+0];
+			glNodeData[6*i+1] = (GLfloat)nodes[6*i+1];
+			glNodeData[6*i+2] = (GLfloat)nodes[6*i+2];
+			glNodeData[6*i+3] = (GLfloat)nodes[6*i+3];
+			glNodeData[6*i+4] = (GLfloat)nodes[6*i+4];
+			glNodeData[6*i+5] = (GLfloat)nodes[6*i+5];
 		}
 
 		if (glUnmapBuffer(GL_ARRAY_BUFFER) == GL_FALSE)
@@ -294,6 +378,10 @@ void OpenStreetMapLayer::InitializeGL()
 	fillShader->SetColor(QColor(0, 255, 0, 255));
 	if (camera)
 		fillShader->SetCamera(camera);
+
+	mapShader = new OpenStreetMapShader();
+	if (camera)
+		mapShader->SetCamera(camera);
 }
 
 
@@ -305,11 +393,17 @@ void OpenStreetMapLayer::InitializeTexture()
 
 void OpenStreetMapLayer::LoadTexture()
 {
+//	QImage qI("/home/tristan/Desktop/13019.png");
+//	QImage qI("/home/tristan/Desktop/testTile.png");
 	QImage qI;
 	bool loaded = qI.loadFromData(testTile.memory, (int)testTile.size, 0);
 	if (loaded)
 	{
-		QImage texData = QGLWidget::convertToGLFormat(qI);
+		QImage formattedImage = qI.convertToFormat(QImage::Format_ARGB32);
+//		formattedImage.invertPixels(QImage::InvertRgba);
+		QImage texData = QGLWidget::convertToGLFormat(formattedImage);
+
+		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texID);
 
 		GLenum minFilter = GL_LINEAR;
@@ -323,6 +417,8 @@ void OpenStreetMapLayer::LoadTexture()
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
 
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+//		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+
 		glTexImage2D(GL_TEXTURE_2D,
 			     0,
 			     GL_RGBA,
@@ -343,6 +439,49 @@ void OpenStreetMapLayer::LoadTexture()
 
 	} else {
 		std::cout << "Unable to create QImage from data" << std::endl;
+	}
+}
+
+
+void OpenStreetMapLayer::UpdateSurfacePosition(float x, float y, float width, float height)
+{
+	int counter = 0;
+
+	for (int i=0; i<surfaceDim; ++i)
+	{
+		for (int j=0; j<surfaceDim; ++j)
+		{
+			float strideWidth = width/(surfaceDim-1);
+			float strideHeight = height/(surfaceDim-1);
+			float xSurf = x + strideWidth*i;
+			float ySurf = y + strideHeight*j;
+
+//			std::cout << x << ", " << y << ", " << z << std::endl;
+
+			nodes[counter++] = xSurf;
+			nodes[counter++] = ySurf;
+			counter += 4;
+		}
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBOId);
+	GLfloat* glNodeData = (GLfloat *)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+	if (glNodeData)
+	{
+		for (int i=0; i<numNodes; i++)
+		{
+			glNodeData[6*i+0] = (GLfloat)nodes[6*i+0];
+			glNodeData[6*i+1] = (GLfloat)nodes[6*i+1];
+		}
+
+		if (glUnmapBuffer(GL_ARRAY_BUFFER) == GL_FALSE)
+		{
+			std::cout << "Error unmapping buffer" << std::endl;
+		}
+
+	} else {
+		std::cout << "Error loading map render surface nodes" << std::endl;
+		return;
 	}
 }
 
@@ -411,9 +550,16 @@ void OpenStreetMapLayer::LoadTile(float lat, float lon, int z)
 		return;
 	}
 
+	std::cout << "Loading tile: " << url.toStdString().data() << std::endl;
+
 	CURL *image = 0;
 
 	image = curl_easy_init();
+
+	if (testTile.memory)
+		free(testTile.memory);
+	testTile.memory = (uchar*)malloc(1);
+	testTile.size = 0;
 
 	if (image)
 	{

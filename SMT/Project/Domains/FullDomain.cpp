@@ -91,4 +91,5 @@ void FullDomain::CreateAllFiles()
 	maxvel = new Maxvel63(projectFile, this);
 
 	fort14->SetCamera(camera);
+	mapLayer->SetFort14(fort14);
 }

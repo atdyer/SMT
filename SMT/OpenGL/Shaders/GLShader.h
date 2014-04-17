@@ -51,7 +51,7 @@ class GLShader
 		bool	camSet;
 		bool	uniformsSet;
 
-		void		UpdateCameraUniform();
+		virtual void		UpdateCameraUniform();
 		GLuint		CompileShaderPart(const char *source, GLenum shaderType);
 
 		/**

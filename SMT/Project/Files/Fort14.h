@@ -51,6 +51,8 @@ class Fort14 : public QObject
 		ShaderType		GetOutlineShaderType();
 		float			GetUnprojectedX(float x);
 		float			GetUnprojectedY(float y);
+		float			GetNormalizedX(float x);
+		float			GetNormalizedY(float y);
 
 		std::vector<Element*>	GetSelectedElements();
 		QColor			GetSolidBoundaryColor();

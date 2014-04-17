@@ -379,6 +379,18 @@ float Fort14::GetUnprojectedY(float y)
 }
 
 
+float Fort14::GetNormalizedX(float x)
+{
+	return (x - midX) / max;
+}
+
+
+float Fort14::GetNormalizedY(float y)
+{
+	return (y - midY) / max;
+}
+
+
 std::vector<Element*> Fort14::GetSelectedElements()
 {
 	std::vector<Element*> selectedElements;

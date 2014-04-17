@@ -3,8 +3,10 @@
 
 #include <QString>
 
+#include "Project/Files/Fort14.h"
 #include "OpenGL/GLCamera.h"
 #include "OpenGL/Shaders/SolidShader.h"
+#include "OpenGL/Shaders/OpenStreetMapShader.h"
 
 #include <curl/curl.h>
 #include <math.h>
@@ -29,7 +31,7 @@ class OpenStreetMapLayer
 		void	ToggleSatellite();
 		void	ToggleTerrain();
 
-		void	SetTestPoint(float x, float y);
+		void	SetFort14(Fort14 *newFort14);
 
 	private:
 
@@ -39,6 +41,7 @@ class OpenStreetMapLayer
 		void	InitializeTexture();
 
 		void	LoadTexture();
+		void	UpdateSurfacePosition(float x, float y, float width, float height);
 
 		int	lonToTileX(float lon, int z);
 		int	latToTileY(float lat, int z);
@@ -47,9 +50,8 @@ class OpenStreetMapLayer
 
 		void	LoadTile(float lat, float lon, int z);
 
-		// Testing
-		float	testX;
-		float	testY;
+		// Fort.14 file
+		Fort14*	fort14;
 
 		// Map Type
 		MapType	currentType;
@@ -59,6 +61,7 @@ class OpenStreetMapLayer
 		struct TileStruct testTile;
 
 		// Rendering surface geometry
+		int	surfaceDim;
 		int	numNodes;
 		int	numTriangles;
 		float*	nodes;
@@ -70,6 +73,7 @@ class OpenStreetMapLayer
 		// Rendering shaders
 		SolidShader*	outlineShader;
 		SolidShader*	fillShader;
+		OpenStreetMapShader*	mapShader;
 
 		// OpenGL rendering surface
 		GLuint	VAOId;

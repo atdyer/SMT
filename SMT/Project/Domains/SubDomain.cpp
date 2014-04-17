@@ -160,4 +160,5 @@ void SubDomain::CreateAllFiles()
 	py141 = new Py141(domainName, projectFile, this);
 
 	fort14->SetCamera(camera);
+	mapLayer->SetFort14(fort14);
 }

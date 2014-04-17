@@ -98,7 +98,8 @@ SOURCES += main.cpp\
     Layers/SelectionLayers/SubDomainSelectionLayer.cpp \
     Project/Files/Workers/Fort14Writer.cpp \
     Project/Files/Fort13.cpp \
-    Layers/OpenStreetMapLayer.cpp
+    Layers/OpenStreetMapLayer.cpp \
+    OpenGL/Shaders/OpenStreetMapShader.cpp
 
 HEADERS  += MainWindow.h \
     OpenGL/wglew.h \
@@ -185,7 +186,8 @@ HEADERS  += MainWindow.h \
     Layers/SelectionLayers/SubDomainSelectionLayer.h \
     Project/Files/Workers/Fort14Writer.h \
     Project/Files/Fort13.h \
-    Layers/OpenStreetMapLayer.h
+    Layers/OpenStreetMapLayer.h \
+    OpenGL/Shaders/OpenStreetMapShader.h
 
 FORMS    += MainWindow.ui \
     Widgets/ShaderOptionsStackedWidget.ui \
