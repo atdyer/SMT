@@ -133,54 +133,16 @@ void OpenStreetMapLayer::ToggleStreet()
 		currentType = Street;
 		isVisible = true;
 
-		if (camera && fort14)
-		{
-			int zoom = 12;
-
-			// Convert screen coordinates to normalized coordinates
-			float normX, normY;
-			camera->GetUnprojectedPoint(camera->GetViewportWidth()/2.0, camera->GetViewportHeight()/2.0, &normX, &normY);
-
-			// Convert normalized coordiantes to lat/long
-			float geoX = fort14->GetUnprojectedX(normX);
-			float geoY = fort14->GetUnprojectedY(normY);
-
-			// Load the tile
-			LoadTile(geoY, geoX, zoom);
-
-			// Get the x, y tile coordinates
-			int tileX = lonToTileX(geoX, zoom);
-			int tileY = latToTileY(geoY, zoom);
-
-			// Convert tile coordinates to lat/long
-			float geoXnew = tileXToLon(tileX, zoom);
-			float geoYnew = tileYToLat(tileY, zoom);
-			float geoXnewNext = tileXToLon(tileX + 1, zoom);
-			float geoYnewNext = tileYToLat(tileY + 1, zoom);
-
-			// Convert lat/long to normalized coordinates
-			float normXnew = fort14->GetNormalizedX(geoXnew);
-			float normYnew = fort14->GetNormalizedY(geoYnew);
-			float normXnewNext = fort14->GetNormalizedX(geoXnewNext);
-			float normYnewNext = fort14->GetNormalizedY(geoYnewNext);
-
-			// Calculate the width and height
-			float width = normXnewNext - normXnew;
-			float height = normYnewNext - normYnew;
-
-			// Update the rendering surface
-			UpdateSurfacePosition(normXnew, normYnew, width, height);
-
-		}
+		RefreshTile();
 
 
 	} else if (currentType == Street) {
 		isVisible = false;
 	} else {
 		currentType = Street;
-	}
 
-	LoadTexture();
+		RefreshTile();
+	}
 }
 
 
@@ -190,10 +152,15 @@ void OpenStreetMapLayer::ToggleSatellite()
 	{
 		currentType = Satellite;
 		isVisible = true;
+
+		RefreshTile();
+
 	} else if (currentType == Satellite) {
 		isVisible = false;
 	} else {
 		currentType = Satellite;
+
+		RefreshTile();
 	}
 }
 
@@ -204,10 +171,14 @@ void OpenStreetMapLayer::ToggleTerrain()
 	{
 		currentType = Terrain;
 		isVisible = true;
+
+		RefreshTile();
+
 	} else if (currentType == Terrain) {
 		isVisible = false;
 	} else {
 		currentType = Terrain;
+		RefreshTile();
 	}
 }
 
@@ -374,16 +345,93 @@ void OpenStreetMapLayer::InitializeTexture()
 }
 
 
+int OpenStreetMapLayer::CalculateZoomLevel(int numHorizontalTiles, float padding)
+{
+	if (camera && fort14)
+	{
+		// Convert the screen coordinates into normalized coordinates
+		float screenLeft, screenRight, screenBottom, screenTop;
+		camera->GetUnprojectedPoint(0.0, 0.0, &screenLeft, &screenTop);
+		camera->GetUnprojectedPoint(camera->GetViewportWidth(), camera->GetViewportHeight(), &screenRight, &screenBottom);
+
+		// Convert normalized coords into lat/long
+		float geoLeft = fort14->GetUnprojectedX(screenLeft);
+		float geoRight = fort14->GetUnprojectedX(screenRight);
+
+		// Get width in degrees
+		float geoWidth = geoRight - geoLeft;
+
+		// Calculate zoom level
+		int newZoom = (int)floor(log2((padding*numHorizontalTiles*256.0) /geoWidth));
+
+		if (newZoom > 19)
+			newZoom = 19;
+		if (newZoom < 0)
+			newZoom = 0;
+
+		std::cout << "Zoom Level: " << newZoom << std::endl;
+
+		return newZoom;
+	}
+
+	return 0;
+
+}
+
+
+void OpenStreetMapLayer::RefreshTile()
+{
+	if (camera && fort14)
+	{
+//		int zoom = 13;
+		int zoom = CalculateZoomLevel(4, 1.2);
+
+		// Convert screen coordinates to normalized coordinates
+		float normX, normY;
+		camera->GetUnprojectedPoint(camera->GetViewportWidth()/2.0, camera->GetViewportHeight()/2.0, &normX, &normY);
+
+		// Convert normalized coordiantes to lat/long
+		float geoX = fort14->GetUnprojectedX(normX);
+		float geoY = fort14->GetUnprojectedY(normY);
+
+		// Load the tile
+		LoadTile(geoY, geoX, zoom);
+		LoadTexture();
+
+		// Get the x, y tile coordinates
+		int tileX = lonToTileX(geoX, zoom);
+		int tileY = latToTileY(geoY, zoom);
+
+		// Convert tile coordinates to lat/long
+		float geoXnew = tileXToLon(tileX, zoom);
+		float geoYnew = tileYToLat(tileY, zoom);
+		float geoXnewNext = tileXToLon(tileX + 1, zoom);
+		float geoYnewNext = tileYToLat(tileY + 1, zoom);
+
+		// Convert lat/long to normalized coordinates
+		float normXnew = fort14->GetNormalizedX(geoXnew);
+		float normYnew = fort14->GetNormalizedY(geoYnew);
+		float normXnewNext = fort14->GetNormalizedX(geoXnewNext);
+		float normYnewNext = fort14->GetNormalizedY(geoYnewNext);
+
+		// Calculate the width and height
+		float width = normXnewNext - normXnew;
+		float height = normYnewNext - normYnew;
+
+		// Update the rendering surface
+		UpdateSurfacePosition(normXnew, normYnew, width, height);
+
+	}
+}
+
+
 void OpenStreetMapLayer::LoadTexture()
 {
-//	QImage qI("/home/tristan/Desktop/13019.png");
-//	QImage qI("/home/tristan/Desktop/testTile.png");
 	QImage qI;
 	bool loaded = qI.loadFromData(testTile.memory, (int)testTile.size, 0);
 	if (loaded)
 	{
 		QImage formattedImage = qI.convertToFormat(QImage::Format_ARGB32);
-//		formattedImage.invertPixels(QImage::InvertRgba);
 		QImage texData = QGLWidget::convertToGLFormat(formattedImage);
 
 		glActiveTexture(GL_TEXTURE0);
@@ -400,7 +448,6 @@ void OpenStreetMapLayer::LoadTexture()
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
 
 		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-//		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 
 		glTexImage2D(GL_TEXTURE_2D,
 			     0,
@@ -423,74 +470,6 @@ void OpenStreetMapLayer::LoadTexture()
 	} else {
 		std::cout << "Unable to create QImage from data" << std::endl;
 	}
-}
-
-
-void OpenStreetMapLayer::UpdateSurfacePosition(float x, float y, float width, float height)
-{
-	int counter = 0;
-
-	for (int i=0; i<surfaceDim; ++i)
-	{
-		for (int j=0; j<surfaceDim; ++j)
-		{
-			float strideWidth = width/(surfaceDim-1);
-			float strideHeight = height/(surfaceDim-1);
-			float xSurf = x + strideWidth*i;
-			float ySurf = y + strideHeight*j;
-
-//			std::cout << x << ", " << y << ", " << z << std::endl;
-
-			nodes[counter++] = xSurf;
-			nodes[counter++] = ySurf;
-			counter += 4;
-		}
-	}
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBOId);
-	GLfloat* glNodeData = (GLfloat *)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-	if (glNodeData)
-	{
-		for (int i=0; i<numNodes; i++)
-		{
-			glNodeData[6*i+0] = (GLfloat)nodes[6*i+0];
-			glNodeData[6*i+1] = (GLfloat)nodes[6*i+1];
-		}
-
-		if (glUnmapBuffer(GL_ARRAY_BUFFER) == GL_FALSE)
-		{
-			std::cout << "Error unmapping buffer" << std::endl;
-		}
-
-	} else {
-		std::cout << "Error loading map render surface nodes" << std::endl;
-		return;
-	}
-}
-
-
-int OpenStreetMapLayer::lonToTileX(float lon, int z)
-{
-	return (int)(floor((lon + 180.0) / 360.0 * pow(2.0, z)));
-}
-
-
-int OpenStreetMapLayer::latToTileY(float lat, int z)
-{
-	return (int)(floor((1.0 - log( tan(lat * M_PI/180.0) + 1.0 / cos(lat * M_PI/180.0)) / M_PI) / 2.0 * pow(2.0, z)));
-}
-
-
-float OpenStreetMapLayer::tileXToLon(int x, int z)
-{
-	return x / pow(2.0, z) * 360.0 - 180;
-}
-
-
-float OpenStreetMapLayer::tileYToLat(int y, int z)
-{
-	double n = M_PI - 2.0 * M_PI * y / pow(2.0, z);
-	return 180.0 / M_PI * atan(0.5 * (exp(n) - exp(-n)));
 }
 
 
@@ -560,6 +539,72 @@ void OpenStreetMapLayer::LoadTile(float lat, float lon, int z)
 		}
 	}
 
+}
+
+
+void OpenStreetMapLayer::UpdateSurfacePosition(float x, float y, float width, float height)
+{
+	int counter = 0;
+
+	for (int i=0; i<surfaceDim; ++i)
+	{
+		for (int j=0; j<surfaceDim; ++j)
+		{
+			float strideWidth = width/(surfaceDim-1);
+			float strideHeight = height/(surfaceDim-1);
+			float xSurf = x + strideWidth*i;
+			float ySurf = y + strideHeight*j;
+
+			nodes[counter++] = xSurf;
+			nodes[counter++] = ySurf;
+			counter += 4;
+		}
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBOId);
+	GLfloat* glNodeData = (GLfloat *)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+	if (glNodeData)
+	{
+		for (int i=0; i<numNodes; i++)
+		{
+			glNodeData[6*i+0] = (GLfloat)nodes[6*i+0];
+			glNodeData[6*i+1] = (GLfloat)nodes[6*i+1];
+		}
+
+		if (glUnmapBuffer(GL_ARRAY_BUFFER) == GL_FALSE)
+		{
+			std::cout << "Error unmapping buffer" << std::endl;
+		}
+
+	} else {
+		std::cout << "Error loading map render surface nodes" << std::endl;
+		return;
+	}
+}
+
+
+int OpenStreetMapLayer::lonToTileX(float lon, int z)
+{
+	return (int)(floor((lon + 180.0) / 360.0 * pow(2.0, z)));
+}
+
+
+int OpenStreetMapLayer::latToTileY(float lat, int z)
+{
+	return (int)(floor((1.0 - log( tan(lat * M_PI/180.0) + 1.0 / cos(lat * M_PI/180.0)) / M_PI) / 2.0 * pow(2.0, z)));
+}
+
+
+float OpenStreetMapLayer::tileXToLon(int x, int z)
+{
+	return x / pow(2.0, z) * 360.0 - 180;
+}
+
+
+float OpenStreetMapLayer::tileYToLat(int y, int z)
+{
+	double n = M_PI - 2.0 * M_PI * y / pow(2.0, z);
+	return 180.0 / M_PI * atan(0.5 * (exp(n) - exp(-n)));
 }
 
 

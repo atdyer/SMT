@@ -26,12 +26,11 @@ class OpenStreetMapLayer
 
 		void	Draw();
 		void	SetCamera(GLCamera *newCamera);
+		void	SetFort14(Fort14 *newFort14);
 
 		void	ToggleStreet();
 		void	ToggleSatellite();
 		void	ToggleTerrain();
-
-		void	SetFort14(Fort14 *newFort14);
 
 	private:
 
@@ -40,7 +39,10 @@ class OpenStreetMapLayer
 		void	InitializeGL();
 		void	InitializeTexture();
 
+		int	CalculateZoomLevel(int numHorizontalTiles, float padding);
+		void	RefreshTile();
 		void	LoadTexture();
+		void	LoadTile(float lat, float lon, int z);
 		void	UpdateSurfacePosition(float x, float y, float width, float height);
 
 		int	lonToTileX(float lon, int z);
@@ -48,7 +50,7 @@ class OpenStreetMapLayer
 		float	tileXToLon(int x, int z);
 		float	tileYToLat(int y, int z);
 
-		void	LoadTile(float lat, float lon, int z);
+
 
 		// Fort.14 file
 		Fort14*	fort14;
