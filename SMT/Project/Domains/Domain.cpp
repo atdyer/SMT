@@ -184,7 +184,7 @@ void Domain::SetProgressBar(QProgressBar* newBar)
 void Domain::SetWindowSize(float w, float h)
 {
 	if (camera)
-		camera->SetWindowSize(-1.0*w/h, 1.0*w/h, -1.0, 1.0, -1000.0, 1000.0);
+		camera->SetWindowSize(-1.0*w/h, 1.0*w/h, -1.0, 1.0, -1000000.0, 1000000.0);
 
 	if (selectionLayer)
 		selectionLayer->WindowSizeChanged(w, h);

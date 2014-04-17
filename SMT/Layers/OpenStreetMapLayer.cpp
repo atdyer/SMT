@@ -135,17 +135,15 @@ void OpenStreetMapLayer::ToggleStreet()
 
 		if (camera && fort14)
 		{
-			int zoom = 15;
+			int zoom = 12;
 
 			// Convert screen coordinates to normalized coordinates
 			float normX, normY;
 			camera->GetUnprojectedPoint(camera->GetViewportWidth()/2.0, camera->GetViewportHeight()/2.0, &normX, &normY);
-			std::cout << "Normalized coordinates: " << normX << ", " << normY << std::endl;
 
 			// Convert normalized coordiantes to lat/long
 			float geoX = fort14->GetUnprojectedX(normX);
 			float geoY = fort14->GetUnprojectedY(normY);
-			std::cout << "Geographic coordinates: " << geoX << ", " << geoY << std::endl;
 
 			// Load the tile
 			LoadTile(geoY, geoX, zoom);
@@ -159,34 +157,19 @@ void OpenStreetMapLayer::ToggleStreet()
 			float geoYnew = tileYToLat(tileY, zoom);
 			float geoXnewNext = tileXToLon(tileX + 1, zoom);
 			float geoYnewNext = tileYToLat(tileY + 1, zoom);
-			std::cout << "New geographic coordinates: " << geoXnew << ", " << geoYnew << std::endl;
 
 			// Convert lat/long to normalized coordinates
 			float normXnew = fort14->GetNormalizedX(geoXnew);
 			float normYnew = fort14->GetNormalizedY(geoYnew);
 			float normXnewNext = fort14->GetNormalizedX(geoXnewNext);
 			float normYnewNext = fort14->GetNormalizedY(geoYnewNext);
-			std::cout << "New normalized coordinates: " << normXnew << ", " << normYnew << std::endl;
-
-			// Convert normalized to window coordinates
-			float windowXnew, windowYnew;
-			float windowXnewNext, windowYnewNext;
-			windowXnew = normXnew;
-			windowYnew = normYnew;
-			windowXnewNext = normXnewNext;
-			windowYnewNext = normYnewNext;
-//			camera->GetProjectedPoint(normXnew, normYnew, &windowXnew, &windowYnew);
-//			camera->GetProjectedPoint(normXnewNext, normYnewNext, &windowXnewNext, &windowYnewNext);
 
 			// Calculate the width and height
-			float width = windowXnewNext - windowXnew;
-			float height = windowYnewNext - windowYnew;
-
-			std::cout << "New render surface position: " << windowXnew << ", " << windowYnew << " -- " <<
-				     width << ", " << height << std::endl;
+			float width = normXnewNext - normXnew;
+			float height = normYnewNext - normYnew;
 
 			// Update the rendering surface
-			UpdateSurfacePosition(windowXnew, windowYnew, width, height);
+			UpdateSurfacePosition(normXnew, normYnew, width, height);
 
 		}
 
