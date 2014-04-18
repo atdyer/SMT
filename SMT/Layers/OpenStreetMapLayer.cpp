@@ -28,12 +28,17 @@ OpenStreetMapLayer::OpenStreetMapLayer()
 	IBOId = 0;
 
 	texID = 0;
+	texIDs = 0;
 
 	currentType = Street;
 	isVisible = false;
 	testTile.memory = (uchar*)malloc(1);
 	testTile.size = 0;
+	osmTile.memory = (uchar*)malloc(1);
+	osmTile.size = 0;
 
+	surfaceTileDim = 4;
+	numTiles = surfaceTileDim*surfaceTileDim;
 	surfaceDim = 2;
 	numNodes = surfaceDim*surfaceDim;
 	numTriangles = (surfaceDim-1)*(surfaceDim-1)*2;
@@ -72,9 +77,16 @@ OpenStreetMapLayer::~OpenStreetMapLayer()
 
 	if (texID)
 		glDeleteTextures(1, &texID);
+	if (texIDs)
+	{
+		glDeleteTextures(numTiles, texIDs);
+		delete texIDs;
+	}
 
 	if (testTile.memory)
 		free(testTile.memory);
+	if (osmTile.memory)
+		free(osmTile.memory);
 }
 
 
@@ -93,16 +105,25 @@ void OpenStreetMapLayer::Draw()
 //		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 //		if (outlineShader && outlineShader->Use())
 //		{
-//			glDrawElements(GL_TRIANGLES, numTriangles*3, GL_UNSIGNED_INT, (GLvoid*)0);
+//			glDrawElements(GL_TRIANGLES, numTriangles, GL_UNSIGNED_INT, (GLvoid*)0);
 //		}
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texID);
+//		glBindTexture(GL_TEXTURE_2D, texID);
 		if (mapShader && mapShader->Use())
 		{
-
-			glDrawElements(GL_TRIANGLES, numTriangles*3, GL_UNSIGNED_INT, (GLvoid*)0);
+			int counter = 0;
+			for (int i=0; i<surfaceTileDim; ++i)
+			{
+				for (int j=0; j<surfaceTileDim; ++j)
+				{
+					int index = counter++;
+					glBindTexture(GL_TEXTURE_2D, texIDs[index]);
+					glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (GLvoid*)(6*index*sizeof(GLuint)));
+				}
+			}
+//			glDrawElements(GL_TRIANGLES, numTriangles*3, GL_UNSIGNED_INT, (GLvoid*)0);
 
 		}
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -133,7 +154,7 @@ void OpenStreetMapLayer::ToggleStreet()
 		currentType = Street;
 		isVisible = true;
 
-		RefreshTile();
+		RefreshTiles();
 
 
 	} else if (currentType == Street) {
@@ -141,7 +162,7 @@ void OpenStreetMapLayer::ToggleStreet()
 	} else {
 		currentType = Street;
 
-		RefreshTile();
+		RefreshTiles();
 	}
 }
 
@@ -153,14 +174,14 @@ void OpenStreetMapLayer::ToggleSatellite()
 		currentType = Satellite;
 		isVisible = true;
 
-		RefreshTile();
+		RefreshTiles();
 
 	} else if (currentType == Satellite) {
 		isVisible = false;
 	} else {
 		currentType = Satellite;
 
-		RefreshTile();
+		RefreshTiles();
 	}
 }
 
@@ -172,13 +193,13 @@ void OpenStreetMapLayer::ToggleTerrain()
 		currentType = Terrain;
 		isVisible = true;
 
-		RefreshTile();
+		RefreshTiles();
 
 	} else if (currentType == Terrain) {
 		isVisible = false;
 	} else {
 		currentType = Terrain;
-		RefreshTile();
+		RefreshTiles();
 	}
 }
 
@@ -191,9 +212,76 @@ void OpenStreetMapLayer::SetFort14(Fort14 *newFort14)
 
 void OpenStreetMapLayer::Initialize()
 {
-	InitializeRenderSurface();
+	InitializeRenderSurfaceNew();
 	InitializeGL();
-	InitializeTexture();
+	InitializeTextures();
+}
+
+
+void OpenStreetMapLayer::InitializeRenderSurfaceNew()
+{
+	int counter = 0;
+
+	numNodes = numTiles*4;
+	numTriangles = numTiles*2;
+
+	nodes = new float[numNodes*6];
+	triangles = new int[numTriangles*3];
+
+	float stride = 2.0/surfaceTileDim;
+
+	for (int i=0; i<surfaceTileDim; ++i)
+	{
+		for (int j=0; j<surfaceTileDim; ++j)
+		{
+			float xLeft = -1.0 + stride*i;
+			float xRight = -1.0 + stride*(i+1);
+			float yBottom = -1.0 + stride*j;
+			float yTop = -1.0 + stride*(j+1);
+
+			nodes[counter++] = xLeft;
+			nodes[counter++] = yBottom;
+			nodes[counter++] = 0.0;
+			nodes[counter++] = 1.0;
+			nodes[counter++] = 0.0;
+			nodes[counter++] = 1.0;
+
+			nodes[counter++] = xRight;
+			nodes[counter++] = yBottom;
+			nodes[counter++] = 0.0;
+			nodes[counter++] = 1.0;
+			nodes[counter++] = 1.0;
+			nodes[counter++] = 1.0;
+
+			nodes[counter++] = xLeft;
+			nodes[counter++] = yTop;
+			nodes[counter++] = 0.0;
+			nodes[counter++] = 1.0;
+			nodes[counter++] = 0.0;
+			nodes[counter++] = 0.0;
+
+			nodes[counter++] = xRight;
+			nodes[counter++] = yTop;
+			nodes[counter++] = 0.0;
+			nodes[counter++] = 1.0;
+			nodes[counter++] = 1.0;
+			nodes[counter++] = 0.0;
+
+		}
+	}
+
+	counter = 0;
+
+	for (int i=0, tile=0; i<numTiles; ++i, tile += 4)
+	{
+		triangles[counter++] = tile;
+		triangles[counter++] = tile+1;
+		triangles[counter++] = tile+3;
+
+		triangles[counter++] = tile;
+		triangles[counter++] = tile+2;
+		triangles[counter++] = tile+3;
+	}
 }
 
 
@@ -306,6 +394,10 @@ void OpenStreetMapLayer::InitializeGL()
 			glElementData[3*i+0] = (GLuint)triangles[3*i+0];
 			glElementData[3*i+1] = (GLuint)triangles[3*i+1];
 			glElementData[3*i+2] = (GLuint)triangles[3*i+2];
+
+			std::cout << "(" << triangles[3*i+0] << ", " <<
+				     triangles[3*i+1] << ", " <<
+				     triangles[3*i+2] << ")" << std::endl;
 		}
 
 		if (glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER) == GL_FALSE)
@@ -339,9 +431,14 @@ void OpenStreetMapLayer::InitializeGL()
 }
 
 
-void OpenStreetMapLayer::InitializeTexture()
+void OpenStreetMapLayer::InitializeTextures()
 {
-	glGenTextures(1, &texID);
+//	glGenTextures(1, &texID);
+
+	texIDs = new GLuint[numTiles];
+
+	if (texIDs)
+		glGenTextures(numTiles, texIDs);
 }
 
 
@@ -362,7 +459,7 @@ int OpenStreetMapLayer::CalculateZoomLevel(int numHorizontalTiles, float padding
 		float geoWidth = geoRight - geoLeft;
 
 		// Calculate zoom level
-		int newZoom = (int)floor(log2((padding*numHorizontalTiles*256.0) /geoWidth));
+		int newZoom = (int)floor(log2((padding*numHorizontalTiles*256.0) / geoWidth));
 
 		if (newZoom > 19)
 			newZoom = 19;
@@ -379,28 +476,31 @@ int OpenStreetMapLayer::CalculateZoomLevel(int numHorizontalTiles, float padding
 }
 
 
-void OpenStreetMapLayer::RefreshTile()
+void OpenStreetMapLayer::RefreshTiles()
 {
 	if (camera && fort14)
 	{
 //		int zoom = 13;
-		int zoom = CalculateZoomLevel(4, 1.2);
+		int zoom = CalculateZoomLevel(8, 1.2);
 
 		// Convert screen coordinates to normalized coordinates
 		float normX, normY;
-		camera->GetUnprojectedPoint(camera->GetViewportWidth()/2.0, camera->GetViewportHeight()/2.0, &normX, &normY);
+		camera->GetUnprojectedPoint(0, 0, &normX, &normY);
 
 		// Convert normalized coordiantes to lat/long
 		float geoX = fort14->GetUnprojectedX(normX);
 		float geoY = fort14->GetUnprojectedY(normY);
 
 		// Load the tile
-		LoadTile(geoY, geoX, zoom);
-		LoadTexture();
+//		LoadTile(geoY, geoX, zoom);
+//		LoadTexture();
 
 		// Get the x, y tile coordinates
 		int tileX = lonToTileX(geoX, zoom);
 		int tileY = latToTileY(geoY, zoom);
+
+		// Load the new tiles
+		LoadTextures(tileX, tileY, zoom);
 
 		// Convert tile coordinates to lat/long
 		float geoXnew = tileXToLon(tileX, zoom);
@@ -419,8 +519,60 @@ void OpenStreetMapLayer::RefreshTile()
 		float height = normYnewNext - normYnew;
 
 		// Update the rendering surface
-		UpdateSurfacePosition(normXnew, normYnew, width, height);
+		UpdateSurfacePositionNew(normXnew, normYnew, width, height);
 
+	}
+}
+
+
+void OpenStreetMapLayer::LoadTextures(int tileX, int tileY, int zoom)
+{
+	int counter = 0;
+
+	glActiveTexture(GL_TEXTURE0);
+
+	GLenum minFilter = GL_LINEAR;
+	GLenum magFilter = GL_LINEAR;
+	GLenum wrapMode = GL_CLAMP_TO_EDGE;
+
+	for (int i=0; i<surfaceTileDim; ++i)
+	{
+		for (int j=0; j<surfaceTileDim; ++j)
+		{
+			// Load the tile from OSM
+			QImage tileImage = FetchTile(tileX+i, tileY+j, zoom).convertToFormat(QImage::Format_ARGB32);
+			QImage textureData = QGLWidget::convertToGLFormat(tileImage);
+
+			// Transfer image data to texture object
+			glBindTexture(GL_TEXTURE_2D, texIDs[counter++]);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrapMode);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, minFilter);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, magFilter);
+
+			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+			glTexImage2D(GL_TEXTURE_2D,
+				     0,
+				     GL_RGBA,
+				     textureData.width(),
+				     textureData.height(),
+				     0,
+				     GL_RGBA,
+				     GL_UNSIGNED_BYTE,
+				     textureData.bits());
+
+			GLenum errorCheck = glGetError();
+			if (errorCheck == GL_NO_ERROR)
+			{
+				std::cout << "Texture loaded" << std::endl;
+			} else {
+				std::cout << "Error loading texture" << std::endl;
+			}
+
+		}
 	}
 }
 
@@ -470,6 +622,80 @@ void OpenStreetMapLayer::LoadTexture()
 	} else {
 		std::cout << "Unable to create QImage from data" << std::endl;
 	}
+}
+
+
+QImage OpenStreetMapLayer::FetchTile(int x, int y, int zoom)
+{
+	QString url;
+	if (currentType == Street)
+	{
+		url = "http://a.tile.openstreetmap.org/" +
+		      QString::number(zoom) +
+		      "/" +
+		      QString::number(x) +
+		      "/" +
+		      QString::number(y) +
+		      ".png";
+	}
+	else if (currentType == Satellite)
+	{
+		url = "http://otile1.mqcdn.com/tiles/1.0.0/sat/" +
+		      QString::number(zoom) +
+		      "/" +
+		      QString::number(x) +
+		      "/" +
+		      QString::number(y) +
+		      ".jpg";
+	}
+	else if (currentType == Terrain)
+	{
+		url = "http://tile.stamen.com/terrain-background/" +
+		      QString::number(zoom) +
+		      "/" +
+		      QString::number(x) +
+		      "/" +
+		      QString::number(y) +
+		      ".jpg";
+	} else {
+		return QImage(256, 256, QImage::Format_ARGB32);
+	}
+
+	std::cout << "Loading tile: " << url.toStdString().data() << std::endl;
+
+	CURL *image = 0;
+
+	image = curl_easy_init();
+
+	if (osmTile.memory)
+		free(osmTile.memory);
+	osmTile.memory = (uchar*)malloc(1);
+	osmTile.size = 0;
+
+	if (image)
+	{
+		curl_easy_setopt(image, CURLOPT_URL, url.toStdString().data());
+		curl_easy_setopt(image, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
+		curl_easy_setopt(image, CURLOPT_WRITEDATA, (void *)&osmTile);
+
+		std::cout << "Sending tile map request" << std::endl;
+		CURLcode fetchResult = curl_easy_perform(image);
+		std::cout << "Retrieved" << std::endl;
+
+		if (fetchResult != CURLE_OK)
+		{
+			std::cout << "Failed: " << curl_easy_strerror(fetchResult) << std::endl;
+		} else {
+			QImage qI;
+			bool loaded = qI.loadFromData(osmTile.memory, (int)osmTile.size, 0);
+			if (loaded)
+			{
+				return qI;
+			}
+		}
+	}
+
+	return QImage(256, 256, QImage::Format_ARGB32);
 }
 
 
@@ -537,6 +763,61 @@ void OpenStreetMapLayer::LoadTile(float lat, float lon, int z)
 		{
 			std::cout << "Failed: " << curl_easy_strerror(fetchResult) << std::endl;
 		}
+	}
+
+}
+
+
+void OpenStreetMapLayer::UpdateSurfacePositionNew(float x, float y, float width, float height)
+{
+	int counter = 0;
+
+	for (int i=0; i<surfaceTileDim; ++i)
+	{
+		for (int j=0; j<surfaceTileDim; ++j)
+		{
+			float xLeft = x + width*i;
+			float xRight = x + width*(i+1);
+			float yBottom = y + height*j;
+			float yTop = y + height*(j+1);
+
+			nodes[counter++] = xLeft;
+			nodes[counter++] = yBottom;
+			counter += 4;
+
+			nodes[counter++] = xRight;
+			nodes[counter++] = yBottom;
+			counter += 4;
+
+			nodes[counter++] = xLeft;
+			nodes[counter++] = yTop;
+			counter += 4;
+
+			nodes[counter++] = xRight;
+			nodes[counter++] = yTop;
+			counter += 4;
+
+		}
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBOId);
+	GLfloat* glNodeData = (GLfloat *)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+	if (glNodeData)
+	{
+		for (int i=0; i<numNodes; i++)
+		{
+			glNodeData[6*i+0] = (GLfloat)nodes[6*i+0];
+			glNodeData[6*i+1] = (GLfloat)nodes[6*i+1];
+		}
+
+		if (glUnmapBuffer(GL_ARRAY_BUFFER) == GL_FALSE)
+		{
+			std::cout << "Error unmapping buffer" << std::endl;
+		}
+
+	} else {
+		std::cout << "Error loading map render surface nodes" << std::endl;
+		return;
 	}
 
 }
