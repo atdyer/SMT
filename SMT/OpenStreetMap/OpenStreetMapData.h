@@ -15,3 +15,21 @@
 * along with SMT.  If not, see <http://www.gnu.org/licenses/>.					*
 *												*
 ************************************************************************************************/
+
+#ifndef OPENSTREETMAPDATA_H
+#define OPENSTREETMAPDATA_H
+
+#include <QString>
+
+enum TileType {StreetTile, SatelliteTile, TerrainTile};
+
+static const QString satelliteURL1 = "http://otile1.mqcdn.com/tiles/1.0.0/sat/";
+static const QString satelliteURL2 = "http://otile2.mqcdn.com/tiles/1.0.0/sat/";
+static const QString satelliteURL3 = "http://otile3.mqcdn.com/tiles/1.0.0/sat/";
+static const QString satelliteURL4 = "http://otile4.mqcdn.com/tiles/1.0.0/sat/";
+static const QString streetURLa = "http://a.tile.openstreetmap.org/";
+static const QString streetURLb = "http://b.tile.openstreetmap.org/";
+static const QString streetURLc = "http://c.tile.openstreetmap.org/";
+static const QString terrainURL = "http://tile.stamen.com/terrain-background/";
+
+#endif // OPENSTREETMAPDATA_H

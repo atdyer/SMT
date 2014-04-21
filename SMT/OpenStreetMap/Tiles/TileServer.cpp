@@ -15,3 +15,42 @@
 * along with SMT.  If not, see <http://www.gnu.org/licenses/>.					*
 *												*
 ************************************************************************************************/
+
+#include "TileServer.h"
+
+TileServer::TileServer()
+{
+	tileCache = new TileCache();
+	tileLoader = new TileLoader();
+
+	connect(tileLoader, SIGNAL(tileLoaded(Tile*)), this, SLOT(tileLoaded(Tile*)));
+}
+
+
+TileServer::~TileServer()
+{
+	if (tileCache)
+		delete tileCache;
+
+	if (tileLoader)
+		delete tileLoader;
+}
+
+
+void TileServer::RunTest()
+{
+	std::cout << "Starting TileServer Test" << std::endl;
+	tileLoader->loadTile(StreetTile, 0, 0, 0);
+}
+
+
+void TileServer::tileLoaded(Tile *newTile)
+{
+	std::cout << "Tile Loaded: " <<
+		     newTile->getTileX() << ", " <<
+		     newTile->getTileY() << ", " <<
+		     newTile->getZoom() << std::endl;
+
+	delete newTile;
+
+}

@@ -15,3 +15,53 @@
 * along with SMT.  If not, see <http://www.gnu.org/licenses/>.					*
 *												*
 ************************************************************************************************/
+
+#ifndef TILE_H
+#define TILE_H
+
+#include <QObject>
+#include <QImage>
+
+#include <OpenStreetMap/OpenStreetMapData.h>
+#include <OpenStreetMap/Tiles/TileLoaderRunnable.h>
+
+class Tile : public QObject
+{
+		Q_OBJECT
+	public:
+		Tile(TileType tileType, int tileX, int tileY, int tileZoom);
+		~Tile();
+
+		const uchar*		getData();
+		TileLoaderRunnable*	getLoaderRunnable();
+		int			getTileX();
+		int			getTileY();
+		TileType		getType();
+		int			getZoom();
+
+		void			setSkip(bool skip);
+
+	private:
+
+		QImage*			data;
+		bool			isLoaded;
+		TileLoaderRunnable*	loader;
+		TileType		type;
+
+		int			x;
+		int			y;
+		int			zoom;
+
+		void	CleanupLoader();
+
+	signals:
+
+		void	loaded(bool isLoaded, Tile* tile);
+		void	skip(bool isSkip);
+
+	protected slots:
+
+		void	threadFinished(QImage* newData);
+};
+
+#endif // TILE_H

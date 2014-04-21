@@ -15,3 +15,34 @@
 * along with SMT.  If not, see <http://www.gnu.org/licenses/>.					*
 *												*
 ************************************************************************************************/
+
+#ifndef TILESERVER_H
+#define TILESERVER_H
+
+#include <QObject>
+
+#include "OpenStreetMap/Tiles/TileCache.h"
+#include "OpenStreetMap/Tiles/TileLoader.h"
+
+#include <iostream>
+
+class TileServer : public QObject
+{
+		Q_OBJECT
+	public:
+		TileServer();
+		~TileServer();
+
+		void	RunTest();
+
+	private:
+
+		TileCache*	tileCache;
+		TileLoader*	tileLoader;
+
+	protected slots:
+
+		void	tileLoaded(Tile* newTile);
+};
+
+#endif // TILESERVER_H

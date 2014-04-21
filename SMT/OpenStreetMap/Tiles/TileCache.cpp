@@ -15,3 +15,9 @@
 * along with SMT.  If not, see <http://www.gnu.org/licenses/>.					*
 *												*
 ************************************************************************************************/
+
+#include "TileCache.h"
+
+TileCache::TileCache()
+{
+}

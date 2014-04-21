@@ -99,7 +99,12 @@ SOURCES += main.cpp\
     Project/Files/Workers/Fort14Writer.cpp \
     Project/Files/Fort13.cpp \
     Layers/OpenStreetMapLayer.cpp \
-    OpenGL/Shaders/OpenStreetMapShader.cpp
+    OpenGL/Shaders/OpenStreetMapShader.cpp \
+    OpenStreetMap/Tiles/TileCache.cpp \
+    OpenStreetMap/Tiles/Tile.cpp \
+    OpenStreetMap/Tiles/TileLoader.cpp \
+    OpenStreetMap/Tiles/TileLoaderRunnable.cpp \
+    OpenStreetMap/Tiles/TileServer.cpp
 
 HEADERS  += MainWindow.h \
     OpenGL/wglew.h \
@@ -187,7 +192,13 @@ HEADERS  += MainWindow.h \
     Project/Files/Workers/Fort14Writer.h \
     Project/Files/Fort13.h \
     Layers/OpenStreetMapLayer.h \
-    OpenGL/Shaders/OpenStreetMapShader.h
+    OpenGL/Shaders/OpenStreetMapShader.h \
+    OpenStreetMap/Tiles/TileCache.h \
+    OpenStreetMap/Tiles/Tile.h \
+    OpenStreetMap/Tiles/TileLoader.h \
+    OpenStreetMap/OpenStreetMapData.h \
+    OpenStreetMap/Tiles/TileLoaderRunnable.h \
+    OpenStreetMap/Tiles/TileServer.h
 
 FORMS    += MainWindow.ui \
     Widgets/ShaderOptionsStackedWidget.ui \

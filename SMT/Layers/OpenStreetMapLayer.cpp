@@ -30,7 +30,7 @@ OpenStreetMapLayer::OpenStreetMapLayer()
 	texID = 0;
 	texIDs = 0;
 
-	currentType = Street;
+	currentType = StreetMap;
 	isVisible = false;
 	testTile.memory = (uchar*)malloc(1);
 	testTile.size = 0;
@@ -49,6 +49,8 @@ OpenStreetMapLayer::OpenStreetMapLayer()
 	outlineShader = 0;
 	fillShader = 0;
 	mapShader = 0;
+
+	testServer = new TileServer();
 
 	Initialize();
 }
@@ -87,6 +89,8 @@ OpenStreetMapLayer::~OpenStreetMapLayer()
 		free(testTile.memory);
 	if (osmTile.memory)
 		free(osmTile.memory);
+
+	delete testServer;
 }
 
 
@@ -151,16 +155,16 @@ void OpenStreetMapLayer::ToggleStreet()
 {
 	if (!isVisible)
 	{
-		currentType = Street;
+		currentType = StreetMap;
 		isVisible = true;
 
 		RefreshTiles();
 
 
-	} else if (currentType == Street) {
+	} else if (currentType == StreetMap) {
 		isVisible = false;
 	} else {
-		currentType = Street;
+		currentType = StreetMap;
 
 		RefreshTiles();
 	}
@@ -171,15 +175,15 @@ void OpenStreetMapLayer::ToggleSatellite()
 {
 	if (!isVisible)
 	{
-		currentType = Satellite;
+		currentType = SatelliteMap;
 		isVisible = true;
 
 		RefreshTiles();
 
-	} else if (currentType == Satellite) {
+	} else if (currentType == SatelliteMap) {
 		isVisible = false;
 	} else {
-		currentType = Satellite;
+		currentType = SatelliteMap;
 
 		RefreshTiles();
 	}
@@ -190,15 +194,15 @@ void OpenStreetMapLayer::ToggleTerrain()
 {
 	if (!isVisible)
 	{
-		currentType = Terrain;
+		currentType = TerrainMap;
 		isVisible = true;
 
 		RefreshTiles();
 
-	} else if (currentType == Terrain) {
+	} else if (currentType == TerrainMap) {
 		isVisible = false;
 	} else {
-		currentType = Terrain;
+		currentType = TerrainMap;
 		RefreshTiles();
 	}
 }
@@ -521,6 +525,8 @@ void OpenStreetMapLayer::RefreshTiles()
 		// Update the rendering surface
 		UpdateSurfacePositionNew(normXnew, normYnew, width, height);
 
+		testServer->RunTest();
+
 	}
 }
 
@@ -628,7 +634,7 @@ void OpenStreetMapLayer::LoadTexture()
 QImage OpenStreetMapLayer::FetchTile(int x, int y, int zoom)
 {
 	QString url;
-	if (currentType == Street)
+	if (currentType == StreetMap)
 	{
 		url = "http://a.tile.openstreetmap.org/" +
 		      QString::number(zoom) +
@@ -638,7 +644,7 @@ QImage OpenStreetMapLayer::FetchTile(int x, int y, int zoom)
 		      QString::number(y) +
 		      ".png";
 	}
-	else if (currentType == Satellite)
+	else if (currentType == SatelliteMap)
 	{
 		url = "http://otile1.mqcdn.com/tiles/1.0.0/sat/" +
 		      QString::number(zoom) +
@@ -648,7 +654,7 @@ QImage OpenStreetMapLayer::FetchTile(int x, int y, int zoom)
 		      QString::number(y) +
 		      ".jpg";
 	}
-	else if (currentType == Terrain)
+	else if (currentType == TerrainMap)
 	{
 		url = "http://tile.stamen.com/terrain-background/" +
 		      QString::number(zoom) +
@@ -705,7 +711,7 @@ void OpenStreetMapLayer::LoadTile(float lat, float lon, int z)
 	int tileY = latToTileY(lat, z);
 
 	QString url;
-	if (currentType == Street)
+	if (currentType == StreetMap)
 	{
 		url = "http://a.tile.openstreetmap.org/" +
 		      QString::number(z) +
@@ -715,7 +721,7 @@ void OpenStreetMapLayer::LoadTile(float lat, float lon, int z)
 		      QString::number(tileY) +
 		      ".png";
 	}
-	else if (currentType == Satellite)
+	else if (currentType == SatelliteMap)
 	{
 		url = "http://otile1.mqcdn.com/tiles/1.0.0/sat/" +
 		      QString::number(z) +
@@ -725,7 +731,7 @@ void OpenStreetMapLayer::LoadTile(float lat, float lon, int z)
 		      QString::number(tileY) +
 		      ".jpg";
 	}
-	else if (currentType == Terrain)
+	else if (currentType == TerrainMap)
 	{
 		url = "http://tile.stamen.com/terrain-background/" +
 		      QString::number(z) +

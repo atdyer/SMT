@@ -8,6 +8,8 @@
 #include "OpenGL/Shaders/SolidShader.h"
 #include "OpenGL/Shaders/OpenStreetMapShader.h"
 
+#include "OpenStreetMap/Tiles/TileServer.h"
+
 #include <curl/curl.h>
 #include <math.h>
 
@@ -23,7 +25,7 @@ struct TileStruct {
 		size_t size;
 };
 
-enum MapType {Street, Satellite, Terrain};
+enum MapType {StreetMap, SatelliteMap, TerrainMap};
 
 class OpenStreetMapLayer
 {
@@ -102,6 +104,8 @@ class OpenStreetMapLayer
 		// Textures
 		GLuint	texID;
 		GLuint*	texIDs;
+
+		TileServer*	testServer;
 
 
 };

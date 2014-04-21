@@ -15,3 +15,14 @@
 * along with SMT.  If not, see <http://www.gnu.org/licenses/>.					*
 *												*
 ************************************************************************************************/
+
+#ifndef TILECACHE_H
+#define TILECACHE_H
+
+class TileCache
+{
+	public:
+		TileCache();
+};
+
+#endif // TILECACHE_H

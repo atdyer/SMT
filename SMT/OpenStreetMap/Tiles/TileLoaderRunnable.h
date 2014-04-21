@@ -15,3 +15,63 @@
 * along with SMT.  If not, see <http://www.gnu.org/licenses/>.					*
 *												*
 ************************************************************************************************/
+
+#ifndef TILELOADERRUNNABLE_H
+#define TILELOADERRUNNABLE_H
+
+#include <QObject>
+#include <QRunnable>
+#include <QImage>
+#include <QGLWidget>
+#include <QThread>
+
+#include <OpenStreetMap/OpenStreetMapData.h>
+
+#include <curl/curl.h>
+#include <iostream>
+
+// Data structure used to hold the image
+// data as it is retrieved from the OSM servers
+struct	RawImageData {
+		uchar*	memory;
+		size_t	size;
+		RawImageData() :
+			memory((uchar*)malloc(1)),
+			size(0)
+		{}
+};
+
+class TileLoaderRunnable : public QObject, public QRunnable
+{
+		Q_OBJECT
+	public:
+		TileLoaderRunnable(TileType tileType, int tileX, int tileY, int zoom);
+		~TileLoaderRunnable();
+
+		void	run();
+
+	private:
+
+		struct	RawImageData	imageData;
+
+		bool		skip;
+		TileType	type;
+		int		x;
+		int		y;
+		int		z;
+
+		QString	BuildURL();
+
+
+	public slots:
+
+		void	setSkip(bool newSkip);
+
+	signals:
+
+		void	finished(QImage *data);
+
+
+};
+
+#endif // TILELOADERRUNNABLE_H
