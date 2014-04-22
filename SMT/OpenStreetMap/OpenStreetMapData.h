@@ -21,6 +21,7 @@
 
 #include <QString>
 
+enum MapType {StreetMap, SatelliteMap, TerrainMap};
 enum TileType {StreetTile, SatelliteTile, TerrainTile};
 
 static const QString satelliteURL1 = "http://otile1.mqcdn.com/tiles/1.0.0/sat/";

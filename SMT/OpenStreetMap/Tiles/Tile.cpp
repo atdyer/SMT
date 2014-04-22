@@ -36,10 +36,12 @@ Tile::Tile(TileType tileType, int tileX, int tileY, int tileZoom)
 
 Tile::~Tile()
 {
+//	std::cout << "Deleting Tile" << std::endl;
 	if (data)
 		delete data;
 
 	CleanupLoader();
+//	std::cout << "Deleted Tile" << std::endl;
 }
 
 
@@ -48,6 +50,14 @@ const uchar* Tile::getData()
 	if (!data)
 		return 0;
 	return data->bits();
+}
+
+
+int Tile::getHeight()
+{
+	if (data)
+		return data->width();
+	return 0;
 }
 
 
@@ -75,6 +85,14 @@ TileType Tile::getType()
 }
 
 
+int Tile::getWidth()
+{
+	if (data)
+		return data->width();
+	return 0;
+}
+
+
 int Tile::getZoom()
 {
 	return zoom;
@@ -94,6 +112,7 @@ void Tile::threadFinished(QImage *newData)
 	if (data)
 		emit loaded(true, this);
 	else
+//		std::cout << "Tile Not Loaded: " << x << ", " << y << ", " << zoom << std::endl;
 		emit loaded(false, this);
 
 	CleanupLoader();

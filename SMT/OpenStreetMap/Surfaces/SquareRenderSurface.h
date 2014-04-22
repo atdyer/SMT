@@ -16,54 +16,64 @@
 *												*
 ************************************************************************************************/
 
-#ifndef TILE_H
-#define TILE_H
+#ifndef SQUARERENDERSURFACE_H
+#define SQUARERENDERSURFACE_H
 
 #include <QObject>
-#include <QImage>
 
-#include <OpenStreetMap/OpenStreetMapData.h>
-#include <OpenStreetMap/Tiles/TileLoaderRunnable.h>
+#include "OpenGL/GLData.h"
+#include "OpenGL/GLCamera.h"
+#include "OpenGL/Shaders/OpenStreetMapShader.h"
 
-class Tile : public QObject
+#include "OpenStreetMap/Tiles/Tile.h"
+
+#include <iostream>
+
+class SquareRenderSurface : public QObject
 {
 		Q_OBJECT
 	public:
-		Tile(TileType tileType, int tileX, int tileY, int tileZoom);
-		~Tile();
+		SquareRenderSurface(int tilesDimension);
+		~SquareRenderSurface();
 
-		const uchar*		getData();
-		int			getHeight();
-		TileLoaderRunnable*	getLoaderRunnable();
-		int			getTileX();
-		int			getTileY();
-		TileType		getType();
-		int			getWidth();
-		int			getZoom();
-
-		void			setSkip(bool skip);
+		void	ClearTextures();
+		void	Render();
+		void	SetCamera(GLCamera *newCamera);
+		void	SetTextureData(int x, int y, Tile *tile);
+		void	UpdateSurfacePosition(float x, float  y, float width, float height);
 
 	private:
 
-		QImage*			data;
-		bool			isLoaded;
-		TileLoaderRunnable*	loader;
-		TileType		type;
+		int	dimension;
+		int	numTiles;
+		int	numNodes;
+		int	numElements;
 
-		int			x;
-		int			y;
-		int			zoom;
+		float*	nodes;
+		int*	elements;
 
-		void	CleanupLoader();
+		// Vertex Array Object
+		GLuint	VAOId;
+		GLuint	VBOId;
+		GLuint	IBOId;
+
+		// Textures
+		GLuint*	textureIDs;
+		bool*	textureLoaded;
+
+		// Shader
+		OpenStreetMapShader*	shader;
+
+		// Camera
+		GLCamera*	camera;
+
+		void	Initialize();
+		void	InitializeGL();
 
 	signals:
 
-		void	loaded(bool isLoaded, Tile* tile);
-		void	skip(bool isSkip);
+		void	updateGL();
 
-	protected slots:
-
-		void	threadFinished(QImage* newData);
 };
 
-#endif // TILE_H
+#endif // SQUARERENDERSURFACE_H

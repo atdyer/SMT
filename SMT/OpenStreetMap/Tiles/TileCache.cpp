@@ -20,22 +20,30 @@
 
 TileCache::TileCache()
 {
+	satellitePool.clear();
+	streetPool.clear();
+	terrainPool.clear();
 }
 
 
 TileCache::~TileCache()
 {
+	std::cout << "Deleting Tile Cache" << std::endl;
+	std::cout << "   Satellite Tiles: " << satellitePool.size() << std::endl;
 	for (std::map<TilePoolObject, Tile*>::iterator it = satellitePool.begin();
 	     it != satellitePool.end(); ++it)
 		delete it->second;
 
+	std::cout << "   Street Tiles: " << streetPool.size() << std::endl;
 	for (std::map<TilePoolObject, Tile*>::iterator it = streetPool.begin();
 	     it != streetPool.end(); ++it)
 		delete it->second;
 
+	std::cout << "   Terrain Tiles: " << terrainPool.size() << std::endl;
 	for (std::map<TilePoolObject, Tile*>::iterator it = terrainPool.begin();
 	     it != terrainPool.end(); ++it)
 		delete it->second;
+//	std::cout << "Deleted Tile Cache" << std::endl;
 }
 
 
@@ -43,6 +51,9 @@ void TileCache::AddTile(Tile *newTile)
 {
 	if (newTile)
 	{
+//		std::cout << "Adding tile to cache: " << newTile->getTileX() << ", " <<
+//			     newTile->getTileY() << ", " << newTile->getZoom() << std::endl;
+
 		TilePoolObject poolObj (newTile->getTileX(), newTile->getTileY(), newTile->getZoom());
 
 		if (newTile->getType() == SatelliteTile)

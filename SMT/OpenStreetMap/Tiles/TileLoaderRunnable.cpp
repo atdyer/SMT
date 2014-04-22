@@ -50,8 +50,10 @@ TileLoaderRunnable::TileLoaderRunnable(TileType tileType, int tileX, int tileY, 
 
 TileLoaderRunnable::~TileLoaderRunnable()
 {
+//	std::cout << "Deleting Tile Loader Runnable" << std::endl;
 	if (imageData.memory)
 		free(imageData.memory);
+//	std::cout << "Deleted Tile Loader Runnable" << std::endl;
 }
 
 
@@ -108,8 +110,9 @@ void TileLoaderRunnable::run()
 		} else {
 			emit finished(0);
 		}
+	} else {
+		emit finished(0);
 	}
-	emit finished(0);
 }
 
 

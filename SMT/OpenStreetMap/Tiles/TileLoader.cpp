@@ -27,8 +27,10 @@ TileLoader::TileLoader()
 
 TileLoader::~TileLoader()
 {
+//	std::cout << "Deleting Tile Loader" << std::endl;
 	if (threadPool)
 		threadPool->waitForDone();
+//	std::cout << "Deleted Tile Loader" << std::endl;
 }
 
 

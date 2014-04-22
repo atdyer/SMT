@@ -15,6 +15,8 @@
 #include "Layers/SelectionLayer.h"
 #include "Layers/OpenStreetMapLayer.h"
 
+#include "OpenStreetMap/OSMTileLayer.h"
+
 class Domain : public QObject
 {
 		Q_OBJECT
@@ -69,7 +71,9 @@ class Domain : public QObject
 		QProgressBar*		progressBar;
 		ProjectFile*		projectFile;
 		SelectionLayer*		selectionLayer;
-		OpenStreetMapLayer*	mapLayer;
+//		OpenStreetMapLayer*	mapLayer;
+
+		OSMTileLayer*		mapLayer;
 
 		/* Mouse Clicking and Moving Stuff */
 		ActionType	currentMode;	/**< The current mode used to determine where actions are sent */

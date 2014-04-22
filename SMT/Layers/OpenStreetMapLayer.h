@@ -25,8 +25,6 @@ struct TileStruct {
 		size_t size;
 };
 
-enum MapType {StreetMap, SatelliteMap, TerrainMap};
-
 class OpenStreetMapLayer
 {
 	public:

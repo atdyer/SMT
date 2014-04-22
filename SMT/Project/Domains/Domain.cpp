@@ -20,8 +20,11 @@ Domain::Domain(ProjectFile *projectFile, QObject *parent) :
 	mouseMoved(false)
 {
 	camera = new GLCamera();
-	mapLayer = new OpenStreetMapLayer();
+//	mapLayer = new OpenStreetMapLayer();
+	mapLayer = new OSMTileLayer();
 	mapLayer->SetCamera(camera);
+
+	connect(mapLayer, SIGNAL(updateGL()), this, SIGNAL(updateGL()));
 }
 
 

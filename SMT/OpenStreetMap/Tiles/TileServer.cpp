@@ -56,8 +56,14 @@ void TileServer::setBoundingBox(TileType tileType, int tileLeft, int tileBottom,
 		int dx = left - tileLeft;
 		int dy = bottom - tileBottom;
 
+//		std::cout << "TileServer: left=" << left << " bottom=" << bottom << std::endl;
+//		std::cout << "TileServer: tileLeft=" << tileLeft << " tileBottom=" << tileBottom << std::endl;
+//		std::cout << "TileServer: dx=" << dx << " dy=" << dy << std::endl;
+
 		if (dx != 0 || dy != 0)
+		{
 			shiftBoundingBox(dx, dy);
+		}
 
 	} else {
 
@@ -112,14 +118,17 @@ void TileServer::loadTile(TileType type, int x, int y, int zoom)
 
 void TileServer::newBoundingBox()
 {
+	std::cout << "TileServer: Creating new bounding box" << std::endl;
 	currentPool.clear();
 
 	if (tileLoader)
 		tileLoader->skipAll(type);
 
-	for (int i=left; i<width; ++i)
+//	std::cout << "TileServer: Loading tiles x=(" << left << ", " << left+width << ") y=(" <<
+//		     bottom << ", " << bottom+height << ")" << std::endl;
+	for (int i=left; i<left+width; ++i)
 	{
-		for (int j=bottom; j<height; ++j)
+		for (int j=bottom; j<bottom+height; ++j)
 		{
 			loadTile(type, i, j, zoom);
 		}
@@ -140,6 +149,9 @@ void TileServer::removeTile(TileType type, int x, int y, int zoom)
 
 void TileServer::shiftBoundingBox(int dx, int dy)
 {
+
+	std::cout << "TileServer: Shifting bounding box: " << dx << ", " << dy << std::endl;
+
 	if (dx < 0)
 	{
 		removeColumns(left+width+dx, left+width);
@@ -151,7 +163,7 @@ void TileServer::shiftBoundingBox(int dx, int dy)
 		addColumns(left+width, left+width+dx);
 	}
 
-	left += dx;
+	left -= dx;
 
 	if (dy < 0)
 	{
@@ -164,7 +176,7 @@ void TileServer::shiftBoundingBox(int dx, int dy)
 		addRows(bottom+height, bottom+height+dy);
 	}
 
-	bottom += dy;
+	bottom -= dy;
 }
 
 
@@ -179,7 +191,9 @@ void TileServer::skipTile(TileType type, int x, int y, int zoom)
 
 void TileServer::addColumns(int l, int r)
 {
-	for (int x=l; x<l+r; ++x)
+//	std::cout << "TileServer: Loading tiles x=(" << l << ", " << r << ") y=(" <<
+//		     bottom << ", " << bottom+height << ")" << std::endl;
+	for (int x=l; x<r; ++x)
 	{
 		for (int y=bottom; y<bottom+height; ++y)
 		{
@@ -193,7 +207,7 @@ void TileServer::addRows(int b, int t)
 {
 	for (int x=left; x<left+width; ++x)
 	{
-		for (int y=b; y<b+t; ++y)
+		for (int y=b; y<t; ++y)
 		{
 			loadTile(type, x, y, zoom);
 		}
@@ -237,10 +251,10 @@ void TileServer::removeRows(int b, int t)
 
 void TileServer::tileLoaded(Tile *newTile)
 {
-	std::cout << "Tile Loaded: " <<
-		     newTile->getTileX() << ", " <<
-		     newTile->getTileY() << ", " <<
-		     newTile->getZoom() << std::endl;
+//	std::cout << "Tile Loaded: " <<
+//		     newTile->getTileX() << ", " <<
+//		     newTile->getTileY() << ", " <<
+//		     newTile->getZoom() << std::endl;
 
 	if (tileCache)
 		tileCache->AddTile(newTile);
