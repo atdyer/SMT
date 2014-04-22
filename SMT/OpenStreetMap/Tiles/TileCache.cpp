@@ -21,3 +21,80 @@
 TileCache::TileCache()
 {
 }
+
+
+TileCache::~TileCache()
+{
+	for (std::map<TilePoolObject, Tile*>::iterator it = satellitePool.begin();
+	     it != satellitePool.end(); ++it)
+		delete it->second;
+
+	for (std::map<TilePoolObject, Tile*>::iterator it = streetPool.begin();
+	     it != streetPool.end(); ++it)
+		delete it->second;
+
+	for (std::map<TilePoolObject, Tile*>::iterator it = terrainPool.begin();
+	     it != terrainPool.end(); ++it)
+		delete it->second;
+}
+
+
+void TileCache::AddTile(Tile *newTile)
+{
+	if (newTile)
+	{
+		TilePoolObject poolObj (newTile->getTileX(), newTile->getTileY(), newTile->getZoom());
+
+		if (newTile->getType() == SatelliteTile)
+		{
+			if (satellitePool.count(poolObj))
+				delete newTile;
+			else
+				satellitePool[poolObj] = newTile;
+		}
+		else if (newTile->getType() == StreetTile)
+		{
+			if (streetPool.count(poolObj))
+				delete newTile;
+			else
+				streetPool[poolObj] = newTile;
+		}
+		else if (newTile->getType() == SatelliteTile)
+		{
+			if (terrainPool.count(poolObj))
+				delete newTile;
+			else
+				terrainPool[poolObj] = newTile;
+		}
+	}
+}
+
+
+Tile* TileCache::GetTile(TileType type, int tileX, int tileY, int zoom)
+{
+	TilePoolObject poolObj (tileX, tileY, zoom);
+
+	if (type == SatelliteTile)
+	{
+		if (satellitePool.count(poolObj))
+			return satellitePool[poolObj];
+		else
+			return 0;
+	}
+	else if (type == StreetTile)
+	{
+		if (streetPool.count(poolObj))
+			return streetPool[poolObj];
+		else
+			return 0;
+	}
+	else if (type == TerrainTile)
+	{
+		if (terrainPool.count(poolObj))
+			return terrainPool[poolObj];
+		else
+			return 0;
+	}
+
+	return 0;
+}

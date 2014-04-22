@@ -19,10 +19,26 @@
 #ifndef TILECACHE_H
 #define TILECACHE_H
 
+#include "OpenStreetMap/OpenStreetMapData.h"
+#include "OpenStreetMap/Tiles/Tile.h"
+
+#include <map>
+
 class TileCache
 {
 	public:
 		TileCache();
+		~TileCache();
+
+		void	AddTile(Tile* newTile);
+		Tile*	GetTile(TileType type, int tileX, int tileY, int zoom);
+
+	private:
+
+		std::map<TilePoolObject, Tile*>	satellitePool;
+		std::map<TilePoolObject, Tile*>	streetPool;
+		std::map<TilePoolObject, Tile*>	terrainPool;
+
 };
 
 #endif // TILECACHE_H

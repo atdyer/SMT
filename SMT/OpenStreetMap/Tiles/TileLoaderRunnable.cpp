@@ -57,10 +57,9 @@ TileLoaderRunnable::~TileLoaderRunnable()
 
 void TileLoaderRunnable::run()
 {
-	std::cout << "Worker thread: " << QThread::currentThread() << std::endl;
+//	std::cout << "Worker thread: " << QThread::currentThread() << std::endl;
 	if (!skip)
 	{
-		sleep(4);
 
 		// Load the tile
 		QString imageURL = BuildURL();

@@ -525,8 +525,6 @@ void OpenStreetMapLayer::RefreshTiles()
 		// Update the rendering surface
 		UpdateSurfacePositionNew(normXnew, normYnew, width, height);
 
-		testServer->RunTest();
-
 	}
 }
 

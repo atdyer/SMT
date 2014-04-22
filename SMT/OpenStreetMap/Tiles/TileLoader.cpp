@@ -64,7 +64,7 @@ void TileLoader::loadTile(TileType type, int tileX, int tileY, int zoom)
 		else if (type == TerrainTile)
 			terrainPool[poolObj] = newTile;
 
-		std::cout << "Main Thread: " << QThread::currentThread() << std::endl;
+//		std::cout << "Main Thread: " << QThread::currentThread() << std::endl;
 		threadPool->start(newTile->getLoaderRunnable());
 
 	} else {
@@ -83,16 +83,44 @@ void TileLoader::loadTile(TileType type, int tileX, int tileY, int zoom)
 }
 
 
+void TileLoader::skipAll(TileType type)
+{
+	if (type == SatelliteTile)
+	{
+		for (std::map<TilePoolObject, Tile*>::iterator it = satellitePool.begin();
+		     it != satellitePool.end(); ++it)
+			(it->second)->setSkip(true);
+	}
+	else if (type == StreetTile)
+	{
+		for (std::map<TilePoolObject, Tile*>::iterator it = streetPool.begin();
+		     it != streetPool.end(); ++it)
+			(it->second)->setSkip(true);
+	}
+	else if (type == TerrainTile)
+	{
+		for (std::map<TilePoolObject, Tile*>::iterator it = terrainPool.begin();
+		     it != terrainPool.end(); ++it)
+			(it->second)->setSkip(true);
+	}
+}
+
+
 void TileLoader::skipTile(TileType type, int tileX, int tileY, int zoom)
 {
 	TilePoolObject poolObj (tileX, tileY, zoom);
 	Tile* oldTile = 0;
-	if (type == SatelliteTile)
+
+	// Look for the target tile (and avoid adding any empty slot
+	// if it isn't there).
+	if (type == SatelliteTile && satellitePool.count(poolObj))
 		oldTile = satellitePool[poolObj];
-	else if (type == StreetTile)
+	else if (type == StreetTile && streetPool.count(poolObj))
 		oldTile = streetPool[poolObj];
-	else if (type == TerrainTile)
+	else if (type == TerrainTile && terrainPool.count(poolObj))
 		oldTile = terrainPool[poolObj];
+
+	// If it's in there, skip it
 	if (oldTile)
 		oldTile->setSkip(true);
 }

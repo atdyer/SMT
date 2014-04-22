@@ -32,4 +32,30 @@ static const QString streetURLb = "http://b.tile.openstreetmap.org/";
 static const QString streetURLc = "http://c.tile.openstreetmap.org/";
 static const QString terrainURL = "http://tile.stamen.com/terrain-background/";
 
+// Data structure used to keep track of
+// which tiles are in the thread pool
+struct	TilePoolObject {
+		int x;
+		int y;
+		int z;
+
+		TilePoolObject(int x, int y, int z) :
+			x(x), y(y), z(z)
+		{}
+
+		bool operator <(const TilePoolObject & t) const {
+			if (t.z == this->z) {
+				if (t.x == this->x) {
+					return t.y < this->y;
+				}
+				return t.x < this->x;
+			}
+			return t.z < this->z;
+		}
+
+		bool operator ==(const TilePoolObject & t) const {
+			return t.x == this->x && t.y == this->y && t.z == this->z;
+		}
+};
+
 #endif // OPENSTREETMAPDATA_H

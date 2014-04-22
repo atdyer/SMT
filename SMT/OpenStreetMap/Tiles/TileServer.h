@@ -25,6 +25,7 @@
 #include "OpenStreetMap/Tiles/TileLoader.h"
 
 #include <iostream>
+#include <set>
 
 class TileServer : public QObject
 {
@@ -33,12 +34,41 @@ class TileServer : public QObject
 		TileServer();
 		~TileServer();
 
-		void	RunTest();
+		void	setBoundingBox(TileType tileType, int tileLeft, int tileBottom, int tileZoom);
+		void	setGridSize(int tilesWide, int tilesHigh);
 
 	private:
 
+		bool		initialized;
+		TileType	type;
+		int		bottom;
+		int		height;
+		int		left;
+		int		width;
+		int		zoom;
+
 		TileCache*	tileCache;
 		TileLoader*	tileLoader;
+
+		std::set<TilePoolObject>	currentPool;
+
+
+		void	loadTile(TileType type, int x, int y, int zoom);
+		void	newBoundingBox();
+		void	removeTile(TileType type, int x, int y, int zoom);
+		void	shiftBoundingBox(int dx, int dy);
+		void	skipTile(TileType type, int x, int y, int zoom);
+
+		void	addColumns(int l, int r);
+		void	addRows(int b, int t);
+		void	removeColumns(int l, int r);
+		void	removeRows(int b, int t);
+
+
+
+	signals:
+
+		void	tileAvailable(Tile* newTile);
 
 	protected slots:
 

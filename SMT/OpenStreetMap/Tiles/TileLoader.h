@@ -28,32 +28,6 @@
 #include <map>
 #include <iostream>
 
-// Data structure used to keep track of
-// which tiles are in the thread pool
-struct	TilePoolObject {
-		int x;
-		int y;
-		int z;
-
-		TilePoolObject(int x, int y, int z) :
-			x(x), y(y), z(z)
-		{}
-
-		bool operator <(const TilePoolObject & t) const {
-			if (t.z == this->z) {
-				if (t.x == this->x) {
-					return t.y < this->y;
-				}
-				return t.x < this->x;
-			}
-			return t.z < this->z;
-		}
-
-		bool operator ==(const TilePoolObject & t) const {
-			return t.x == this->x && t.y == this->y && t.z == this->z;
-		}
-};
-
 class TileLoader : public QObject
 {
 		Q_OBJECT
@@ -62,6 +36,7 @@ class TileLoader : public QObject
 		~TileLoader();
 
 		void	loadTile(TileType type, int tileX, int tileY, int zoom);
+		void	skipAll(TileType type);
 		void	skipTile(TileType type, int tileX, int tileY, int zoom);
 
 
