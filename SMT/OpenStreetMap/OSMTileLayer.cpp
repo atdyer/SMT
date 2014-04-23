@@ -195,6 +195,7 @@ void OSMTileLayer::RefreshTiles()
 
 		if (newX != x || newY != y)
 		{
+
 			// Convert tile coordinates to lat/long
 			float geoXnew = tileXToLon(newX, zoom);
 			float geoYnew = tileYToLat(newY, zoom);
@@ -213,6 +214,9 @@ void OSMTileLayer::RefreshTiles()
 
 			renderSurface->UpdateSurfacePosition(normXnew, normYnew, width, height);
 
+//			std::cout << "Old Coords: (" << x << ", " << y << ")\t" <<
+//				     "New Coords: (" << newX << ", " << newY << ")" << std::endl;
+
 			x = newX;
 			y = newY;
 		}
@@ -230,14 +234,17 @@ void OSMTileLayer::RefreshTiles()
 
 void OSMTileLayer::tileAvailable(Tile *newTile)
 {
-	if (newTile && renderSurface)
+	if (newTile && renderSurface && newTile->getZoom() == zoom)
 	{
 		int tileX = newTile->getTileX();
 		int tileY = newTile->getTileY();
 
+//		std::cout << "(" << x << ", " << y << ") - (" << tileX << ", " << tileY << ")" << std::endl;
+
 		if (x <= tileX && tileX < x+surfaceDimension &&
 		    y <= tileY && tileY < y+surfaceDimension)
 		{
+//			std::cout << "Sending (" << tileX-x << ", " << tileY-y << ") to be rendered" << std::endl;
 			renderSurface->SetTextureData(tileX - x,
 						      tileY - y,
 						      newTile);

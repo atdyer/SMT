@@ -28,6 +28,10 @@ SquareRenderSurface::SquareRenderSurface(int tilesDimension)
 	nodes = new float[numNodes*6];
 	elements = new int[numElements*3];
 
+	positionSet = false;
+	currX = 0.0;
+	currY = 0.0;
+
 	camera = 0;
 
 	Initialize();
@@ -54,11 +58,8 @@ SquareRenderSurface::~SquareRenderSurface()
 	if (IBOId)
 		glDeleteBuffers(1, &IBOId);
 
-	if (textureIDs)
-	{
-		glDeleteTextures(numTiles, textureIDs);
-		delete textureIDs;
-	}
+	if (texManager)
+		delete texManager;
 
 //	std::cout << "Deleted Render Surface" << std::endl;
 }
@@ -66,9 +67,8 @@ SquareRenderSurface::~SquareRenderSurface()
 
 void SquareRenderSurface::ClearTextures()
 {
-	if (textureLoaded)
-		for (int i=0; i<numTiles; ++i)
-			textureLoaded[i] = false;
+	if (texManager)
+		texManager->HideAll();
 }
 
 
@@ -77,19 +77,25 @@ void SquareRenderSurface::Render()
 	glBindVertexArray(VAOId);
 	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	glActiveTexture(GL_TEXTURE0);
-	if (shader && shader->Use() && textureIDs && textureLoaded)
+	if (shader && shader->Use() && texManager)
 	{
 		int counter = 0;
 		for (int i=0; i<dimension; ++i)
 		{
 			for (int j=0; j<dimension; ++j)
 			{
-				int index = counter++;
-				if (textureLoaded[i])
+				int texID = texManager->GetTexture(i, j);
+				if (texID)
 				{
-					glBindTexture(GL_TEXTURE_2D, textureIDs[index]);
-					glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (GLvoid*)(6*index*sizeof(GLuint)));
+					glBindTexture(GL_TEXTURE_2D, texID);
+					glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (GLvoid*)(6*(counter++)*sizeof(GLuint)));
 				}
+//				int index = counter++;
+//				if (textureLoaded[i])
+//				{
+//					glBindTexture(GL_TEXTURE_2D, textureIDs[index]);
+//					glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, (GLvoid*)(6*index*sizeof(GLuint)));
+//				}
 			}
 		}
 	}
@@ -111,44 +117,72 @@ void SquareRenderSurface::SetCamera(GLCamera *newCamera)
 
 void SquareRenderSurface::SetTextureData(int x, int y, Tile *tile)
 {
-	int index = dimension*x + y;
+	if (texManager)
+		texManager->SetTexture(x, y, tile);
 
-	if (index < numTiles && tile && tile->getData())
-	{
-		glBindTexture(GL_TEXTURE_2D, textureIDs[index]);
+	emit updateGL();
+//	int index = dimension*x + y;
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+//	if (index < numTiles && tile && tile->getData())
+//	{
+//		glBindTexture(GL_TEXTURE_2D, textureIDs[index]);
 
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
-		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-		glTexImage2D(GL_TEXTURE_2D,
-			     0,
-			     GL_RGBA,
-			     tile->getWidth(),
-			     tile->getHeight(),
-			     0,
-			     GL_RGBA,
-			     GL_UNSIGNED_BYTE,
-			     tile->getData());
+//		glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-		GLenum errorCheck = glGetError();
-		if (errorCheck != GL_NO_ERROR)
-		{
-			std::cout << "Error loading texture" << std::endl;
-		}
+//		glTexImage2D(GL_TEXTURE_2D,
+//			     0,
+//			     GL_RGBA,
+//			     tile->getWidth(),
+//			     tile->getHeight(),
+//			     0,
+//			     GL_RGBA,
+//			     GL_UNSIGNED_BYTE,
+//			     tile->getData());
 
-		textureLoaded[index] = true;
-		emit updateGL();
-	}
+//		GLenum errorCheck = glGetError();
+//		if (errorCheck != GL_NO_ERROR)
+//		{
+//			std::cout << "Error loading texture" << std::endl;
+//		}
+
+//		textureLoaded[index] = true;
+//		emit updateGL();
+//	}
 }
 
 
 void SquareRenderSurface::UpdateSurfacePosition(float x, float y, float width, float height)
 {
+
+	if (!positionSet)
+	{
+		currX = x;
+		currY = y;
+		positionSet = true;
+	}
+	else if (texManager)
+	{
+
+		if (x < currX)
+			texManager->ShiftRight();
+		else if (x > currX)
+			texManager->ShiftLeft();
+		if (y < currY)
+			texManager->ShiftDown();
+		else if (y > currY)
+			texManager->ShiftUp();
+
+		currX = x;
+		currY = y;
+
+	}
+
 	int counter = 0;
 
 	for (int i=0; i<dimension; ++i)
@@ -339,10 +373,12 @@ void SquareRenderSurface::InitializeGL()
 
 
 	// Create the textures
-	textureIDs = new GLuint[numTiles];
-	textureLoaded = new bool[numTiles];
+//	textureIDs = new GLuint[numTiles];
+//	textureLoaded = new bool[numTiles];
 
-	if (textureIDs)
-		glGenTextures(numTiles, textureIDs);
-	ClearTextures();
+//	if (textureIDs)
+//		glGenTextures(numTiles, textureIDs);
+//	ClearTextures();
+
+	texManager = new TextureManager(dimension, dimension);
 }

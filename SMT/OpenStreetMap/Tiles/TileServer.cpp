@@ -53,8 +53,8 @@ void TileServer::setBoundingBox(TileType tileType, int tileLeft, int tileBottom,
 
 		// Check bounds
 
-		int dx = left - tileLeft;
-		int dy = bottom - tileBottom;
+		int dx = tileLeft - left;
+		int dy = tileBottom - bottom;
 
 //		std::cout << "TileServer: left=" << left << " bottom=" << bottom << std::endl;
 //		std::cout << "TileServer: tileLeft=" << tileLeft << " tileBottom=" << tileBottom << std::endl;
@@ -118,7 +118,7 @@ void TileServer::loadTile(TileType type, int x, int y, int zoom)
 
 void TileServer::newBoundingBox()
 {
-	std::cout << "TileServer: Creating new bounding box" << std::endl;
+//	std::cout << "TileServer: Creating new bounding box" << std::endl;
 	currentPool.clear();
 
 	if (tileLoader)
@@ -150,7 +150,7 @@ void TileServer::removeTile(TileType type, int x, int y, int zoom)
 void TileServer::shiftBoundingBox(int dx, int dy)
 {
 
-	std::cout << "TileServer: Shifting bounding box: " << dx << ", " << dy << std::endl;
+//	std::cout << "TileServer: Shifting bounding box: " << dx << ", " << dy << std::endl;
 
 	if (dx < 0)
 	{
@@ -163,7 +163,7 @@ void TileServer::shiftBoundingBox(int dx, int dy)
 		addColumns(left+width, left+width+dx);
 	}
 
-	left -= dx;
+	left += dx;
 
 	if (dy < 0)
 	{
@@ -176,7 +176,7 @@ void TileServer::shiftBoundingBox(int dx, int dy)
 		addRows(bottom+height, bottom+height+dy);
 	}
 
-	bottom -= dy;
+	bottom += dy;
 }
 
 

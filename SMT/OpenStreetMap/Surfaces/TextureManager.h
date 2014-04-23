@@ -16,69 +16,40 @@
 *												*
 ************************************************************************************************/
 
-#ifndef SQUARERENDERSURFACE_H
-#define SQUARERENDERSURFACE_H
-
-#include <QObject>
+#ifndef TEXTUREMANAGER_H
+#define TEXTUREMANAGER_H
 
 #include "OpenGL/GLData.h"
-#include "OpenGL/GLCamera.h"
-#include "OpenGL/Shaders/OpenStreetMapShader.h"
-
 #include "OpenStreetMap/Tiles/Tile.h"
-#include "OpenStreetMap/Surfaces/TextureManager.h"
 
 #include <iostream>
 
-class SquareRenderSurface : public QObject
+class TextureManager
 {
-		Q_OBJECT
 	public:
-		SquareRenderSurface(int tilesDimension);
-		~SquareRenderSurface();
+		TextureManager(int width, int height);
+		~TextureManager();
 
-		void	ClearTextures();
-		void	Render();
-		void	SetCamera(GLCamera *newCamera);
-		void	SetTextureData(int x, int y, Tile *tile);
-		void	UpdateSurfacePosition(float x, float  y, float width, float height);
+		GLuint	GetTexture(int x, int y);
+		void	SetTexture(int x, int y, Tile *tile);
+
+		void	HideAll();
+		void	ShiftDown();
+		void	ShiftLeft();
+		void	ShiftRight();
+		void	ShiftUp();
+
+		void	PrintIndices();
 
 	private:
 
-		int	dimension;
-		int	numTiles;
-		int	numNodes;
-		int	numElements;
+		int	width;
+		int	height;
+		int	numTextures;
 
-		float*	nodes;
-		int*	elements;
-
-		// Current position
-		bool	positionSet;
-		float	currX;
-		float	currY;
-
-		// Vertex Array Object
-		GLuint	VAOId;
-		GLuint	VBOId;
-		GLuint	IBOId;
-
-		// Textures
-		TextureManager*	texManager;
-
-		// Shader
-		OpenStreetMapShader*	shader;
-
-		// Camera
-		GLCamera*	camera;
-
-		void	Initialize();
-		void	InitializeGL();
-
-	signals:
-
-		void	updateGL();
-
+		int*	indices;
+		bool*	loaded;
+		GLuint*	textureIDs;
 };
 
-#endif // SQUARERENDERSURFACE_H
+#endif // TEXTUREMANAGER_H

@@ -106,7 +106,8 @@ SOURCES += main.cpp\
     OpenStreetMap/Tiles/TileLoaderRunnable.cpp \
     OpenStreetMap/Tiles/TileServer.cpp \
     OpenStreetMap/OSMTileLayer.cpp \
-    OpenStreetMap/Surfaces/SquareRenderSurface.cpp
+    OpenStreetMap/Surfaces/SquareRenderSurface.cpp \
+    OpenStreetMap/Surfaces/TextureManager.cpp
 
 HEADERS  += MainWindow.h \
     OpenGL/wglew.h \
@@ -202,7 +203,8 @@ HEADERS  += MainWindow.h \
     OpenStreetMap/Tiles/TileLoaderRunnable.h \
     OpenStreetMap/Tiles/TileServer.h \
     OpenStreetMap/OSMTileLayer.h \
-    OpenStreetMap/Surfaces/SquareRenderSurface.h
+    OpenStreetMap/Surfaces/SquareRenderSurface.h \
+    OpenStreetMap/Surfaces/TextureManager.h
 
 FORMS    += MainWindow.ui \
     Widgets/ShaderOptionsStackedWidget.ui \
