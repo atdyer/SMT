@@ -70,7 +70,7 @@ void TileCache::AddTile(Tile *newTile)
 			else
 				streetPool[poolObj] = newTile;
 		}
-		else if (newTile->getType() == SatelliteTile)
+		else if (newTile->getType() == TerrainTile)
 		{
 			if (terrainPool.count(poolObj))
 				delete newTile;

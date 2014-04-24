@@ -21,7 +21,7 @@
 TileLoader::TileLoader()
 {
 	threadPool = QThreadPool::globalInstance();
-	threadPool->setMaxThreadCount(1);
+	threadPool->setMaxThreadCount(4);
 }
 
 

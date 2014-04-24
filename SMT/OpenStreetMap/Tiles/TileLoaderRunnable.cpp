@@ -18,6 +18,27 @@
 
 #include "TileLoaderRunnable.h"
 
+static int currSatelliteURL = 1;
+static QString nextSatelliteURL()
+{
+	currSatelliteURL = currSatelliteURL == 5 ? 1 : currSatelliteURL;
+	QString url = "http://otile" + QString::number(currSatelliteURL++) + ".mqcdn.com/tiles/1.0.0/sat/";
+	return url;
+}
+
+static int currStreetURL = 1;
+static QString nextStreetURL()
+{
+	currStreetURL = currStreetURL == 4 ? 1 : currStreetURL;
+	QString url = "http://" +
+		      (currStreetURL == 1 ? QString('a') :
+					    (currStreetURL == 2 ? QString('b') :
+								  QString('c'))) +
+		      ".tile.openstreetmap.org/";
+	++currStreetURL;
+	return url;
+}
+
 static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {
 	size_t realsize = size*nmemb;
@@ -74,17 +95,24 @@ void TileLoaderRunnable::run()
 
 			if (image)
 			{
+				curl_easy_setopt(image, CURLOPT_NOSIGNAL, 1);
 				curl_easy_setopt(image, CURLOPT_URL, imageURL.toStdString().data());
 				curl_easy_setopt(image, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
 				curl_easy_setopt(image, CURLOPT_WRITEDATA, (void*)&imageData);
 
+				std::cout << "Requesting tile: " << imageURL.toStdString().data() << std::endl;
 				CURLcode fetchResult = curl_easy_perform(image);
+				std::cout << "Requesting tile: " << imageURL.toStdString().data() << " - Received" << std::endl;
 
 				if (fetchResult == CURLE_OK)
 				{
 
 					QImage qImage;
-					bool loaded = qImage.loadFromData(imageData.memory, (int)imageData.size, 0);
+					bool loaded = false;
+					if (type == StreetTile)
+						loaded = qImage.loadFromData(imageData.memory, (int)imageData.size, "PNG");
+					else
+						loaded = qImage.loadFromData(imageData.memory, (int)imageData.size, "JPG");
 					if (loaded)
 					{
 						// Convert format
@@ -95,6 +123,7 @@ void TileLoaderRunnable::run()
 						emit finished(finalImage);
 
 					} else {
+						std::cout << "Unable to load image data" << std::endl;
 						emit finished(0);
 					}
 
@@ -111,6 +140,7 @@ void TileLoaderRunnable::run()
 			emit finished(0);
 		}
 	} else {
+		std::cout << "Skipping tile" << std::endl;
 		emit finished(0);
 	}
 }
@@ -121,14 +151,14 @@ QString TileLoaderRunnable::BuildURL()
 	QString url;
 	if (type == SatelliteTile)
 	{
-		url = satelliteURL1 +
+		url = nextSatelliteURL() +
 		      QString::number(z) + "/" +
 		      QString::number(x) + "/" +
 		      QString::number(y) + ".jpg";
 	}
 	else if (type == StreetTile)
 	{
-		url = streetURLa +
+		url = nextStreetURL() +
 		      QString::number(z) + "/" +
 		      QString::number(x) + "/" +
 		      QString::number(y) + ".png";
