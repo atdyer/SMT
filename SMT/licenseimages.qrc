@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/licenseimages">
+        <file>images/licenses/osmlicense.png</file>
+    </qresource>
+</RCC>

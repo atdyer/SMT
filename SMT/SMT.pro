@@ -107,7 +107,10 @@ SOURCES += main.cpp\
     OpenStreetMap/Tiles/TileServer.cpp \
     OpenStreetMap/OSMTileLayer.cpp \
     OpenStreetMap/Surfaces/SquareRenderSurface.cpp \
-    OpenStreetMap/Surfaces/TextureManager.cpp
+    OpenStreetMap/Surfaces/TextureManager.cpp \
+    OpenStreetMap/Licenses/OSMLicense.cpp \
+    OpenStreetMap/Surfaces/RectangleRenderSurface.cpp \
+    OpenGL/Shaders/OverlayShader.cpp
 
 HEADERS  += MainWindow.h \
     OpenGL/wglew.h \
@@ -204,7 +207,10 @@ HEADERS  += MainWindow.h \
     OpenStreetMap/Tiles/TileServer.h \
     OpenStreetMap/OSMTileLayer.h \
     OpenStreetMap/Surfaces/SquareRenderSurface.h \
-    OpenStreetMap/Surfaces/TextureManager.h
+    OpenStreetMap/Surfaces/TextureManager.h \
+    OpenStreetMap/Licenses/OSMLicense.h \
+    OpenStreetMap/Surfaces/RectangleRenderSurface.h \
+    OpenGL/Shaders/OverlayShader.h
 
 FORMS    += MainWindow.ui \
     Widgets/ShaderOptionsStackedWidget.ui \
@@ -215,4 +221,5 @@ FORMS    += MainWindow.ui \
     Dialogs/CreateProjectDialog.ui
 
 RESOURCES += \
-    icons.qrc
+    icons.qrc \
+    licenseimages.qrc

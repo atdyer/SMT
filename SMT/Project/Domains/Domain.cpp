@@ -57,6 +57,9 @@ void Domain::Draw()
 
 	if (selectionLayer)
 		selectionLayer->Draw();
+
+	if (mapLayer)
+		mapLayer->DrawLicense();
 }
 
 
@@ -191,6 +194,9 @@ void Domain::SetWindowSize(float w, float h)
 
 	if (selectionLayer)
 		selectionLayer->WindowSizeChanged(w, h);
+
+	if (mapLayer)
+		mapLayer->SetWindowSize(w, h);
 }
 
 

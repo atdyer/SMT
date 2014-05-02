@@ -20,6 +20,8 @@
 
 OSMTileLayer::OSMTileLayer()
 {
+	license = new OSMLicense(800, 600);
+
 	surfaceDimension = 4;
 
 	tileServer = new TileServer();
@@ -45,6 +47,8 @@ OSMTileLayer::OSMTileLayer()
 OSMTileLayer::~OSMTileLayer()
 {
 //	std::cout << "Deleting Tile Layer" << std::endl;
+	if (license)
+		delete license;
 	if (tileServer)
 		delete tileServer;
 	if (renderSurface)
@@ -63,6 +67,16 @@ void OSMTileLayer::Draw()
 		// Okay, now draw
 		if (renderSurface)
 			renderSurface->Render();
+
+	}
+}
+
+
+void OSMTileLayer::DrawLicense()
+{
+	if (isVisible && license)
+	{
+		license->Render();
 	}
 }
 
@@ -72,12 +86,23 @@ void OSMTileLayer::SetCamera(GLCamera *newCamera)
 	camera = newCamera;
 	if (renderSurface)
 		renderSurface->SetCamera(camera);
+
+	if (license)
+		license->SetViewportSize(camera->GetViewportWidth(), camera->GetViewportHeight());
+
 }
 
 
 void OSMTileLayer::SetFort14(Fort14 *newFort14)
 {
 	fort14 = newFort14;
+}
+
+
+void OSMTileLayer::SetWindowSize(int width, int height)
+{
+	if (license)
+		license->SetViewportSize(width, height);
 }
 
 

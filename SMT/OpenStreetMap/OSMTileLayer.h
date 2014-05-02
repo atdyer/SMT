@@ -26,6 +26,7 @@
 #include "OpenGL/Shaders/OpenStreetMapShader.h"
 #include "OpenStreetMap/Tiles/TileServer.h"
 #include "OpenStreetMap/Surfaces/SquareRenderSurface.h"
+#include "OpenStreetMap/Licenses/OSMLicense.h"
 
 #include <math.h>
 #include <iostream>
@@ -38,14 +39,19 @@ class OSMTileLayer : public QObject
 		~OSMTileLayer();
 
 		void	Draw();
+		void	DrawLicense();
 		void	SetCamera(GLCamera *newCamera);
 		void	SetFort14(Fort14 *newFort14);
+		void	SetWindowSize(int width, int height);
 
 		void	ToggleSatellite();
 		void	ToggleStreet();
 		void	ToggleTerrain();
 
 	private:
+
+		// The OpenStreetMap License layer
+		OSMLicense*	license;
 
 		// The fort.14 file and camera
 		Fort14*		fort14;
