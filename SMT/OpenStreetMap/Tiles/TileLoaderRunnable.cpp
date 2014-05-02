@@ -39,6 +39,20 @@ static QString nextStreetURL()
 	return url;
 }
 
+static int currTerrainURL = 1;
+static QString nextTerrainURL()
+{
+	currTerrainURL = currTerrainURL == 5 ? 1 : currTerrainURL;
+	QString url = "http://" +
+		      (currTerrainURL == 1 ? QString('a') :
+					     (currTerrainURL == 2 ? QString('b') :
+								    currTerrainURL == 3 ? QString('c') :
+											  QString('d'))) +
+		      ".tile.stamen.com/terrain-background/";
+	++currTerrainURL;
+	return url;
+}
+
 static size_t WriteMemoryCallback(void *contents, size_t size, size_t nmemb, void *userp)
 {
 	size_t realsize = size*nmemb;
@@ -99,49 +113,61 @@ void TileLoaderRunnable::run()
 				curl_easy_setopt(image, CURLOPT_URL, imageURL.toStdString().data());
 				curl_easy_setopt(image, CURLOPT_WRITEFUNCTION, WriteMemoryCallback);
 				curl_easy_setopt(image, CURLOPT_WRITEDATA, (void*)&imageData);
+				curl_easy_setopt(image, CURLOPT_NOSIGNAL, 1);
+				curl_easy_setopt(image, CURLOPT_TIMEOUT, 3);
 
-				std::cout << "Requesting tile: " << imageURL.toStdString().data() << std::endl;
+//				std::cout << "Requesting tile: " << imageURL.toStdString().data() << std::endl;
 				CURLcode fetchResult = curl_easy_perform(image);
-				std::cout << "Requesting tile: " << imageURL.toStdString().data() << " - Received" << std::endl;
+//				std::cout << "Requesting tile: " << imageURL.toStdString().data() << " - Received" << std::endl;
 
-				if (fetchResult == CURLE_OK)
+				QImage qImage;
+				bool loaded = false;
+				bool valid = false;
+
+				if (fetchResult != CURLE_OK)
 				{
-
-					QImage qImage;
-					bool loaded = false;
+					std::cout << "Failed to retrieve tile: "
+						  << curl_easy_strerror(fetchResult) << std::endl;
+					loaded = qImage.load(":/tiles/images/tiles/noload.png");
+				} else {
 					if (type == StreetTile)
 						loaded = qImage.loadFromData(imageData.memory, (int)imageData.size, "PNG");
 					else
 						loaded = qImage.loadFromData(imageData.memory, (int)imageData.size, "JPG");
+
+					// If it wasn't loaded, load the error image
 					if (loaded)
-					{
-						// Convert format
-						QImage formattedImage = qImage.convertToFormat(QImage::Format_ARGB32);
+						valid = true;
+					else
+						loaded = qImage.load(":/tiles/images/tiles/noload.png");
+				}
 
-						// Create new image on heap that is a shallow copy of the GL version of the image
-						QImage *finalImage = new QImage(QGLWidget::convertToGLFormat(formattedImage));
-						emit finished(finalImage);
+				if (loaded)
+				{
+					// Convert format
+					QImage formattedImage = qImage.convertToFormat(QImage::Format_ARGB32);
 
-					} else {
-						std::cout << "Unable to load image data" << std::endl;
-						emit finished(0);
-					}
+					// Create new image on heap that is a shallow copy of the GL version of the image
+					QImage *finalImage = new QImage(QGLWidget::convertToGLFormat(formattedImage));
+					emit finished(finalImage, valid);
 
 				} else {
-					std::cout << "Failed to retrieve tile: "
-						  << curl_easy_strerror(fetchResult) << std::endl;
-					emit finished(0);
+					std::cout << "Unable to load image data: " << imageURL.toStdString().data() << std::endl;
+					emit finished(0, false);
 				}
+
+				curl_easy_cleanup(image);
+
 			} else {
-				emit finished(0);
+				emit finished(0, false);
 			}
 
 		} else {
-			emit finished(0);
+			emit finished(0, false);
 		}
 	} else {
-		std::cout << "Skipping tile" << std::endl;
-		emit finished(0);
+//		std::cout << "Skipping tile" << std::endl;
+		emit finished(0, false);
 	}
 }
 
@@ -165,7 +191,7 @@ QString TileLoaderRunnable::BuildURL()
 	}
 	else if (type == TerrainTile)
 	{
-		url = terrainURL +
+		url = nextTerrainURL() +
 		      QString::number(z) + "/" +
 		      QString::number(x) + "/" +
 		      QString::number(y) + ".jpg";

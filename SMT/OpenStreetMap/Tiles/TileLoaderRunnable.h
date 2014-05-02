@@ -69,7 +69,7 @@ class TileLoaderRunnable : public QObject, public QRunnable
 
 	signals:
 
-		void	finished(QImage *data);
+		void	finished(QImage *data, bool isValid);
 
 
 };

@@ -40,6 +40,7 @@ class Tile : public QObject
 		TileType		getType();
 		int			getWidth();
 		int			getZoom();
+		bool			isValid();
 
 		void			setSkip(bool skip);
 
@@ -49,6 +50,7 @@ class Tile : public QObject
 		bool			isLoaded;
 		TileLoaderRunnable*	loader;
 		TileType		type;
+		bool			valid;
 
 		int			x;
 		int			y;
@@ -63,7 +65,7 @@ class Tile : public QObject
 
 	protected slots:
 
-		void	threadFinished(QImage* newData);
+		void	threadFinished(QImage* newData, bool valid);
 };
 
 #endif // TILE_H

@@ -222,4 +222,5 @@ FORMS    += MainWindow.ui \
 
 RESOURCES += \
     icons.qrc \
-    licenseimages.qrc
+    licenseimages.qrc \
+    tileimages.qrc

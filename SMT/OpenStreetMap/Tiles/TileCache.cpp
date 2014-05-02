@@ -88,23 +88,71 @@ Tile* TileCache::GetTile(TileType type, int tileX, int tileY, int zoom)
 	if (type == SatelliteTile)
 	{
 		if (satellitePool.count(poolObj))
-			return satellitePool[poolObj];
+		{
+			Tile* targetTile = satellitePool[poolObj];
+			if (targetTile->isValid())
+			{
+				return targetTile;
+			}
+			else
+			{
+				// This means the last time we tried to load the tile we
+				// were unsuccessful. So get rid of it and try again.
+				satellitePool.erase(poolObj);
+				delete targetTile;
+				return 0;
+			}
+		}
 		else
+		{
 			return 0;
+		}
 	}
 	else if (type == StreetTile)
 	{
 		if (streetPool.count(poolObj))
-			return streetPool[poolObj];
+		{
+			Tile* targetTile = streetPool[poolObj];
+			if (targetTile->isValid())
+			{
+				return targetTile;
+			}
+			else
+			{
+				// This means the last time we tried to load the tile we
+				// were unsuccessful. So get rid of it and try again.
+				streetPool.erase(poolObj);
+				delete targetTile;
+				return 0;
+			}
+		}
 		else
+		{
 			return 0;
+		}
 	}
 	else if (type == TerrainTile)
 	{
 		if (terrainPool.count(poolObj))
-			return terrainPool[poolObj];
+		{
+			Tile* targetTile = terrainPool[poolObj];
+			if (targetTile->isValid())
+			{
+				return targetTile;
+			}
+			else
+			{
+				// This means the last time we tried to load the tile we
+				// were unsuccessful. So get rid of it and try again.
+				terrainPool.erase(poolObj);
+				delete targetTile;
+				return 0;
+			}
+		}
 		else
+		{
 			return 0;
+		}
 	}
 
 	return 0;

@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/tiles">
+        <file>images/tiles/noload.png</file>
+    </qresource>
+</RCC>

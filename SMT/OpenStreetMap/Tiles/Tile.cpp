@@ -23,6 +23,7 @@ Tile::Tile(TileType tileType, int tileX, int tileY, int tileZoom)
 	data = 0;
 	isLoaded = false;
 	type = tileType;
+	valid = false;
 	x = tileX;
 	y = tileY;
 	zoom = tileZoom;
@@ -30,7 +31,7 @@ Tile::Tile(TileType tileType, int tileX, int tileY, int tileZoom)
 	loader = new TileLoaderRunnable(type, x, y, zoom);
 
 	connect(this, SIGNAL(skip(bool)), loader, SLOT(setSkip(bool)));
-	connect(loader, SIGNAL(finished(QImage*)), this, SLOT(threadFinished(QImage*)));
+	connect(loader, SIGNAL(finished(QImage*,bool)), this, SLOT(threadFinished(QImage*,bool)));
 }
 
 
@@ -99,15 +100,22 @@ int Tile::getZoom()
 }
 
 
+bool Tile::isValid()
+{
+	return valid;
+}
+
+
 void Tile::setSkip(bool isSkip)
 {
 	emit skip(isSkip);
 }
 
 
-void Tile::threadFinished(QImage *newData)
+void Tile::threadFinished(QImage *newData, bool valid)
 {
 	data = newData;
+	this->valid = valid;
 
 	if (data)
 		emit loaded(true, this);
