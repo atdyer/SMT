@@ -87,6 +87,14 @@ void Project::DisplayDomain(int index)
 }
 
 
+QString Project::GetFilePath()
+{
+	if (projectFile)
+		return projectFile->GetProjectFile();
+	return QString();
+}
+
+
 bool Project::IsInitialized()
 {
 	return projectInitialized;

@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QListWidgetItem>
 #include <QToolBar>
+#include <QSettings>
 
 #include "Project/Project.h"
 #include "Dialogs/DisplayOptionsDialog.h"
@@ -12,6 +13,8 @@
 namespace Ui {
 	class MainWindow;
 }
+
+enum { MaxRecentProjects = 5 };
 
 class MainWindow : public QMainWindow
 {
@@ -39,8 +42,18 @@ class MainWindow : public QMainWindow
 		// Dialogs
 		DisplayOptionsDialog*	displayOptionsDialog;
 
+		// Recent Project Actions
+		QAction		*recentProjects[MaxRecentProjects];
+		QAction		*recentProjectsSeparator;
+
+		// Program settings
+		QSettings	settings;
+
 		void	CheckForMemoryLeaks();
 		void	CreateProject(bool newProjectFile);
+		void	ConnectProject(Project *proj);
+		void	LoadRecentProjects();
+		void	UpdateRecentProjects();
 
 	public slots:
 
@@ -62,6 +75,7 @@ class MainWindow : public QMainWindow
 		/* Project buttons */
 		void	createProject();
 		void	openProject();
+		void	openRecentProject();
 		void	closeProject();
 
 		/* Left side pane slots */

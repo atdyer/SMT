@@ -80,6 +80,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	toolBar->addWidget(ui->addFileToProjectButton);
 	ui->projectButtonsLayout->addWidget(toolBar);
 
+	// Load recently opened projects
+	LoadRecentProjects();
+
 }
 
 MainWindow::~MainWindow()
@@ -282,59 +285,121 @@ void MainWindow::CreateProject(bool currentProjectFile)
 		}
 	}
 
-	currentProject->SetOpenGLPanel(ui->GLPanel);
-	currentProject->SetProgressBar(ui->progressBar);
-	currentProject->SetProjectTree(ui->projectTree);
-	currentProject->SetEditSubdomainList(ui->editSubdomainList);
+	QString currFile = currentProject->GetFilePath();
+	if (!currFile.isEmpty())
+	{
+		QStringList files = settings.value("recentProjectList").toStringList();
+		files.removeAll(currFile);
+		files.prepend(currFile);
+		while (files.size() > MaxRecentProjects)
+			files.removeLast();
+
+		settings.setValue("recentProjectList", files);
+		UpdateRecentProjects();
+	}
+
+	ConnectProject(currentProject);
+}
+
+
+void MainWindow::ConnectProject(Project *proj)
+{
+
+	proj->SetOpenGLPanel(ui->GLPanel);
+	proj->SetProgressBar(ui->progressBar);
+	proj->SetProjectTree(ui->projectTree);
+	proj->SetEditSubdomainList(ui->editSubdomainList);
 
 	/* Subdomain Creation */
-	connect(ui->createSubdomainButton, SIGNAL(clicked()), currentProject, SLOT(CreateNewSubdomain()));
+	connect(ui->createSubdomainButton, SIGNAL(clicked()), proj, SLOT(CreateNewSubdomain()));
 
 	/* Selection Tools */
-	connect(ui->selectNodesCircle, SIGNAL(clicked()), currentProject, SLOT(SelectFullDomainCircleElements()));
-	connect(ui->selectElementSingle, SIGNAL(clicked()), currentProject, SLOT(SelectFullDomainClickElements()));
-	connect(ui->selectNodeSingle, SIGNAL(clicked()), currentProject, SLOT(SelectFullDomainPolygonElements()));
-	connect(ui->selectNodesSquare, SIGNAL(clicked()), currentProject, SLOT(SelectFullDomainRectangleElements()));
-	connect(ui->deselectElementCircle, SIGNAL(clicked()), currentProject, SLOT(DeselectFullDomainCircleElements()));
-	connect(ui->deselectElementPolygon, SIGNAL(clicked()), currentProject, SLOT(DeselectFullDomainPolygonElements()));
-	connect(ui->deselectElementSingle, SIGNAL(clicked()), currentProject, SLOT(DeselectFullDomainClickElements()));
-	connect(ui->deselectElementSquare, SIGNAL(clicked()), currentProject, SLOT(DeselectFullDomainRectangleElements()));
-	connect(ui->selectNodeButton, SIGNAL(clicked()), currentProject, SLOT(SelectSingleSubdomainNode()));
+	connect(ui->selectNodesCircle, SIGNAL(clicked()), proj, SLOT(SelectFullDomainCircleElements()));
+	connect(ui->selectElementSingle, SIGNAL(clicked()), proj, SLOT(SelectFullDomainClickElements()));
+	connect(ui->selectNodeSingle, SIGNAL(clicked()), proj, SLOT(SelectFullDomainPolygonElements()));
+	connect(ui->selectNodesSquare, SIGNAL(clicked()), proj, SLOT(SelectFullDomainRectangleElements()));
+	connect(ui->deselectElementCircle, SIGNAL(clicked()), proj, SLOT(DeselectFullDomainCircleElements()));
+	connect(ui->deselectElementPolygon, SIGNAL(clicked()), proj, SLOT(DeselectFullDomainPolygonElements()));
+	connect(ui->deselectElementSingle, SIGNAL(clicked()), proj, SLOT(DeselectFullDomainClickElements()));
+	connect(ui->deselectElementSquare, SIGNAL(clicked()), proj, SLOT(DeselectFullDomainRectangleElements()));
+	connect(ui->selectNodeButton, SIGNAL(clicked()), proj, SLOT(SelectSingleSubdomainNode()));
 
-	connect(ui->undoButton, SIGNAL(clicked()), currentProject, SLOT(Undo()));
-	connect(ui->redoButton, SIGNAL(clicked()), currentProject, SLOT(Redo()));
-	connect(ui->actionUndo, SIGNAL(triggered()), currentProject, SLOT(Undo()));
-	connect(ui->actionRedo, SIGNAL(triggered()), currentProject, SLOT(Redo()));
+	connect(ui->undoButton, SIGNAL(clicked()), proj, SLOT(Undo()));
+	connect(ui->redoButton, SIGNAL(clicked()), proj, SLOT(Redo()));
+	connect(ui->actionUndo, SIGNAL(triggered()), proj, SLOT(Undo()));
+	connect(ui->actionRedo, SIGNAL(triggered()), proj, SLOT(Redo()));
 
 	/* Subdomain Editing */
-	connect(currentProject, SIGNAL(editNode(uint,QString,QString,QString)), this, SLOT(editNode(uint,QString,QString,QString)));
+	connect(proj, SIGNAL(editNode(uint,QString,QString,QString)), this, SLOT(editNode(uint,QString,QString,QString)));
 
 	/* U/I Updates */
-	connect(currentProject, SIGNAL(mouseX(float)), this, SLOT(showMouseX(float)));
-	connect(currentProject, SIGNAL(mouseY(float)), this, SLOT(showMouseY(float)));
-	connect(currentProject, SIGNAL(undoAvailable(bool)), ui->undoButton, SLOT(setEnabled(bool)));
-	connect(currentProject, SIGNAL(redoAvailable(bool)), ui->redoButton, SLOT(setEnabled(bool)));
-	connect(currentProject, SIGNAL(numElements(int)), this, SLOT(showNumElements(int)));
-	connect(currentProject, SIGNAL(numNodes(int)), this, SLOT(showNumNodes(int)));
-	connect(currentProject, SIGNAL(numElementsSelected(int)), this, SLOT(showNumSelectedElements(int)));
-	connect(currentProject, SIGNAL(numNodesSelected(int)), this, SLOT(showNumSelectedNodes(int)));
-	connect(currentProject, SIGNAL(maxSelectedZ(float)), this, SLOT(showMaxSelectedZ(float)));
-	connect(currentProject, SIGNAL(minSelectedZ(float)), this, SLOT(showMinSelectedZ(float)));
-	connect(currentProject, SIGNAL(showProjectView()), this, SLOT(showProjectExplorerPane()));
+	connect(proj, SIGNAL(mouseX(float)), this, SLOT(showMouseX(float)));
+	connect(proj, SIGNAL(mouseY(float)), this, SLOT(showMouseY(float)));
+	connect(proj, SIGNAL(undoAvailable(bool)), ui->undoButton, SLOT(setEnabled(bool)));
+	connect(proj, SIGNAL(redoAvailable(bool)), ui->redoButton, SLOT(setEnabled(bool)));
+	connect(proj, SIGNAL(numElements(int)), this, SLOT(showNumElements(int)));
+	connect(proj, SIGNAL(numNodes(int)), this, SLOT(showNumNodes(int)));
+	connect(proj, SIGNAL(numElementsSelected(int)), this, SLOT(showNumSelectedElements(int)));
+	connect(proj, SIGNAL(numNodesSelected(int)), this, SLOT(showNumSelectedNodes(int)));
+	connect(proj, SIGNAL(maxSelectedZ(float)), this, SLOT(showMaxSelectedZ(float)));
+	connect(proj, SIGNAL(minSelectedZ(float)), this, SLOT(showMinSelectedZ(float)));
+	connect(proj, SIGNAL(showProjectView()), this, SLOT(showProjectExplorerPane()));
 
 	/* Running ADCIRC */
-	connect(ui->actionFull_Domain, SIGNAL(triggered()), currentProject, SLOT(RunFullDomain()));
-	connect(ui->runFullDomainButton, SIGNAL(clicked()), currentProject, SLOT(RunFullDomain()));
-	connect(currentProject, SIGNAL(subdomainCreated(QString)), this, SLOT(addSubdomainToList(QString)));
+	connect(ui->actionFull_Domain, SIGNAL(triggered()), proj, SLOT(RunFullDomain()));
+	connect(ui->runFullDomainButton, SIGNAL(clicked()), proj, SLOT(RunFullDomain()));
+	connect(proj, SIGNAL(subdomainCreated(QString)), this, SLOT(addSubdomainToList(QString)));
 
 	/* Color Options Action Bar */
-	connect(ui->actionColor_Options, SIGNAL(triggered()), currentProject, SLOT(ShowDisplayOptionsDialog()));
+	connect(ui->actionColor_Options, SIGNAL(triggered()), proj, SLOT(ShowDisplayOptionsDialog()));
 
 	/* Update list with already created subdomains */
-	QStringList currSubs = currentProject->GetSubdomainNames();
+	QStringList currSubs = proj->GetSubdomainNames();
 	for (int i=0; i<currSubs.size(); ++i)
 		addSubdomainToList(currSubs.at(i));
 
+}
+
+
+void MainWindow::LoadRecentProjects()
+{
+	QList<QAction*> actionList;
+	for (int i=0; i<MaxRecentProjects; ++i)
+	{
+		recentProjects[i] = new QAction(this);
+		recentProjects[i]->setVisible(false);
+		connect(recentProjects[i], SIGNAL(triggered()),
+			this, SLOT(openRecentProject()));
+		actionList.append(recentProjects[i]);
+	}
+	recentProjectsSeparator = new QAction(this);
+	recentProjectsSeparator->setSeparator(true);
+	recentProjectsSeparator->setVisible(false);
+	actionList.append(recentProjectsSeparator);
+
+	ui->menuFile->insertActions(ui->actionClose_Project, actionList);
+
+	UpdateRecentProjects();
+}
+
+
+void MainWindow::UpdateRecentProjects()
+{
+	QStringList files = settings.value("recentProjectList").toStringList();
+	int numRecentProjects = qMin(files.size(), (int)MaxRecentProjects);
+
+	for (int i=0; i<numRecentProjects; ++i)
+	{
+		QString text = tr("&%1 %2").arg(i+1).arg(QFileInfo(files[i]).fileName());
+		recentProjects[i]->setText(text);
+		recentProjects[i]->setData(files[i]);
+		recentProjects[i]->setVisible(true);
+	}
+
+	for (int i=numRecentProjects; i<MaxRecentProjects; ++i)
+		recentProjects[i]->setVisible(false);
+
+	recentProjectsSeparator->setVisible(numRecentProjects > 0);
 }
 
 
@@ -412,6 +477,19 @@ void MainWindow::createProject()
 void MainWindow::openProject()
 {
 	CreateProject(false);
+}
+
+
+void MainWindow::openRecentProject()
+{
+	QAction *action = qobject_cast<QAction *>(sender());
+	if (action)
+	{
+		if (currentProject)
+			delete currentProject;
+		currentProject = new Project(action->data().toString(), this);
+		ConnectProject(currentProject);
+	}
 }
 
 

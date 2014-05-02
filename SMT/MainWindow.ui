@@ -1158,17 +1158,10 @@ border-top-right-radius: 4px;
     <property name="title">
      <string>File</string>
     </property>
-    <widget class="QMenu" name="menuRecent_Projects">
-     <property name="title">
-      <string>Recent Projects</string>
-     </property>
-     <addaction name="actionNone"/>
-    </widget>
     <addaction name="actionNew_Project"/>
     <addaction name="actionOpen_Project"/>
     <addaction name="actionSave_Project"/>
     <addaction name="actionSave_Project_As"/>
-    <addaction name="menuRecent_Projects"/>
     <addaction name="separator"/>
     <addaction name="actionClose_Project"/>
     <addaction name="actionExit"/>

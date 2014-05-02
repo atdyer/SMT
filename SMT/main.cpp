@@ -3,6 +3,8 @@
 
 int main(int argc, char *argv[])
 {
+	QCoreApplication::setOrganizationName("ncsu");
+	QCoreApplication::setApplicationName("SMT");
 	QApplication a(argc, argv);
 	MainWindow w;
 

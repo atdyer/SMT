@@ -38,6 +38,7 @@ class ProjectFile : public QDomDocument
 		QString		GetFullDomainMaxvel();
 		QDateTime	GetLastFileAccess();
 		QString		GetProjectDirectory();
+		QString		GetProjectFile();
 		QString		GetProjectName();
 		QString		GetSubDomainBNList(QString subdomainName);
 		QString		GetSubDomainDirectory(QString subdomainName);

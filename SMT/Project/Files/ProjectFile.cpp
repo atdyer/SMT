@@ -235,6 +235,12 @@ QString ProjectFile::GetProjectDirectory()
 }
 
 
+QString ProjectFile::GetProjectFile()
+{
+	return projectFile.fileName();
+}
+
+
 QString ProjectFile::GetProjectName()
 {
 	return projectName;

@@ -35,6 +35,7 @@ class Project : public QObject
 		~Project();
 
 		void	DisplayDomain(int index);
+		QString	GetFilePath();
 		bool	IsInitialized();
 		void	ResetAllNodalValues(QString subdomainName);
 		void	ResetNodalValues(QString subdomainName, unsigned int nodeNumber);
