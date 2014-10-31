@@ -79,8 +79,8 @@ class SubdomainCreator
 		Fort015*		GetFullDomainFort015(int version, int recordFrequency);
 		std::vector<Node*>	GetSelectedNodes(std::vector<Element*> selectedElements);
 		Fort13*			CreateFort13(Py140 *py140);
-		bool			CreateFort14(std::vector<Node *> selectedNodes, std::vector<Element*> selectedElements,
-						     Py140 *py140, Py141 *py141);
+        bool			CreateFort14(std::vector<Node *> selectedNodes, std::vector<Element*> selectedElements,
+                             Py140 *py140, Py141 *py141, std::vector<unsigned int> boundaryNodes);
 		Py140*			CreatePy140(std::vector<Node*> selectedNodes);
 		Py141*			CreatePy141(std::vector<Element*> selectedElements);
 

@@ -146,7 +146,7 @@ bool SubdomainCreator::CreateSubdomainVersion1(QString targetDir, int recordFreq
 
 
 	// Create a fort.14 file for the subdomain
-	if (!CreateFort14(selectedNodes, selectedElements, py140, py141))
+    if (!CreateFort14(selectedNodes, selectedElements, py140, py141, boundaryNodes))
 	{
 		std::cout << "Error creating the fort.14 file for the new subdomain" << std::endl;
 		return false;
@@ -290,7 +290,7 @@ bool SubdomainCreator::CreateSubdomainVersion2(QString targetDir, int recordFreq
 
 
 	// Create a fort.14 file for the subdomain
-	if (!CreateFort14(selectedNodes, selectedElements, py140, py141))
+    if (!CreateFort14(selectedNodes, selectedElements, py140, py141, outerBoundaries))
 	{
 		std::cout << "Error creating the fort.14 file for the new subdomain" << std::endl;
 		return false;
@@ -449,7 +449,7 @@ Fort13* SubdomainCreator::CreateFort13(Py140 *py140)
 }
 
 
-bool SubdomainCreator::CreateFort14(std::vector<Node*> selectedNodes, std::vector<Element*> selectedElements, Py140 *py140, Py141 *py141)
+bool SubdomainCreator::CreateFort14(std::vector<Node*> selectedNodes, std::vector<Element*> selectedElements, Py140 *py140, Py141 *py141, std::vector<unsigned int> boundaryNodes)
 {
 	QString targetPath = projectFile->GetSubDomainDirectory(subdomainName) + QDir::separator() + "fort.14";
 	std::ofstream fort14File (targetPath.toStdString().data());
@@ -491,8 +491,19 @@ bool SubdomainCreator::CreateFort14(std::vector<Node*> selectedNodes, std::vecto
 		}
 
 		// Write boundaries
-		fort14File << "0\t!no. of open boundary segments\n";
-		fort14File << "0\t!no. of open boundary nodes\n";
+        if (boundaryNodes.size() > 0)
+        {
+            fort14File << "1\t!no. of open boundary segments\n";
+            fort14File << boundaryNodes.size() + 1 << "\t!no. of open boundary nodes\n";
+            for (std::vector<unsigned int>::iterator it = boundaryNodes.begin(); it != boundaryNodes.end(); ++it)
+            {
+                fort14File << *it << "\n";
+            }
+            fort14File << boundaryNodes[0] << "\n";
+        } else {
+            fort14File << "0\t!no. of open boundary segments\n";
+            fort14File << "0\t!no. of open boundary nodes\n";
+        }
 		fort14File << "0\t!no. of land boundary segments\n";
 		fort14File << "0\t!no. of land boundary nodes\n";
 
