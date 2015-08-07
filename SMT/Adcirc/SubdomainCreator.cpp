@@ -494,12 +494,15 @@ bool SubdomainCreator::CreateFort14(std::vector<Node*> selectedNodes, std::vecto
         if (boundaryNodes.size() > 0)
         {
             fort14File << "1\t!no. of open boundary segments\n";
-            fort14File << boundaryNodes.size() + 1 << "\t!no. of open boundary nodes\n";
+            fort14File << boundaryNodes.size() + 1 << "\t!total no. of open boundary nodes\n";
+            fort14File << boundaryNodes.size() + 1 << "\t!no. of open boundary nodes  in segment 1\n";
+
             for (std::vector<unsigned int>::iterator it = boundaryNodes.begin(); it != boundaryNodes.end(); ++it)
             {
-                fort14File << *it << "\n";
+
+                fort14File << py140->ConvertOldToNew(*it) << "\n";
             }
-            fort14File << boundaryNodes[0] << "\n";
+            fort14File << py140->ConvertOldToNew(boundaryNodes[0]) << "\n";
         } else {
             fort14File << "0\t!no. of open boundary segments\n";
             fort14File << "0\t!no. of open boundary nodes\n";

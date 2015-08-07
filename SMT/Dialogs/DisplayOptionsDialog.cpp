@@ -65,7 +65,8 @@ void DisplayOptionsDialog::DisplayCurrentDomainProperties()
 			ui->outlineShaderOptions->update();
 
 			ui->fillShaderOptions->SetSolidColor(fort14->GetSolidFillColor());
-			ui->fillShaderOptions->SetGradientRange(fort14->GetMinZ(), fort14->GetMaxZ());
+            //ui->fillShaderOptions->SetGradientRange(fort14->GetMinZ(), fort14->GetMaxZ());
+            ui->fillShaderOptions->SetGradientRange(fort14->GetMinDisplayVal(), fort14->GetMaxDisplayVal());    //aa15
 			ui->fillShaderOptions->SetGradient(fort14->GetGradientFillColors());
 			ui->fillShaderOptions->update();
 

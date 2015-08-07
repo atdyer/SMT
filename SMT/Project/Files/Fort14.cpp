@@ -19,6 +19,8 @@ Fort14::Fort14(QObject *parent) :
 	minX(0.0),
 	minY(0.0),
 	minZ(0.0),
+    minDif(10e10),
+    maxDif(-10e10),
 	nodes(),
 	numElements(0),
 	numNodes(0),
@@ -32,7 +34,8 @@ Fort14::Fort14(QObject *parent) :
 	outlineShader(0), fillShader(0), boundaryShader(0),
 	solidOutline(0), solidFill(0), solidBoundary(0),
 	gradientOutline(0), gradientFill(0), gradientBoundary(0),
-	VAOId(0), VBOId(0), IBOId(0)
+    VAOId(0), VBOId(0), IBOId(0),
+    GLmode("default")
 {
 
 }
@@ -58,6 +61,8 @@ Fort14::Fort14(ProjectFile *projectFile, QObject *parent) :
 	minX(0.0),
 	minY(0.0),
 	minZ(0.0),
+    minDif(10e10),
+    maxDif(-10e10),
 	nodes(),
 	numElements(0),
 	numNodes(0),
@@ -70,7 +75,9 @@ Fort14::Fort14(ProjectFile *projectFile, QObject *parent) :
 	camera(0),
 	solidOutline(0), solidFill(0), solidBoundary(0),
 	gradientOutline(0), gradientFill(0), gradientBoundary(0),
-	VAOId(0), VBOId(0), IBOId(0)
+    VAOId(0), VBOId(0), IBOId(0),
+    GLmode("default")
+
 {
 	ReadFile();
 }
@@ -96,6 +103,8 @@ Fort14::Fort14(QString domainName, ProjectFile *projectFile, QObject *parent) :
 	minX(0.0),
 	minY(0.0),
 	minZ(0.0),
+    minDif(10e10),
+    maxDif(-10e10),
 	nodes(),
 	numElements(0),
 	numNodes(0),
@@ -108,7 +117,8 @@ Fort14::Fort14(QString domainName, ProjectFile *projectFile, QObject *parent) :
 	camera(0),
 	solidOutline(0), solidFill(0), solidBoundary(0),
 	gradientOutline(0), gradientFill(0), gradientBoundary(0),
-	VAOId(0), VBOId(0), IBOId(0)
+    VAOId(0), VBOId(0), IBOId(0),
+    GLmode("default")
 {
 	ReadFile();
 }
@@ -333,7 +343,25 @@ float Fort14::GetMinZ()
 	return minZ;
 }
 
+float Fort14::GetMinDisplayVal()
+{
+    return minDisplayVal;
+}
 
+float Fort14::GetMaxDisplayVal()
+{
+    return maxDisplayVal;
+}
+
+float Fort14::GetMinDif()
+{
+    return minDif;
+}
+
+float Fort14::GetMaxDif()
+{
+    return maxDif;
+}
 Node Fort14::GetNode(int nodeNumber)
 {
 	for (std::vector<Node>::iterator it = nodes.begin(); it != nodes.end(); ++it)
@@ -445,7 +473,10 @@ void Fort14::RefreshGL()
 				return;
 			}
 		}
+            resetGradientFill(minZ, maxZ); //aa15
 	}
+
+
 }
 
 
@@ -518,13 +549,13 @@ void Fort14::SetNodalValues(unsigned int nodeNumber, QString x, QString y, QStri
 		{
 			currNode->xDat = x.toStdString();
 			currNode->yDat = y.toStdString();
-			currNode->zDat = z.toStdString();
+            currNode->zDat = z.toStdString();
 			currNode->x = atof(currNode->xDat.data());
 			currNode->y = atof(currNode->yDat.data());
-			currNode->z = -1.0 * atof(currNode->zDat.data());
+            currNode->z = -1.0 * atof(currNode->zDat.data());
 			currNode->normX = (currNode->x - midX) / max;
 			currNode->normY = (currNode->y - midY) / max;
-			currNode->normZ = currNode->z / (maxZ - minZ);
+            currNode->normZ = currNode->z / (maxZ - minZ);
 
 			if (quadtree)
 				quadtree->SetNodalValues(nodeNumber,
@@ -594,6 +625,9 @@ void Fort14::ToggleQuadtreeVisible()
 
 void Fort14::CreateDefaultShaders()
 {
+    minDisplayVal = minZ;
+    maxDisplayVal = maxZ;
+
 //	SetSolidFillColor(QColor(0.1*255, 0.8*255, 0.1*255, 1.0*255));
 	QGradientStops defaultStops;
 
@@ -619,11 +653,12 @@ void Fort14::CreateDefaultShaders()
 }
 
 
+
 void Fort14::LoadGL()
 {
 	CreateDefaultShaders();
 
-	if (!glLoaded)
+    if (!glLoaded)
 	{
 		const size_t VertexBufferSize = 4*sizeof(GLfloat)*numNodes;
 
@@ -638,16 +673,16 @@ void Fort14::LoadGL()
 		glEnableVertexAttribArray(0);
 		glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4*sizeof(GLfloat), 0);
 		glBufferData(GL_ARRAY_BUFFER, VertexBufferSize, NULL, GL_STATIC_DRAW);
-		GLfloat* glNodeData = (GLfloat *)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+        GLfloat* glNodeData = (GLfloat *)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
 		if (glNodeData)
 		{
-			for (unsigned int i=0; i<numNodes; i++)
-			{
-				glNodeData[4*i+0] = (GLfloat)nodes[i].normX;
-				glNodeData[4*i+1] = (GLfloat)nodes[i].normY;
-				glNodeData[4*i+2] = (GLfloat)nodes[i].z;
-				glNodeData[4*i+3] = (GLfloat)1.0;
-			}
+            for (unsigned int i=0; i<numNodes; i++)
+                {
+                    glNodeData[4*i+0] = (GLfloat)nodes[i].normX;
+                    glNodeData[4*i+1] = (GLfloat)nodes[i].normY;
+                    glNodeData[4*i+2] = (GLfloat)nodes[i].z;
+                    glNodeData[4*i+3] = (GLfloat)1.0;
+                }
 		} else {
 			glLoaded = false;
 			return;
@@ -845,4 +880,101 @@ void Fort14::SetDomainBounds(float minX, float minY, float minZ, float maxX, flo
 		gradientFill->SetGradientRange(minZ, maxZ);
 	if (gradientOutline)
 		gradientOutline->SetGradientRange(minZ, maxZ);
+}
+
+
+
+bool Fort14::setMaxele(Maxele63 * maxele63){
+
+    if (maxele63->GetNumNodes() != numNodes){
+        // maxele file is incompatible
+        return false;
+    }
+
+    for (unsigned int i=0; i<numNodes; i++){
+        nodes[i].maxele = maxele63->GetMaxele(i);
+    }
+
+    return true;
+}
+
+void Fort14::setMaxeleDif(float fullMaxele, unsigned int i){
+    nodes[i].maxele = fullMaxele - nodes[i].maxele;
+    minDif = std::min(minDif,nodes[i].maxele);
+    maxDif = std::max(maxDif,nodes[i].maxele);
+}
+
+
+
+
+void Fort14::maxeleGL(float minMaxele, float maxMaxele){
+
+
+    if (glLoaded)
+    {
+        const size_t VertexBufferSize = 4*sizeof(GLfloat)*numNodes;
+
+        glBindBuffer(GL_ARRAY_BUFFER, VBOId);
+        GLfloat* glNodeData = (GLfloat *)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+        if (glNodeData)
+        {
+            for (unsigned int i=0; i<numNodes; i++)
+            {
+                glNodeData[4*i+0] = (GLfloat)nodes[i].normX;
+                glNodeData[4*i+1] = (GLfloat)nodes[i].normY;
+                glNodeData[4*i+2] = (GLfloat)nodes[i].maxele;
+            }
+
+            if (glUnmapBuffer(GL_ARRAY_BUFFER) == GL_FALSE)
+            {
+                glLoaded = false;
+                DEBUG("ERROR: Unmapping vertex buffer for fort.14");
+                return;
+            }
+        }
+
+        glBindVertexArray(VAOId);
+
+        resetGradientFill(minMaxele,maxMaxele);
+
+        emit Refresh();
+
+    }
+
+}
+
+
+void Fort14::resetGradientFill(float minVal, float maxVal){
+
+    minDisplayVal = minVal;
+    maxDisplayVal = maxVal;
+
+    QGradientStops defaultStops;
+    float percentage;
+
+    float ticks[] = {   minVal,
+                        0.00001,
+                        maxVal,
+                        minVal+(maxVal-minVal)*0.5,
+                        minVal+(maxVal-minVal)*0.3,
+                        minVal+(maxVal-minVal)*0.7,
+                      };
+
+    QColor colors[] = {QColor::fromRgb(0, 0, 255),
+               QColor::fromRgb(255,255,255),
+               QColor::fromRgb(0, 100, 0),
+               QColor::fromRgb(0,175,0),
+               QColor::fromRgb(0,255,255),
+               QColor::fromRgb(0,255,0)};
+
+    for (unsigned int i=0; i<6; ++i)
+    {
+        percentage = (maxVal - ticks[i])/(maxVal-minVal);
+        defaultStops << QGradientStop(percentage, colors[i]);
+    }
+
+    gradientFill->SetCamera(camera);
+    gradientFill->SetGradientRange(minVal, maxVal);
+    gradientFill->SetGradientStops(defaultStops);
+
 }

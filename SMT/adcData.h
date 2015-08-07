@@ -53,6 +53,7 @@ struct Node
 		std::string xDat;
 		std::string yDat;
 		std::string zDat;
+        float maxele; //aa15
 };
 
 

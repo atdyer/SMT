@@ -47,6 +47,11 @@ class Project : public QObject
 
 		QStringList	GetSubdomainNames();
 
+        //aa15
+        int GetNumberOfSubdomains();
+        void setDisplay(QString displayMode, int domainIndex, QString FileName, QString FullFileName);
+        QString GetDomainPath(int domainIndex);
+
 	private:
 
 		DisplayOptionsDialog*	displayOptions;
@@ -59,7 +64,7 @@ class Project : public QObject
 		bool			projectInitialized;
 		QTreeWidget*		projectTree;
 		std::vector<SubDomain*>	subDomains;
-		Domain*			visibleDomain;
+        Domain*			visibleDomain;
 
 
 		FullDomain*	BuildFullDomain();

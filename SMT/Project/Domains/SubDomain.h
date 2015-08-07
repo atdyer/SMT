@@ -41,7 +41,7 @@ class SubDomain : public Domain
 
 		Fort015*	GetFort015();
 		Py140*		GetPy140();
-		virtual QString	GetPath();
+        QString	GetPath();
 		QString		GetDomainName();
 		Node*		GetSelectedNode();
 
@@ -49,7 +49,8 @@ class SubDomain : public Domain
 		void	ResetAllNodalValues(Fort14 *fullDomainFort14);
 		void	SaveAllChanges();
 		void	SetNodalValues(unsigned int nodeNumber, QString x, QString y, QString z);
-
+        void    visualizeDomain(QString displayMode, QString FileName, Maxele63 * fullMaxele63);
+        void    setMaxeleDif(Maxele63 * fullMaxele63);
 	private:
 
 		SubDomainSelectionLayer*	selectionLayerSubdomain;
@@ -65,7 +66,7 @@ class SubDomain : public Domain
 		Fort020*	fort020;
 		Fort021*	fort021;
 		Fort022*	fort022;
-		Maxele63*	maxele;
+        Maxele63*	maxele63;
 		Maxvel63*	maxvel;
 		Py140*		py140;
 		Py141*		py141;

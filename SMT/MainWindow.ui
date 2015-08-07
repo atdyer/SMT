@@ -162,11 +162,20 @@
         </item>
         <item>
          <widget class="QToolBox" name="paneBox">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Maximum" vsizetype="Preferred">
             <horstretch>0</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
+          </property>
+          <property name="minimumSize">
+           <size>
+            <width>250</width>
+            <height>0</height>
+           </size>
           </property>
           <property name="maximumSize">
            <size>
@@ -194,7 +203,7 @@ border-top-right-radius: 4px;
            <number>1</number>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>4</number>
           </property>
           <property name="tabSpacing">
            <number>0</number>
@@ -205,7 +214,7 @@ border-top-right-radius: 4px;
              <x>0</x>
              <y>0</y>
              <width>256</width>
-             <height>551</height>
+             <height>535</height>
             </rect>
            </property>
            <property name="styleSheet">
@@ -276,8 +285,8 @@ border-top-right-radius: 4px;
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>206</width>
-             <height>551</height>
+             <width>250</width>
+             <height>535</height>
             </rect>
            </property>
            <attribute name="label">
@@ -752,7 +761,7 @@ border-top-right-radius: 4px;
              <x>0</x>
              <y>0</y>
              <width>256</width>
-             <height>551</height>
+             <height>535</height>
             </rect>
            </property>
            <attribute name="label">
@@ -969,7 +978,7 @@ border-top-right-radius: 4px;
              <x>0</x>
              <y>0</y>
              <width>258</width>
-             <height>551</height>
+             <height>535</height>
             </rect>
            </property>
            <attribute name="label">
@@ -1030,19 +1039,433 @@ border-top-right-radius: 4px;
              </layout>
             </item>
            </layout>
+           <widget class="Line" name="line_9">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>190</y>
+              <width>256</width>
+              <height>3</height>
+             </rect>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
           </widget>
           <widget class="QWidget" name="analyzeResultsPage">
            <property name="geometry">
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>150</width>
-             <height>551</height>
+             <width>250</width>
+             <height>535</height>
             </rect>
            </property>
            <attribute name="label">
             <string>Analyze Results</string>
            </attribute>
+           <widget class="Line" name="line_8">
+            <property name="geometry">
+             <rect>
+              <x>1</x>
+              <y>50</y>
+              <width>249</width>
+              <height>16</height>
+             </rect>
+            </property>
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
+            </property>
+           </widget>
+           <widget class="QStackedWidget" name="analyzeStacked">
+            <property name="geometry">
+             <rect>
+              <x>1</x>
+              <y>68</y>
+              <width>249</width>
+              <height>271</height>
+             </rect>
+            </property>
+            <property name="currentIndex">
+             <number>1</number>
+            </property>
+            <widget class="QWidget" name="page">
+             <widget class="QGroupBox" name="groupBox_3">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>241</width>
+                <height>91</height>
+               </rect>
+              </property>
+              <property name="title">
+               <string>Domain:</string>
+              </property>
+              <property name="checkable">
+               <bool>false</bool>
+              </property>
+              <widget class="QWidget" name="layoutWidget_4">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>20</y>
+                 <width>231</width>
+                 <height>62</height>
+                </rect>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_6">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_20">
+                  <property name="text">
+                   <string>ID:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QComboBox" name="visualizeDomainComboBox"/>
+                </item>
+                <item row="0" column="2">
+                 <spacer name="horizontalSpacer_8">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Fixed</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>18</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_21">
+                  <property name="text">
+                   <string>maxele:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QLineEdit" name="maxeleDirLineEdit"/>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QPushButton" name="openFileButton">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>25</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>25</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </widget>
+             <widget class="QWidget" name="layoutWidget">
+              <property name="geometry">
+               <rect>
+                <x>20</x>
+                <y>120</y>
+                <width>202</width>
+                <height>71</height>
+               </rect>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_4">
+               <item>
+                <widget class="QPushButton" name="visualizeMaxeleButton">
+                 <property name="enabled">
+                  <bool>true</bool>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>200</width>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="font">
+                  <font>
+                   <weight>75</weight>
+                   <bold>true</bold>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Visualize maxele</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="visualizeGridButton1">
+                 <property name="minimumSize">
+                  <size>
+                   <width>0</width>
+                   <height>30</height>
+                  </size>
+                 </property>
+                 <property name="text">
+                  <string>Visualize grid</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </widget>
+            <widget class="QWidget" name="page_2">
+             <widget class="QGroupBox" name="groupBox_2">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>70</y>
+                <width>241</width>
+                <height>131</height>
+               </rect>
+              </property>
+              <property name="title">
+               <string>Subdomain:</string>
+              </property>
+              <property name="checkable">
+               <bool>false</bool>
+              </property>
+              <widget class="QWidget" name="layoutWidget">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>21</y>
+                 <width>238</width>
+                 <height>61</height>
+                </rect>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_4">
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_16">
+                  <property name="text">
+                   <string>ID:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QLineEdit" name="subMaxeleLineEdit"/>
+                </item>
+                <item row="0" column="2">
+                 <spacer name="horizontalSpacer_6">
+                  <property name="orientation">
+                   <enum>Qt::Horizontal</enum>
+                  </property>
+                  <property name="sizeType">
+                   <enum>QSizePolicy::Fixed</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>18</width>
+                    <height>20</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="1" column="0">
+                 <widget class="QLabel" name="label_17">
+                  <property name="text">
+                   <string>maxele:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QComboBox" name="compareSubdomainComboBox"/>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QPushButton" name="openSubMaxeleButton">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>25</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>25</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+             </widget>
+             <widget class="QGroupBox" name="groupBox">
+              <property name="geometry">
+               <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>241</width>
+                <height>91</height>
+               </rect>
+              </property>
+              <property name="title">
+               <string>Full Domain:</string>
+              </property>
+              <property name="checkable">
+               <bool>false</bool>
+              </property>
+              <widget class="QWidget" name="layoutWidget_3">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>20</y>
+                 <width>231</width>
+                 <height>31</height>
+                </rect>
+               </property>
+               <layout class="QGridLayout" name="gridLayout_3">
+                <item row="0" column="2">
+                 <widget class="QPushButton" name="openFullMaxeleButton">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>25</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>25</width>
+                    <height>16777215</height>
+                   </size>
+                  </property>
+                  <property name="text">
+                   <string>...</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0">
+                 <widget class="QLabel" name="label_19">
+                  <property name="text">
+                   <string>maxele:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <widget class="QLineEdit" name="fullMaxeleLineEdit"/>
+                </item>
+               </layout>
+              </widget>
+             </widget>
+             <widget class="QPushButton" name="visualizeGridButton2">
+              <property name="geometry">
+               <rect>
+                <x>25</x>
+                <y>237</y>
+                <width>200</width>
+                <height>30</height>
+               </rect>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>0</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="text">
+               <string>Visualize grid</string>
+              </property>
+             </widget>
+             <widget class="QPushButton" name="visualizeMaxeleComparisonButton">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="geometry">
+               <rect>
+                <x>25</x>
+                <y>200</y>
+                <width>200</width>
+                <height>30</height>
+               </rect>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>200</width>
+                <height>30</height>
+               </size>
+              </property>
+              <property name="font">
+               <font>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
+              </property>
+              <property name="text">
+               <string>Visualize comparison</string>
+              </property>
+             </widget>
+            </widget>
+           </widget>
+           <widget class="QWidget" name="layoutWidget">
+            <property name="geometry">
+             <rect>
+              <x>5</x>
+              <y>20</y>
+              <width>241</width>
+              <height>29</height>
+             </rect>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_5">
+             <item>
+              <widget class="QLabel" name="label_11">
+               <property name="text">
+                <string>Mode:</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QComboBox" name="analyzeComboBox">
+               <item>
+                <property name="text">
+                 <string>Visualize Maxele file</string>
+                </property>
+               </item>
+               <item>
+                <property name="text">
+                 <string>Compare Maxele files</string>
+                </property>
+               </item>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+           <zorder>layoutWidget</zorder>
+           <zorder>line_8</zorder>
+           <zorder>analyzeStacked</zorder>
           </widget>
          </widget>
         </item>
@@ -1151,7 +1574,7 @@ border-top-right-radius: 4px;
      <x>0</x>
      <y>0</y>
      <width>1105</width>
-     <height>20</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

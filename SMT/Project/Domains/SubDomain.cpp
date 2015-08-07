@@ -15,7 +15,7 @@ SubDomain::SubDomain(QString domainName, ProjectFile *projectFile, QObject *pare
 	fort020(0),
 	fort021(0),
 	fort022(0),
-	maxele(0),
+    maxele63(0),
 	maxvel(0),
 	py140(0),
 	py141(0),
@@ -99,13 +99,13 @@ void SubDomain::ResetNodalValues(unsigned int nodeNumber, Fort14 *fullDomainFort
 
 		QString xDat (originalNode.xDat.data());
 		QString yDat (originalNode.yDat.data());
-		QString zDat (originalNode.zDat.data());
+        QString zDat (originalNode.zDat.data());
 
 		// Set the subdomain nodal values
-		fort14->SetNodalValues(nodeNumber, xDat, yDat, zDat);
+        fort14->SetNodalValues(nodeNumber, xDat, yDat, zDat);
 
 		// Update the UI with the reset values
-		emit editNode(nodeNumber, xDat, yDat, zDat);
+        emit editNode(nodeNumber, xDat, yDat, zDat);
 	}
 }
 
@@ -154,11 +154,60 @@ void SubDomain::CreateAllFiles()
 	fort020 = new Fort020(domainName, projectFile, this);
 	fort021 = new Fort021(domainName, projectFile, this);
 	fort022 = new Fort022(domainName, projectFile, this);
-	maxele = new Maxele63(domainName, projectFile, this);
+    //maxele = new Maxele63(domainName, projectFile, this); // aa15-commented out
 	maxvel = new Maxvel63(domainName, projectFile, this);
 	py140 = new Py140(domainName, projectFile, this);
 	py141 = new Py141(domainName, projectFile, this);
 
 	fort14->SetCamera(camera);
 	mapLayer->SetFort14(fort14);
+}
+
+
+void SubDomain::setMaxeleDif(Maxele63 * fullMaxele63){
+
+    for (int i=0; i<fort14->GetNumNodes();i++){
+        unsigned int old = py140->ConvertNewToOld(i+1);
+        fort14->setMaxeleDif( fullMaxele63->GetMaxele(old-1), i );
+    }
+}
+
+
+void SubDomain::visualizeDomain(QString displayMode, QString FileName,Maxele63 * fullMaxele63){
+
+    if (displayMode == "maxele"){
+
+        maxele63 = new Maxele63(FileName, "Subdomain", projectFile,  this);
+        if ( fort14->setMaxele( maxele63 ) ){
+            float minMaxele = maxele63->GetMinMaxele();
+            float maxMaxele = maxele63->GetMaxMaxele();
+            fort14->maxeleGL(minMaxele,maxMaxele);
+            updateGL();
+        }
+        else{
+            QMessageBox::warning(0,"Maxele!","Maxele file is not compatible with the domain");
+            return;
+        }
+    }
+    else if (displayMode == "compareMaxele"){
+        maxele63 = new Maxele63(FileName, "Subdomain", projectFile,  this);
+        if ( fort14->setMaxele( maxele63 ) ){
+            setMaxeleDif(fullMaxele63);
+            float minMaxele = fort14->GetMinDif();
+            float maxMaxele = fort14->GetMaxDif();
+            fort14->maxeleGL(minMaxele,maxMaxele);
+            updateGL();
+        }
+        else{
+            QMessageBox::warning(0,"Maxele!","Maxele file is not compatible with the domain");
+            return;
+        }
+
+
+    }
+    else if (displayMode =="default"){
+        fort14->RefreshGL();
+        updateGL();
+    }
+
 }

@@ -67,7 +67,7 @@ class Domain : public QObject
 	protected:
 
 		GLCamera*		camera;
-		Fort14*			fort14;
+        Fort14*			fort14;
 		QProgressBar*		progressBar;
 		ProjectFile*		projectFile;
 		SelectionLayer*		selectionLayer;

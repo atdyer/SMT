@@ -8,6 +8,8 @@
 #include <istream>
 #include <fstream>
 #include <sstream>
+#include <algorithm>
+#include <iostream>
 
 #include "Project/Files/ProjectFile.h"
 
@@ -18,14 +20,19 @@ class Maxele63 : public QObject
 		explicit Maxele63(QObject *parent=0);
 		Maxele63(ProjectFile *projectFile, QObject *parent=0);
 		Maxele63(QString domainName, ProjectFile *projectFile, QObject *parent=0);
+        Maxele63(QString targetFile, QString domainName, ProjectFile *projectFile, QObject *parent=0);
 
         QString                 GetHeaderLine();
         unsigned int            GetNumNodes();
-        std::vector<float>      GetMaxeles();
+        float       GetMaxele(int index);
+        float       GetMaxMaxele();
+        float       GetMinMaxele();
+
 
 
 	private:
 
+        QString             targetFile;
         QString             domainName;
         ProjectFile*        projectFile;
         bool                isFullDomain;
@@ -33,7 +40,6 @@ class Maxele63 : public QObject
         QString             headerLine;
         unsigned int        numNodes;
         std::vector<float>  maxeles;
-
         void ReadFile();
 };
 
