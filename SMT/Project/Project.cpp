@@ -136,8 +136,8 @@ void Project::SetNodalValues(QString subdomainName, unsigned int nodeNumber, QSt
 		if (currentSubdomain)
 		{
 			if (currentSubdomain->GetDomainName() == subdomainName)
-			{
-				currentSubdomain->SetNodalValues(nodeNumber, x, y, z);
+            {
+                currentSubdomain->SetNodalValues(nodeNumber, x, y, z);
 				break;
 			}
 		}
@@ -161,8 +161,8 @@ void Project::SetOpenGLPanel(OpenGLPanel *newPanel)
 		{
 			SubDomain* currSubdomain = *it;
 			emit subdomainCreated(currSubdomain->GetDomainName());
-		}
-	}
+        }
+    }
 }
 
 
@@ -649,7 +649,7 @@ void Project::PopulateProjectTree()
 void Project::SetVisibleDomain(Domain *newDomain)
 {
 	if (newDomain)
-	{
+    {
 		visibleDomain = newDomain;
 		if (glPanel)
 			glPanel->SetActiveDomainNew(visibleDomain);
@@ -671,7 +671,7 @@ void Project::SetVisibleDomain(Domain *newDomain)
 		}
 
 		if (projectTree)
-		{
+        {
 			if (visibleDomain == fullDomain)
 				projectTree->setCurrentItem(projectTree->findItems("Full Domain", Qt::MatchExactly | Qt::MatchRecursive).first());
 			else
@@ -686,7 +686,7 @@ void Project::SetVisibleDomain(Domain *newDomain)
 		}
 
 		if (editSubdomainList)
-		{
+        {
 			if (visibleDomain == fullDomain)
 				editSubdomainList->clearSelection();
 			else
@@ -1181,4 +1181,42 @@ void Project::ClearSelections()
 	{
 		visibleDomain->ClearSelections();
 	}
+}
+
+int Project::GetNumberOfSubdomains(){
+    return subDomains.size();
+}
+
+
+void Project::setDisplay(QString displayMode,
+                         int domainIndex,
+                         QString FileName,
+                         QString FullFileName){
+
+    if ( displayMode=="default" or displayMode=="maxele"){
+        if (domainIndex==0){
+            fullDomain->visualizeDomain(displayMode,FileName);
+        }
+        else{
+            subDomains[domainIndex-1]->visualizeDomain(displayMode,FileName,0);
+        }
+    }
+    else if ( displayMode=="compareMaxele"){
+        Maxele63 fullMaxele(FullFileName,"FullDomain",0,0);
+        subDomains[domainIndex-1]->visualizeDomain(displayMode,FileName,&fullMaxele);
+    }
+
+
+}
+
+
+QString Project::GetDomainPath(int domainIndex){
+
+    if (domainIndex==0){
+        return fullDomain->GetPath();
+    }
+    else if (domainIndex>0){
+        return subDomains[domainIndex-1]->GetPath();
+    }
+    return QString();
 }

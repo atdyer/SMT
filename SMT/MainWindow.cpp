@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	ui->setupUi(this);
 
 	ui->paneBox->setCurrentIndex(0);
-	ui->paneBox->setMinimumWidth(ui->projectTree->width()+6);
+    ui->paneBox->setMinimumWidth(ui->projectTree->width()+6);
 
 	currentProject = 0;
 	displayOptionsDialog = 0;
@@ -84,6 +84,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
 	// Load recently opened projects
 	LoadRecentProjects();
+
+
+    //aa15
+    ui->analyzeStacked->setCurrentIndex( ui->analyzeComboBox->currentIndex() );
 
 }
 
@@ -360,6 +364,8 @@ void MainWindow::ConnectProject(Project *proj)
 	for (int i=0; i<currSubs.size(); ++i)
 		addSubdomainToList(currSubs.at(i));
 
+    /* Analyze */
+    fill_visualizeDomainComboBox();
 }
 
 
@@ -607,4 +613,186 @@ void MainWindow::saveAllSubdomainChanges()
 void MainWindow::printText(QString text)
 {
 	std::cout << text.toStdString().data() << std::endl;
+}
+
+void MainWindow::on_analyzeComboBox_currentIndexChanged(int index)
+{
+    ui->analyzeStacked->setCurrentIndex(index);
+}
+
+
+//aa15
+void MainWindow::on_paneBox_currentChanged(int index)
+{
+    int analysisIndex = 4;
+
+    if (currentProject!=0){    // if there is an active project:
+
+        if ( index==analysisIndex ){ // ANALYZE RESULTS:
+            fill_visualizeDomainComboBox();
+        }
+        else{
+            // ...
+        }
+
+    }
+
+}
+
+
+void MainWindow::fill_visualizeDomainComboBox(){
+
+
+    // insert items to comboboxes
+    ui->visualizeDomainComboBox->clear();
+    ui->visualizeDomainComboBox->addItem("Full Domain");
+    ui->compareSubdomainComboBox->clear();
+
+    int nsubdomains = currentProject->GetNumberOfSubdomains();
+    if ( nsubdomains > 0){
+        QStringList subdomainNames = currentProject->GetSubdomainNames();
+        for (int i=0;i<nsubdomains;i++){
+            ui->visualizeDomainComboBox->addItem(subdomainNames[i]);
+            ui->compareSubdomainComboBox->addItem(subdomainNames[i]);
+        }
+    }
+
+    ui->fullMaxeleLineEdit->setText( currentProject->GetDomainPath(0)+"/maxele.63" );
+
+}
+
+
+
+void MainWindow::on_openFileButton_clicked()
+{
+
+    QString maxeleFileName = QFileDialog::getOpenFileName(this,"Open File",QString(),"Maxele File (*.63)");
+    ui->maxeleDirLineEdit->setText(maxeleFileName);
+}
+
+
+void MainWindow::on_visualizeGridButton1_clicked()
+{
+    int domainIndex = ui->visualizeDomainComboBox->currentIndex();
+
+    if (ui->visualizeDomainComboBox->count()==0 ) {
+        QMessageBox::warning(this,"Project!","No domain is avaliable to visualize. Open or create a project.");
+        return;
+    }
+
+    // display grid
+    if (currentProject!=0){
+        currentProject->setDisplay("default",domainIndex, "","");
+    }
+}
+
+
+void MainWindow::on_visualizeMaxeleButton_clicked()
+{
+    int domainIndex = ui->visualizeDomainComboBox->currentIndex();
+    QString maxeleFileName = ui->maxeleDirLineEdit->text();
+
+
+    if (ui->visualizeDomainComboBox->count()==0 ) {
+        QMessageBox::warning(this,"Project!","No domain is avaliable to visualize. Open or create a project.");
+        return;
+    }
+    else if (maxeleFileName.isEmpty()) {
+        QMessageBox::warning(this,"Maxele Path!","Provide the maxele path.");
+        return;
+    }
+
+    // set display
+    if (currentProject!=0){
+        currentProject->setDisplay("maxele",domainIndex, maxeleFileName,"");
+    }
+
+
+}
+
+void MainWindow::on_visualizeDomainComboBox_currentIndexChanged(const QString &arg1)
+{
+    int newIndex = ui->visualizeDomainComboBox->currentIndex();
+    currentProject->DisplayDomain(newIndex);
+    ui->maxeleDirLineEdit->setText( currentProject->GetDomainPath(newIndex)+"/maxele.63" );
+
+    // synchronize two comboboxes
+    if (ui->compareSubdomainComboBox->currentIndex() != newIndex-1 and
+            ui->compareSubdomainComboBox->currentIndex() != 0 ){
+        ui->compareSubdomainComboBox->setCurrentIndex(newIndex-1);
+    }
+}
+
+
+
+void MainWindow::on_openFullMaxeleButton_clicked()
+{
+    QString fullMaxeleFileName = QFileDialog::getOpenFileName(this,"Open File",QString(),"Full Maxele File (*.63)");
+    ui->fullMaxeleLineEdit->setText(fullMaxeleFileName);
+}
+
+void MainWindow::on_openSubMaxeleButton_clicked()
+{
+    QString subMaxeleFileName = QFileDialog::getOpenFileName(this,"Open File",QString(),"Subdomain Maxele File (*.63)");
+    ui->subMaxeleLineEdit->setText(subMaxeleFileName);
+}
+
+
+void MainWindow::on_compareSubdomainComboBox_currentIndexChanged(int index)
+{
+    int newIndex = ui->compareSubdomainComboBox->currentIndex()+1;
+    currentProject->DisplayDomain(newIndex);
+    ui->subMaxeleLineEdit->setText( currentProject->GetDomainPath(newIndex)+"/maxele.63" );
+
+    // synchronize two comboboxes
+    if (ui->visualizeDomainComboBox->currentIndex() != newIndex){
+        ui->visualizeDomainComboBox->setCurrentIndex(newIndex);
+    }
+}
+
+void MainWindow::on_visualizeGridButton2_clicked()
+{
+    int domainIndex = ui->compareSubdomainComboBox->currentIndex()+1;
+
+    if (ui->compareSubdomainComboBox->count()==0 ) {
+        QMessageBox::warning(this,"Project!","No subdomain is avaliable to visualize. Open or create a project.");
+        return;
+    }
+
+    // display grid
+    if (currentProject!=0){
+        currentProject->setDisplay("default",domainIndex, "","");
+    }
+}
+
+void MainWindow::on_visualizeMaxeleComparisonButton_clicked()
+{
+
+    QString fullMaxeleFileName = ui->fullMaxeleLineEdit->text();
+    int subdomainIndex = ui->compareSubdomainComboBox->currentIndex()+1;
+    QString subMaxeleFileName = ui->subMaxeleLineEdit->text();
+
+    if (ui->compareSubdomainComboBox->count()==0 ) {
+        QMessageBox::warning(this,"Project!","No subdomain is avaliable to visualize. Open or create a project.");
+        return;
+    }
+    else if (fullMaxeleFileName.isEmpty()) {
+        QMessageBox::warning(this,"Maxele Path!","Provide the full domain maxele path.");
+        return;
+    }
+    else if (subMaxeleFileName.isEmpty()) {
+        QMessageBox::warning(this,"Maxele Path!","Provide the subdomain maxele path.");
+        return;
+    }
+
+
+    // set display
+    if (currentProject!=0){
+        currentProject->setDisplay("compareMaxele",
+                                   subdomainIndex,
+                                   subMaxeleFileName,
+                                   fullMaxeleFileName);
+    }
+
+
 }

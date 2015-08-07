@@ -54,6 +54,7 @@ class MainWindow : public QMainWindow
 		void	ConnectProject(Project *proj);
 		void	LoadRecentProjects();
 		void	UpdateRecentProjects();
+        void    fill_visualizeDomainComboBox();
 
 	public slots:
 
@@ -97,7 +98,30 @@ class MainWindow : public QMainWindow
 		/* Extra */
 		void	printText(QString text);
 
-	signals:
+        void on_analyzeComboBox_currentIndexChanged(int index);
+
+        void on_paneBox_currentChanged(int index);
+
+        void on_openFileButton_clicked();
+
+
+        void on_visualizeMaxeleButton_clicked();
+
+        void on_visualizeDomainComboBox_currentIndexChanged(const QString &arg1);
+
+        void on_visualizeGridButton1_clicked();
+
+        void on_openFullMaxeleButton_clicked();
+
+        void on_openSubMaxeleButton_clicked();
+
+        void on_compareSubdomainComboBox_currentIndexChanged(int index);
+
+        void on_visualizeGridButton2_clicked();
+
+        void on_visualizeMaxeleComparisonButton_clicked();
+
+signals:
 
 		void	quit();
 };

@@ -271,17 +271,17 @@ void OpenGLPanel::toggleTerrain()
  */
 void OpenGLPanel::SetActiveDomain(Domain *newDomain)
 {
-	/* Disconnect the old domain */
-	if (activeDomain)
+    /* Disconnect the old domain */
+    if (activeDomain)
 	{
 		disconnect(activeDomain, SIGNAL(UpdateGL()), this, SLOT(updateGL()));
 	}
 
-	/* Set up connections with the new one */
-	activeDomain = newDomain;
+    /* Set up connections with the new one */
+    activeDomain = newDomain;
 	activeDomain->SetWindowSize(viewportWidth, viewportHeight);
-	connect(activeDomain, SIGNAL(UpdateGL()), this, SLOT(updateGL()));
-	connect(activeDomain, SIGNAL(SetCursor(QCursor)), this, SLOT(UseCursor(QCursor)));
+    connect(activeDomain, SIGNAL(UpdateGL()), this, SLOT(updateGL()));
+    connect(activeDomain, SIGNAL(SetCursor(QCursor)), this, SLOT(UseCursor(QCursor)));
 }
 
 
@@ -297,10 +297,10 @@ void OpenGLPanel::SetActiveDomainNew(Domain *newDomain)
 	if (activeNewDomain)
 	{
 		activeNewDomain->SetWindowSize(viewportWidth, viewportHeight);
-		connect(activeNewDomain, SIGNAL(updateGL()), this, SLOT(updateGL()));
+        connect(activeNewDomain, SIGNAL(updateGL()), this, SLOT(updateGL()));
 		connect(activeNewDomain, SIGNAL(setCursor(QCursor)), this, SLOT(UseCursor(QCursor)));
-		updateGL();
-	}
+        updateGL();
+    }
 }
 
 

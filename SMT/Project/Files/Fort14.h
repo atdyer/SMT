@@ -14,6 +14,8 @@
 #include "OpenGL/Shaders/SolidShader.h"
 
 #include "Quadtree/Quadtree.h"
+#include "Maxele63.h"
+
 
 class Fort14 : public QObject
 {
@@ -73,9 +75,20 @@ class Fort14 : public QObject
 
 		void			ToggleQuadtreeVisible();
 
+        float           GetMinDisplayVal();
+        float           GetMaxDisplayVal();
+        float           GetMinDif();
+        float           GetMaxDif();
+        bool            setMaxele(Maxele63 * maxele63);
+        void            setMaxeleDif(float fullMaxele, unsigned int i);
+        void            maxeleGL(float minMaxele, float maxMaxele);
+        void            resetGradientFill(float minVal, float maxVal);
+
+
+
 	private:
 
-		QString				domainName;
+        QString				domainName;
 		std::vector<Element>		elements;
 		std::vector<std::vector<unsigned int> >	elevationBoundaries;
 		std::vector<std::vector<unsigned int> >	flowBoundaries;
@@ -88,6 +101,10 @@ class Fort14 : public QObject
 		float				minX;
 		float				minY;
 		float				minZ;
+        float               minDif;
+        float               maxDif;
+        float               minDisplayVal;
+        float               maxDisplayVal;
 		std::vector<Node>		nodes;
 		unsigned int			numElements;
 		unsigned int			numNodes;
@@ -112,6 +129,7 @@ class Fort14 : public QObject
 		GLuint		VAOId;
 		GLuint		VBOId;
 		GLuint		IBOId;
+        QString     GLmode;
 
 		void	CreateDefaultShaders();
 		void	LoadGL();

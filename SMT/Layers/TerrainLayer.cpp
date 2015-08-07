@@ -40,7 +40,7 @@ TerrainLayer::TerrainLayer()
 	gradientFill = 0;
 	gradientBoundary = 0;
 
-	connect(this, SIGNAL(fort14Valid()), this, SLOT(readFort14()));
+    connect(this, SIGNAL(fort14Valid()), this, SLOT(readFort14()));
 }
 
 
@@ -148,7 +148,7 @@ void TerrainLayer::Draw()
  */
 void TerrainLayer::LoadDataToGPU()
 {
-	if (fileLoaded)
+    if (fileLoaded)
 	{
 
 		/* First check if we should be using culled shaders */
@@ -173,7 +173,7 @@ void TerrainLayer::LoadDataToGPU()
 		if (glNodeData)
 		{
 			for (unsigned int i=0; i<numNodes; i++)
-			{
+            {
 				glNodeData[4*i+0] = (GLfloat)nodes[i].normX;
 				glNodeData[4*i+1] = (GLfloat)nodes[i].normY;
 				glNodeData[4*i+2] = (GLfloat)nodes[i].z;

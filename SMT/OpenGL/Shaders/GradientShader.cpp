@@ -25,8 +25,8 @@ GradientShader::GradientShader()
 			"	ex_Color = colors[0];"
 			"	for (int i=1; i<stopCount; ++i)"
 			"	{"
-			"		float t = clamp((in_Position.z - values[i-1]) / (values[i]-values[i-1]), 0.0, 1.0);"
-			"		ex_Color = mix(ex_Color, colors[i], t*t*(3.0 - 2.0*t));"
+            "		float t = clamp((in_Position.z - values[i-1]) / (values[i]-values[i-1]), 0.0, 1.0);"
+            "		ex_Color = mix(ex_Color, colors[i], t*t*(3.0 - 2.0*t));"
 			"	}"
 			"	gl_Position = MVPMatrix*in_Position;"
 			"}";

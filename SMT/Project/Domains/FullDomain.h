@@ -39,8 +39,9 @@ class FullDomain : public Domain
 		Fort015*			GetFort015();
 		std::vector<unsigned int>	GetInnerBoundaryNodes();
 		std::vector<unsigned int>	GetOuterBoundaryNodes();
-		virtual QString			GetPath();
+        QString			GetPath();
 		std::vector<Element*>		GetSelectedElements();
+        void visualizeDomain(QString displayMode, QString FileName);
 
 	private:
 
@@ -54,8 +55,8 @@ class FullDomain : public Domain
 		Fort015*	fort015;
 		Fort066*	fort066;
 		Fort067*	fort067;
-		Maxele63*	maxele;
-		Maxvel63*	maxvel;
+        Maxele63*	maxele63;
+        Maxvel63*	maxvel;
 
 		void	CreateAllFiles();
 

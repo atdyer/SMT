@@ -80,6 +80,9 @@
        </item>
        <item>
         <widget class="ShaderOptionsStackedWidget" name="fillShaderOptions">
+         <property name="currentIndex">
+          <number>0</number>
+         </property>
          <widget class="QWidget" name="page_3"/>
          <widget class="QWidget" name="page_4"/>
         </widget>
