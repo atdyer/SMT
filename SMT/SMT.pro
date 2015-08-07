@@ -110,7 +110,8 @@ SOURCES += main.cpp\
     OpenStreetMap/Surfaces/TextureManager.cpp \
     OpenStreetMap/Licenses/OSMLicense.cpp \
     OpenStreetMap/Surfaces/RectangleRenderSurface.cpp \
-    OpenGL/Shaders/OverlayShader.cpp
+    OpenGL/Shaders/OverlayShader.cpp \
+    Layers/maxelelayer.cpp
 
 HEADERS  += MainWindow.h \
     OpenGL/wglew.h \
@@ -210,7 +211,8 @@ HEADERS  += MainWindow.h \
     OpenStreetMap/Surfaces/TextureManager.h \
     OpenStreetMap/Licenses/OSMLicense.h \
     OpenStreetMap/Surfaces/RectangleRenderSurface.h \
-    OpenGL/Shaders/OverlayShader.h
+    OpenGL/Shaders/OverlayShader.h \
+    Layers/maxelelayer.h
 
 FORMS    += MainWindow.ui \
     Widgets/ShaderOptionsStackedWidget.ui \
